@@ -4,40 +4,78 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+  ───────────────────────────────────────────────────────────────────────────
+  NINS Design System — tokens mapped to PRD Section 2.
+  Fonts are injected by app/layout.tsx as CSS variables:
+    --font-sans (Inter), --font-heading (Plus Jakarta Sans),
+    --font-ui (Geist), --font-mono (Geist Mono), --font-bengali (Noto Sans Bengali)
+  ───────────────────────────────────────────────────────────────────────────
+*/
 @theme inline {
-    --font-heading: var(--font-sans);
-    --font-sans: var(--font-sans);
-    --color-sidebar-ring: var(--sidebar-ring);
-    --color-sidebar-border: var(--sidebar-border);
-    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-    --color-sidebar-accent: var(--sidebar-accent);
-    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-    --color-sidebar-primary: var(--sidebar-primary);
-    --color-sidebar-foreground: var(--sidebar-foreground);
-    --color-sidebar: var(--sidebar);
-    --color-chart-5: var(--chart-5);
-    --color-chart-4: var(--chart-4);
-    --color-chart-3: var(--chart-3);
-    --color-chart-2: var(--chart-2);
-    --color-chart-1: var(--chart-1);
-    --color-ring: var(--ring);
-    --color-input: var(--input);
-    --color-border: var(--border);
-    --color-destructive: var(--destructive);
-    --color-accent-foreground: var(--accent-foreground);
-    --color-accent: var(--accent);
-    --color-muted-foreground: var(--muted-foreground);
-    --color-muted: var(--muted);
-    --color-secondary-foreground: var(--secondary-foreground);
-    --color-secondary: var(--secondary);
-    --color-primary-foreground: var(--primary-foreground);
-    --color-primary: var(--primary);
-    --color-popover-foreground: var(--popover-foreground);
-    --color-popover: var(--popover);
-    --color-card-foreground: var(--card-foreground);
-    --color-card: var(--card);
-    --color-foreground: var(--foreground);
+    /* ── Typography ── */
+    --font-heading: var(--font-heading), "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+    --font-sans: var(--font-sans), "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-ui: var(--font-ui), "Geist", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: var(--font-mono), "Geist Mono", ui-monospace, monospace;
+    --font-bengali: var(--font-bengali), "Noto Sans Bengali", var(--font-sans), sans-serif;
+
+    /* ── Color mappings (Tailwind utilities resolve from these) ── */
     --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+
+    --color-success: var(--success);
+    --color-success-foreground: var(--success-foreground);
+
+    --color-warning: var(--warning);
+    --color-warning-foreground: var(--warning-foreground);
+
+    --color-info: var(--info);
+    --color-info-foreground: var(--info-foreground);
+
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    /* ── Brand-harmonious chart palette (teal → emerald → amber → slate) ── */
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+
+    /* ── Sidebar (brand-styled admin/doctor rails) ── */
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+
+    /* ── Radius scale ── */
     --radius-sm: calc(var(--radius) * 0.6);
     --radius-md: calc(var(--radius) * 0.8);
     --radius-lg: var(--radius);
@@ -47,73 +85,123 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   LIGHT THEME — clinical canvas + Deep Govt Teal primary
+   ═══════════════════════════════════════════════════════════════════════════ */
 :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
+    /* Surfaces — Slate Light Canvas #F8FAFC, pure white cards */
+    --background: oklch(0.984 0.003 247.86);
+    --foreground: oklch(0.279 0.037 260.03);          /* Slate Dark Blue #1E293B */
     --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
+    --card-foreground: oklch(0.279 0.037 260.03);
     --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
+    --popover-foreground: oklch(0.279 0.037 260.03);
+
+    /* Primary — Deep Govt Teal #005A5B */
+    --primary: oklch(0.424 0.072 196.09);
+    --primary-foreground: oklch(0.985 0.002 197);     /* near-white with cool tint */
+
+    /* Secondary — soft slate surface */
+    --secondary: oklch(0.968 0.007 247.9);
+    --secondary-foreground: oklch(0.279 0.037 260.03);
+
+    /* Muted — neutral text holders */
+    --muted: oklch(0.968 0.007 247.9);
+    --muted-foreground: oklch(0.554 0.041 257.42);    /* #64748B */
+
+    /* Accent — mint-tinted teal wash for hovers/active rows */
+    --accent: oklch(0.952 0.028 196);
+    --accent-foreground: oklch(0.424 0.072 196.09);
+
+    /* Destructive — Crimson Red #EF4444 */
+    --destructive: oklch(0.637 0.208 25.33);
+    --destructive-foreground: oklch(0.985 0 0);
+
+    /* Semantic — Emerald success, Amber warning, Teal info */
+    --success: oklch(0.696 0.149 162.48);             /* #10B981 */
+    --success-foreground: oklch(0.985 0 0);
+    --warning: oklch(0.769 0.165 70.08);              /* #F59E0B */
+    --warning-foreground: oklch(0.279 0.037 260.03);
+    --info: oklch(0.527 0.087 196.92);                /* #0E7A7C tealLight */
+    --info-foreground: oklch(0.985 0 0);
+
+    /* Lines & focus */
+    --border: oklch(0.929 0.013 255.51);              /* #E2E8F0 */
+    --input: oklch(0.929 0.013 255.51);
+    --ring: oklch(0.424 0.072 196.09);                /* brand teal focus ring */
+
+    /* Charts — brand-harmonious sequence */
+    --chart-1: oklch(0.424 0.072 196.09);             /* Deep Govt Teal */
+    --chart-2: oklch(0.696 0.149 162.48);             /* Emerald */
+    --chart-3: oklch(0.769 0.165 70.08);              /* Amber */
+    --chart-4: oklch(0.279 0.037 260.03);             /* Slate Dark */
+    --chart-5: oklch(0.527 0.087 196.92);             /* Teal Light */
+
     --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
+
+    /* Sidebar — deep teal rail */
+    --sidebar: oklch(0.383 0.061 198.07);             /* tealDark #0A4D4F */
+    --sidebar-foreground: oklch(0.97 0.01 197);
+    --sidebar-primary: oklch(0.952 0.028 196);
+    --sidebar-primary-foreground: oklch(0.383 0.061 198.07);
+    --sidebar-accent: oklch(0.45 0.06 198);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(0.5 0.05 198 / 40%);
+    --sidebar-ring: oklch(0.952 0.028 196);
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   DARK THEME — slate-dark canvas, brighter teal primary for contrast
+   ═══════════════════════════════════════════════════════════════════════════ */
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
+    --background: oklch(0.21 0.025 255);              /* deep slate */
+    --foreground: oklch(0.97 0.005 247);
+    --card: oklch(0.255 0.028 255);
+    --card-foreground: oklch(0.97 0.005 247);
+    --popover: oklch(0.255 0.028 255);
+    --popover-foreground: oklch(0.97 0.005 247);
+
+    /* Primary lifted brighter for dark contrast */
+    --primary: oklch(0.68 0.11 196);
+    --primary-foreground: oklch(0.21 0.025 255);
+
+    --secondary: oklch(0.32 0.03 255);
+    --secondary-foreground: oklch(0.97 0.005 247);
+
+    --muted: oklch(0.32 0.03 255);
+    --muted-foreground: oklch(0.7 0.02 255);
+
+    --accent: oklch(0.36 0.05 196);
+    --accent-foreground: oklch(0.85 0.09 196);
+
+    --destructive: oklch(0.66 0.19 25);
+    --destructive-foreground: oklch(0.985 0 0);
+
+    --success: oklch(0.72 0.15 162);
+    --success-foreground: oklch(0.21 0.025 255);
+    --warning: oklch(0.79 0.16 70);
+    --warning-foreground: oklch(0.21 0.025 255);
+    --info: oklch(0.68 0.1 196);
+    --info-foreground: oklch(0.21 0.025 255);
+
     --border: oklch(1 0 0 / 10%);
     --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --ring: oklch(0.68 0.11 196);
+
+    --chart-1: oklch(0.68 0.11 196);
+    --chart-2: oklch(0.72 0.15 162);
+    --chart-3: oklch(0.79 0.16 70);
+    --chart-4: oklch(0.7 0.02 255);
+    --chart-5: oklch(0.55 0.09 196);
+
+    --sidebar: oklch(0.18 0.02 255);
+    --sidebar-foreground: oklch(0.97 0.005 247);
+    --sidebar-primary: oklch(0.68 0.11 196);
+    --sidebar-primary-foreground: oklch(0.21 0.025 255);
+    --sidebar-accent: oklch(0.3 0.03 255);
+    --sidebar-accent-foreground: oklch(0.97 0.005 247);
     --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
+    --sidebar-ring: oklch(0.68 0.11 196);
 }
 
 @layer base {
@@ -121,9 +209,19 @@
     @apply border-border outline-ring/50;
     }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    /* Inter is the default body face; headings opt in via font-heading */
+    font-feature-settings: "rlig" 1, "calt" 1;
     }
   html {
     @apply font-sans;
+    }
+  /* Headings use Plus Jakarta Sans per PRD typography spec */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+    }
+  /* Bengali locale: add `lang="bn"` on <html> to switch body rendering */
+  html[lang="bn"] body {
+    font-family: var(--font-bengali);
     }
 }

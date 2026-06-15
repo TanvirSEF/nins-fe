@@ -1,14 +1,40 @@
-import { Geist, Geist_Mono, Inter } from "next/font/google"
+import { Plus_Jakarta_Sans, Geist, Inter, Noto_Sans_Bengali } from "next/font/google"
+import { Geist_Mono } from "next/font/google"
 
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'})
+// PRD Section 3.2 typography stack
+const fontHeading = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-heading",
+  display: "swap",
+})
+
+const fontUi = Geist({
+  subsets: ["latin"],
+  variable: "--font-ui",
+  display: "swap",
+})
+
+const fontSans = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+})
+
+const fontBengali = Noto_Sans_Bengali({
+  subsets: ["bengali"],
+  variable: "--font-bengali",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+})
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
+  display: "swap",
 })
 
 export default function RootLayout({
@@ -20,7 +46,14 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontMono.variable, "font-sans", inter.variable)}
+      className={cn(
+        "antialiased",
+        fontHeading.variable,
+        fontUi.variable,
+        fontSans.variable,
+        fontBengali.variable,
+        fontMono.variable,
+      )}
     >
       <body>
         <ThemeProvider>{children}</ThemeProvider>
