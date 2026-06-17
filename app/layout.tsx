@@ -2,7 +2,7 @@ import { Plus_Jakarta_Sans, Geist, Inter, Noto_Sans_Bengali } from "next/font/go
 import { Geist_Mono } from "next/font/google"
 
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
+import { Providers } from "./providers"
 import { cn } from "@/lib/utils"
 
 // PRD Section 3.2 typography stack
@@ -55,8 +55,8 @@ export default function RootLayout({
         fontMono.variable,
       )}
     >
-      <body>
-        <ThemeProvider>{children}</ThemeProvider>
+      <body suppressHydrationWarning>
+        <Providers>{children}</Providers>
       </body>
     </html>
   )
