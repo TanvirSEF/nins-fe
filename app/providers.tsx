@@ -4,6 +4,7 @@ import * as React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/context/auth-context";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   // Ensure QueryClient is created once on the client to avoid state sharing across requests
@@ -22,10 +23,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        {children}
-        <Toaster closeButton position="top-right" richColors />
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider>
+          {children}
+          <Toaster closeButton position="top-right" richColors />
+        </ThemeProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
