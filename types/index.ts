@@ -105,9 +105,14 @@ export interface BedTypeStats {
   available: number
 }
 
-export interface LiveBoard {
-  ICU: BedTypeStats
-  HDU: BedTypeStats
+/**
+ * Shape returned by `GET /bed-management/live-board` — an array with one entry
+ * per bed type (ICU, HDU). Note: the backend returns an ARRAY, not a keyed
+ * object, so consumers index by `.type`.
+ */
+export interface BedAvailability extends BedTypeStats {
+  type: BedType
+  wards: string[]
 }
 
 export enum PaymentStatus {

@@ -5,3 +5,9 @@
 //   useMedicalRecordQuery, usePrescriptionQuery, useDashboardQuery,
 //   useNotificationQuery, useReportQuery
 export { useProfile } from "./useAuthQuery"
+export {
+  useLiveBoard,
+  useBeds,
+  useUpdateBedStatus,
+} from "./useBedQuery"
+export type { UpdateBedStatusPayload } from "./useBedQuery"
