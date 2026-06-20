@@ -11,3 +11,7 @@ export {
   useUpdateBedStatus,
 } from "./useBedQuery"
 export type { UpdateBedStatusPayload } from "./useBedQuery"
+export { useDepartments, useDepartment } from "./useDepartmentQuery"
+export type { DepartmentParams } from "./useDepartmentQuery"
+export { useDoctors, useDoctor } from "./useDoctorQuery"
+export type { DoctorParams } from "./useDoctorQuery"
