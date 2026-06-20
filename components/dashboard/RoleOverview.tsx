@@ -60,16 +60,16 @@ export function RoleOverview() {
         <h2 className="font-heading text-xs font-semibold tracking-wider text-muted-foreground uppercase">
           Modules
         </h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {upcoming.map((item) => {
             const Icon = item.icon
             return (
               <Card key={item.href}>
-                <CardHeader>
+                <CardHeader className="gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
                     <Icon className="h-5 w-5" />
                   </div>
-                  <CardTitle className="pt-1.5">{item.label}</CardTitle>
+                  <CardTitle>{item.label}</CardTitle>
                   {item.description && (
                     <CardDescription>{item.description}</CardDescription>
                   )}

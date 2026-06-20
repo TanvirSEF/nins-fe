@@ -1,13 +1,11 @@
 "use client"
 
 import * as React from "react"
-import { usePathname } from "next/navigation"
-import { useAuth } from "@/hooks/useAuth"
 import { RoleGate } from "@/components/shared/RoleGate"
-import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet"
+import { AppSidebar } from "@/components/app-sidebar"
+import { SiteHeader } from "@/components/site-header"
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { Role } from "@/types"
-import { Sidebar } from "./Sidebar"
-import { Topbar } from "./Topbar"
 
 interface DashboardShellProps {
   children: React.ReactNode
@@ -16,48 +14,38 @@ interface DashboardShellProps {
   title: string
 }
 
+/**
+ * Dashboard chrome built on the shadcn sidebar primitive (dashboard-01 layout):
+ * SidebarProvider → AppSidebar (role-aware) + SidebarInset (SiteHeader + main).
+ * RoleGate enforces per-segment access; the shared /dashboard layout handles auth.
+ */
 export function DashboardShell({
   children,
   allowedRoles,
   title,
 }: DashboardShellProps) {
-  const { role } = useAuth()
-  const pathname = usePathname()
-  const [mobileOpen, setMobileOpen] = React.useState(false)
-
   return (
     <RoleGate allowedRoles={allowedRoles}>
-      <div className="min-h-screen bg-background">
-        {/* Desktop rail */}
-        <aside className="hidden w-64 shrink-0 md:block">
-          <div className="fixed inset-y-0 left-0 w-64">
-            {role && <Sidebar role={role} pathname={pathname} />}
+      <SidebarProvider
+        style={
+          {
+            "--sidebar-width": "calc(var(--spacing) * 72)",
+            "--header-height": "calc(var(--spacing) * 12)",
+          } as React.CSSProperties
+        }
+      >
+        <AppSidebar variant="inset" />
+        <SidebarInset>
+          <SiteHeader title={title} />
+          <div className="flex flex-1 flex-col">
+            <div className="@container/main flex flex-1 flex-col gap-2">
+              <div className="flex flex-col gap-4 px-4 py-4 md:gap-6 md:px-6 md:py-6">
+                {children}
+              </div>
+            </div>
           </div>
-        </aside>
-
-        {/* Mobile drawer */}
-        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-          <SheetContent
-            side="left"
-            showCloseButton={false}
-            className="w-72 p-0"
-          >
-            <SheetTitle className="sr-only">Navigation</SheetTitle>
-            {role && (
-              <Sidebar
-                role={role}
-                pathname={pathname}
-                onNavigate={() => setMobileOpen(false)}
-              />
-            )}
-          </SheetContent>
-        </Sheet>
-
-        <div className="flex flex-col md:pl-64">
-          <Topbar title={title} onMenuClick={() => setMobileOpen(true)} />
-          <main className="flex-1 p-4 md:p-6 lg:p-8">{children}</main>
-        </div>
-      </div>
+        </SidebarInset>
+      </SidebarProvider>
     </RoleGate>
   )
 }
