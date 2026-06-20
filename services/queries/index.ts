@@ -20,9 +20,14 @@ export {
   useDoctorAppointments,
   useAppointment,
   useBookWithPayment,
+  useMyTickets,
+  useCancelAppointment,
 } from "./useAppointmentQuery"
 export type {
   CreateAppointmentPayload,
   BookWithPaymentResult,
   DoctorAppointmentsResult,
+  MyTicketsParams,
 } from "./useAppointmentQuery"
+export { useMyPayments } from "./usePaymentQuery"
+export type { MyPaymentsParams } from "./usePaymentQuery"

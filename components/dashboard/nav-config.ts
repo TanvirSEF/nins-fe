@@ -82,14 +82,14 @@ export const NAV_BY_ROLE: Record<Role, NavItem[]> = {
       label: "My Tickets",
       href: "/dashboard/patient/tickets",
       icon: Ticket,
-      enabled: false,
+      enabled: true,
       description: "Your appointment history and downloadable PDF tickets.",
     },
     {
       label: "Payments",
       href: "/dashboard/patient/payments",
       icon: CreditCard,
-      enabled: false,
+      enabled: true,
       description: "Track registration fees and transaction status.",
     },
     {

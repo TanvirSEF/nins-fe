@@ -3,7 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { apiClient } from "@/lib/api-client"
 import { qk } from "@/lib/query-keys"
-import type { Appointment } from "@/types"
+import type { Appointment, Paginated } from "@/types"
 import { AppointmentStatus } from "@/types"
 
 export interface CreateAppointmentPayload {
@@ -73,6 +73,45 @@ export function useBookWithPayment() {
       }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["appointments"] })
+    },
+  })
+}
+
+export interface MyTicketsParams {
+  page: number
+  limit: number
+  status?: AppointmentStatus
+  [key: string]: unknown
+}
+
+/** The logged-in patient's appointments (paginated, optional status filter). */
+export function useMyTickets(params: MyTicketsParams) {
+  return useQuery<Paginated<Appointment>>({
+    queryKey: qk.myTickets(params),
+    queryFn: () =>
+      apiClient<Paginated<Appointment>>("/appointments/my-tickets", {
+        method: "GET",
+        params: {
+          page: params.page,
+          limit: params.limit,
+          status: params.status,
+        },
+      }),
+    staleTime: 30 * 1000,
+  })
+}
+
+/** Cancel one of the patient's own appointments (PATCH status → CANCELLED). */
+export function useCancelAppointment() {
+  const qc = useQueryClient()
+  return useMutation<Appointment, Error, string>({
+    mutationFn: (id) =>
+      apiClient<Appointment>(`/appointments/${id}/status`, {
+        method: "PATCH",
+        json: { status: AppointmentStatus.CANCELLED },
+      }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["appointments", "mine"] })
     },
   })
 }
