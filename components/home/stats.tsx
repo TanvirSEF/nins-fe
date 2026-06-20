@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
-import * as React from "react";
-import { Users, BedDouble, ShieldAlert, BadgeCheck } from "lucide-react";
+import * as React from "react"
+import { Users, BedDouble, ShieldAlert, BadgeCheck } from "lucide-react"
 
 export function Stats() {
   const statItems = [
@@ -33,21 +33,23 @@ export function Stats() {
       icon: BadgeCheck,
       colorClass: "text-success bg-success/10",
     },
-  ];
+  ]
 
   return (
-    <section className="bg-white py-12 border-y border-slate-100 dark:bg-slate-950 dark:border-white/5">
+    <section className="border-y border-slate-100 bg-white py-12 dark:border-white/5 dark:bg-slate-950">
       <div className="mx-auto max-w-7xl px-6">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {statItems.map((item, index) => {
-            const Icon = item.icon;
+            const Icon = item.icon
             return (
-              <div 
-                key={index} 
-                className="group relative flex flex-col p-6 rounded-2xl border border-transparent transition-all duration-300 hover:border-slate-100 hover:shadow-sm dark:hover:border-white/5 dark:hover:bg-slate-900/10"
+              <div
+                key={index}
+                className="group relative flex flex-col rounded-2xl border border-transparent p-6 transition-all duration-300 hover:border-slate-100 hover:shadow-sm dark:hover:border-white/5 dark:hover:bg-slate-900/10"
               >
                 <div className="flex items-center gap-4">
-                  <div className={`flex h-11 w-11 items-center justify-center rounded-xl transition-all duration-300 group-hover:scale-105 ${item.colorClass}`}>
+                  <div
+                    className={`flex h-11 w-11 items-center justify-center rounded-xl transition-all duration-300 group-hover:scale-105 ${item.colorClass}`}
+                  >
                     <Icon className="h-5 w-5" />
                   </div>
                   <div>
@@ -59,14 +61,14 @@ export function Stats() {
                     </div>
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground mt-3 leading-relaxed">
+                <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
                   {item.description}
                 </p>
               </div>
-            );
+            )
           })}
         </div>
       </div>
     </section>
-  );
+  )
 }

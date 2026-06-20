@@ -1,33 +1,37 @@
-"use client";
+"use client"
 
-import * as React from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { apiClient, ApiError } from "@/lib/api-client";
-import { getToken, setToken, clearToken } from "@/lib/auth";
-import { User, Role, AuthResponse } from "@/types";
+import * as React from "react"
+import { useQueryClient } from "@tanstack/react-query"
+import { useRouter } from "next/navigation"
+import { apiClient, AUTH_ENDPOINTS } from "@/lib/api-client"
+import { getToken, setToken, clearToken } from "@/lib/auth"
+import { User, Role, AuthResponse } from "@/types"
 
 export interface AuthContextType {
-  user: User | null;
-  token: string | null;
-  role: Role | null;
-  isLoading: boolean;
-  login: (email: string, password: string) => Promise<AuthResponse>;
+  user: User | null
+  token: string | null
+  role: Role | null
+  isLoading: boolean
+  login: (email: string, password: string) => Promise<AuthResponse>
   register: (
     name: string,
     email: string,
     password: string,
     phone?: string
-  ) => Promise<AuthResponse>;
-  logout: () => void;
+  ) => Promise<AuthResponse>
+  logout: () => void
 }
 
-export const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = React.createContext<AuthContextType | undefined>(
+  undefined
+)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = React.useState<User | null>(null);
-  const [token, setTokenState] = React.useState<string | null>(null);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const queryClient = useQueryClient();
+  const [user, setUser] = React.useState<User | null>(null)
+  const [token, setTokenState] = React.useState<string | null>(null)
+  const [isLoading, setIsLoading] = React.useState(true)
+  const queryClient = useQueryClient()
+  const router = useRouter()
 
   // Load token from storage and fetch profile
   const fetchProfile = React.useCallback(async (savedToken: string) => {
@@ -35,48 +39,51 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const profileUser = await apiClient<User>("/auth/profile", {
         method: "GET",
         token: savedToken,
-      });
-      setUser(profileUser);
-      setTokenState(savedToken);
+      })
+      setUser(profileUser)
+      setTokenState(savedToken)
     } catch (error) {
-      console.error("Failed to restore auth session:", error);
-      clearToken();
-      setUser(null);
-      setTokenState(null);
+      console.error("Failed to restore auth session:", error)
+      clearToken()
+      setUser(null)
+      setTokenState(null)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  }, []);
+  }, [])
 
   React.useEffect(() => {
-    const savedToken = getToken();
+    const savedToken = getToken()
     if (savedToken) {
-      fetchProfile(savedToken);
+      // Async session hydration: state updates happen after `await`, not
+      // synchronously, so this is the intended external-system sync pattern.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      fetchProfile(savedToken)
     } else {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  }, [fetchProfile]);
+  }, [fetchProfile])
 
   const login = async (email: string, password: string) => {
-    setIsLoading(true);
+    setIsLoading(true)
     try {
       const response = await apiClient<AuthResponse>("/auth/login", {
         method: "POST",
         json: { email, password },
-      });
-      setToken(response.token);
-      setTokenState(response.token);
-      setUser(response.user);
-      return response;
+      })
+      setToken(response.token)
+      setTokenState(response.token)
+      setUser(response.user)
+      return response
     } catch (error) {
-      setUser(null);
-      setTokenState(null);
-      clearToken();
-      throw error;
+      setUser(null)
+      setTokenState(null)
+      clearToken()
+      throw error
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const register = async (
     name: string,
@@ -84,47 +91,52 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     password: string,
     phone?: string
   ) => {
-    setIsLoading(true);
+    setIsLoading(true)
     try {
       const response = await apiClient<AuthResponse>("/auth/register", {
         method: "POST",
         json: { name, email, password, phone },
-      });
-      setToken(response.token);
-      setTokenState(response.token);
-      setUser(response.user);
-      return response;
+      })
+      setToken(response.token)
+      setTokenState(response.token)
+      setUser(response.user)
+      return response
     } catch (error) {
-      setUser(null);
-      setTokenState(null);
-      clearToken();
-      throw error;
+      setUser(null)
+      setTokenState(null)
+      clearToken()
+      throw error
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const logout = React.useCallback(() => {
-    clearToken();
-    setUser(null);
-    setTokenState(null);
-    queryClient.clear();
-  }, [queryClient]);
+    clearToken()
+    setUser(null)
+    setTokenState(null)
+    queryClient.clear()
+  }, [queryClient])
 
-  // Intercept unauthorized requests to log out automatically
+  // Auto-logout on session expiry. apiClient dispatches `auth:unauthorized` on
+  // any 401 that goes through it; auth endpoints are excluded because a 401
+  // there means bad credentials (a form error), not an expired session.
   React.useEffect(() => {
-    const originalFetch = window.fetch;
-    window.fetch = async (...args) => {
-      const res = await originalFetch(...args);
-      if (res.status === 401) {
-        logout();
+    if (typeof window === "undefined") return
+    const handler = (e: Event) => {
+      const { endpoint } = (e as CustomEvent).detail ?? {}
+      if (
+        endpoint &&
+        (AUTH_ENDPOINTS as readonly string[]).includes(endpoint)
+      ) {
+        return
       }
-      return res;
-    };
-    return () => {
-      window.fetch = originalFetch;
-    };
-  }, [logout]);
+      logout()
+      router.push("/login")
+    }
+    window.addEventListener("auth:unauthorized", handler)
+    return () => window.removeEventListener("auth:unauthorized", handler)
+  }, [logout, router])
 
   const value = React.useMemo(
     () => ({
@@ -137,7 +149,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       logout,
     }),
     [user, token, isLoading, logout]
-  );
+  )
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

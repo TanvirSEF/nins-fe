@@ -1,4 +1,9 @@
-import { Plus_Jakarta_Sans, Geist, Inter, Noto_Sans_Bengali } from "next/font/google"
+import {
+  Plus_Jakarta_Sans,
+  Geist,
+  Inter,
+  Noto_Sans_Bengali,
+} from "next/font/google"
 import { Geist_Mono } from "next/font/google"
 
 import "./globals.css"
@@ -52,7 +57,7 @@ export default function RootLayout({
         fontUi.variable,
         fontSans.variable,
         fontBengali.variable,
-        fontMono.variable,
+        fontMono.variable
       )}
     >
       <body suppressHydrationWarning>
