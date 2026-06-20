@@ -1,7 +1,7 @@
 import Link from "next/link"
-import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
 import type { DoctorProfile } from "@/types"
+import { RemoteImage } from "./RemoteImage"
 
 export function doctorName(d: DoctorProfile): string {
   return typeof d.userId === "object" ? d.userId.name : "Doctor"
@@ -24,19 +24,18 @@ export function DoctorCard({ doctor }: { doctor: DoctorProfile }) {
       className="group flex gap-4 rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-white/10 dark:bg-slate-900/50"
     >
       <div className="relative size-16 shrink-0 overflow-hidden rounded-full bg-primary/10">
-        {doctor.profilePicture ? (
-          <Image
-            src={doctor.profilePicture}
-            alt={name}
-            fill
-            className="object-cover"
-            sizes="64px"
-          />
-        ) : (
-          <div className="flex size-full items-center justify-center font-heading text-lg font-bold text-primary">
-            {initials(name)}
-          </div>
-        )}
+        <RemoteImage
+          src={doctor.profilePicture}
+          alt={name}
+          fill
+          className="object-cover"
+          sizes="64px"
+          fallback={
+            <div className="absolute inset-0 flex items-center justify-center font-heading text-lg font-bold text-primary">
+              {initials(name)}
+            </div>
+          }
+        />
       </div>
 
       <div className="min-w-0 flex-1">

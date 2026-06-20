@@ -1,11 +1,11 @@
 "use client"
 
 import * as React from "react"
-import Image from "next/image"
 import Link from "next/link"
 import { useDepartment } from "@/services/queries/useDepartmentQuery"
 import { useDoctors } from "@/services/queries/useDoctorQuery"
 import { DoctorCard } from "./DoctorCard"
+import { RemoteImage } from "./RemoteImage"
 import { Pagination } from "./Pagination"
 import { DirectoryError } from "./DepartmentsDirectory"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -40,22 +40,21 @@ export function DepartmentDetail({ id }: { id: string }) {
       </Link>
 
       <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white dark:border-white/10 dark:bg-slate-900/50">
-        {d.image ? (
-          <div className="relative h-40 w-full bg-muted sm:h-56">
-            <Image
-              src={d.image}
-              alt={d.name}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 60vw"
-              priority
-            />
-          </div>
-        ) : (
-          <div className="flex h-40 items-center justify-center bg-primary/5 sm:h-56">
-            <Building2 className="h-12 w-12 text-primary" />
-          </div>
-        )}
+        <div className="relative h-40 w-full bg-muted sm:h-56">
+          <RemoteImage
+            src={d.image}
+            alt={d.name}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 60vw"
+            priority
+            fallback={
+              <div className="absolute inset-0 flex items-center justify-center bg-primary/5">
+                <Building2 className="h-12 w-12 text-primary" />
+              </div>
+            }
+          />
+        </div>
         <div className="space-y-3 p-6">
           <div className="flex flex-wrap items-center gap-2">
             <span className="rounded-md bg-primary/10 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-primary">

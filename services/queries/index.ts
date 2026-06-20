@@ -15,3 +15,14 @@ export { useDepartments, useDepartment } from "./useDepartmentQuery"
 export type { DepartmentParams } from "./useDepartmentQuery"
 export { useDoctors, useDoctor } from "./useDoctorQuery"
 export type { DoctorParams } from "./useDoctorQuery"
+export { useSchedules } from "./useScheduleQuery"
+export {
+  useDoctorAppointments,
+  useAppointment,
+  useBookWithPayment,
+} from "./useAppointmentQuery"
+export type {
+  CreateAppointmentPayload,
+  BookWithPaymentResult,
+  DoctorAppointmentsResult,
+} from "./useAppointmentQuery"

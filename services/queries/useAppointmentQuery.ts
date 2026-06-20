@@ -1,0 +1,78 @@
+"use client"
+
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { apiClient } from "@/lib/api-client"
+import { qk } from "@/lib/query-keys"
+import type { Appointment } from "@/types"
+import { AppointmentStatus } from "@/types"
+
+export interface CreateAppointmentPayload {
+  doctorId: string
+  scheduleId: string
+  /** YYYY-MM-DD */
+  appointmentDate: string
+}
+
+export interface BookWithPaymentResult {
+  appointmentId: string
+  tranId: string
+  gatewayPageURL: string
+}
+
+export interface DoctorAppointmentsResult {
+  doctorId: string
+  date?: string
+  appointments: Appointment[]
+  totalBooked: number
+}
+
+/** Public capacity preview for a doctor on a given date. */
+export function useDoctorAppointments(
+  doctorId: string | undefined,
+  date: string | undefined,
+) {
+  return useQuery<DoctorAppointmentsResult>({
+    queryKey: qk.doctorAppts(doctorId ?? "", date),
+    queryFn: () =>
+      apiClient<DoctorAppointmentsResult>(
+        `/appointments/doctor/${doctorId}`,
+        { method: "GET", params: { date }, token: null },
+      ),
+    enabled: !!(doctorId && date),
+    staleTime: 30 * 1000,
+  })
+}
+
+/** Single appointment (authed). `poll` refetches every 2s while PENDING. */
+export function useAppointment(
+  id: string | undefined,
+  opts?: { poll?: boolean },
+) {
+  return useQuery<Appointment>({
+    queryKey: ["appointments", "detail", id],
+    queryFn: () =>
+      apiClient<Appointment>(`/appointments/${id}`, { method: "GET" }),
+    enabled: !!id,
+    staleTime: 2 * 1000,
+    refetchInterval: opts?.poll
+      ? (q) =>
+          q.state.data?.status === AppointmentStatus.PENDING ? 2000 : false
+      : false,
+  })
+}
+
+/** Book an appointment + initiate SSLCommerz payment (PATIENT). */
+export function useBookWithPayment() {
+  const qc = useQueryClient()
+  return useMutation<BookWithPaymentResult, Error, CreateAppointmentPayload>({
+    mutationFn: (payload) =>
+      apiClient<BookWithPaymentResult>("/appointments/book", {
+        method: "POST",
+        json: payload,
+        // authed — token auto-injected
+      }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["appointments"] })
+    },
+  })
+}

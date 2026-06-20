@@ -1,11 +1,11 @@
 "use client"
 
 import * as React from "react"
-import Image from "next/image"
 import Link from "next/link"
 import { useDoctor } from "@/services/queries/useDoctorQuery"
 import { doctorName, doctorDeptName } from "./DoctorCard"
 import { DirectoryError } from "./DepartmentsDirectory"
+import { RemoteImage } from "./RemoteImage"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -73,20 +73,19 @@ export function DoctorDetail({ id }: { id: string }) {
         {/* Header */}
         <div className="flex flex-col items-center gap-4 bg-primary/5 p-6 text-center sm:flex-row sm:text-left">
           <div className="relative size-24 shrink-0 overflow-hidden rounded-full border-4 border-white bg-primary/10 shadow-sm dark:border-slate-900">
-            {doctor.profilePicture ? (
-              <Image
-                src={doctor.profilePicture}
-                alt={name}
-                fill
-                className="object-cover"
-                sizes="96px"
-                priority
-              />
-            ) : (
-              <div className="flex size-full items-center justify-center font-heading text-2xl font-bold text-primary">
-                {initials(name)}
-              </div>
-            )}
+            <RemoteImage
+              src={doctor.profilePicture}
+              alt={name}
+              fill
+              className="object-cover"
+              sizes="96px"
+              priority
+              fallback={
+                <div className="absolute inset-0 flex items-center justify-center font-heading text-2xl font-bold text-primary">
+                  {initials(name)}
+                </div>
+              }
+            />
           </div>
           <div className="flex-1">
             <h1 className="font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">

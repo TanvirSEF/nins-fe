@@ -75,7 +75,7 @@ export const NAV_BY_ROLE: Record<Role, NavItem[]> = {
       label: "Book Appointment",
       href: "/dashboard/patient/book",
       icon: CalendarPlus,
-      enabled: false,
+      enabled: true,
       description: "Find a consultant, pick a slot, and reserve your serial.",
     },
     {
