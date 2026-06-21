@@ -28,8 +28,8 @@ export function Hero() {
   return (
     <section className="relative overflow-hidden bg-slate-50/50 py-16 lg:py-24 dark:bg-slate-950/20">
       {/* Visual background gradient glows */}
-      <div className="pointer-events-none absolute top-0 -right-24 h-[600px] w-[600px] rounded-full bg-[radial-gradient(circle,oklch(0.952_0.028_196/20%)_0%,transparent_70%)] dark:bg-[radial-gradient(circle,oklch(0.36_0.05_196/10%)_0%,transparent_70%)]" />
-      <div className="pointer-events-none absolute -bottom-24 -left-24 h-[400px] w-[400px] rounded-full bg-[radial-gradient(circle,oklch(0.968_0.007_247.9/10%)_0%,transparent_70%)]" />
+      <div className="pointer-events-none absolute top-0 -right-24 h-150 w-150 rounded-full bg-[radial-gradient(circle,oklch(0.952_0.028_196/20%)_0%,transparent_70%)] dark:bg-[radial-gradient(circle,oklch(0.36_0.05_196/10%)_0%,transparent_70%)]" />
+      <div className="pointer-events-none absolute -bottom-24 -left-24 h-100 w-100 rounded-full bg-[radial-gradient(circle,oklch(0.968_0.007_247.9/10%)_0%,transparent_70%)]" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-6">
         <div className="grid items-center gap-12 lg:grid-cols-12">
@@ -42,7 +42,7 @@ export function Hero() {
 
             <h1 className="font-heading text-4xl leading-[1.1] font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
               Advancing{" "}
-              <span className="bg-gradient-to-r from-primary to-info bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-primary to-info bg-clip-text text-transparent">
                 Neurological
               </span>{" "}
               Care & Innovation
@@ -77,7 +77,7 @@ export function Hero() {
             {/* Quick Action 1: Outpatient Booking */}
             <div
               onClick={() => handleActionClick("/dashboard/patient/book")}
-              className="group cursor-pointer rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition-all duration-300 hover:translate-y-[-2px] hover:border-primary/10 hover:shadow-md dark:border-white/5 dark:bg-slate-900/50"
+              className="group cursor-pointer rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/10 hover:shadow-md dark:border-white/5 dark:bg-slate-900/50"
             >
               <div className="flex items-center gap-4">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-all duration-300 group-hover:scale-105 group-hover:bg-primary group-hover:text-primary-foreground">
@@ -87,7 +87,7 @@ export function Hero() {
                   <h3 className="flex items-center gap-1 font-heading text-sm font-bold text-foreground transition-colors group-hover:text-primary">
                     Outpatient Serials
                   </h3>
-                  <p className="mt-0.5 max-w-[200px] truncate text-xs text-muted-foreground sm:max-w-none">
+                  <p className="mt-0.5 max-w-50 truncate text-xs text-muted-foreground sm:max-w-none">
                     Schedule checkups with specialists
                   </p>
                 </div>
@@ -97,7 +97,7 @@ export function Hero() {
             {/* Quick Action 2: Patient Portal */}
             <div
               onClick={() => handleActionClick("/dashboard/patient")}
-              className="group cursor-pointer rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition-all duration-300 hover:translate-y-[-2px] hover:border-primary/10 hover:shadow-md dark:border-white/5 dark:bg-slate-900/50"
+              className="group cursor-pointer rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/10 hover:shadow-md dark:border-white/5 dark:bg-slate-900/50"
             >
               <div className="flex items-center gap-4">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-success/10 text-success transition-all duration-300 group-hover:scale-105 group-hover:bg-success group-hover:text-success-foreground">
@@ -117,7 +117,7 @@ export function Hero() {
             {/* Quick Action 3: Doctor Console */}
             <div
               onClick={() => handleActionClick("/dashboard/doctor")}
-              className="group cursor-pointer rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition-all duration-300 hover:translate-y-[-2px] hover:border-primary/10 hover:shadow-md dark:border-white/5 dark:bg-slate-900/50"
+              className="group cursor-pointer rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/10 hover:shadow-md dark:border-white/5 dark:bg-slate-900/50"
             >
               <div className="flex items-center gap-4">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-info/10 text-info transition-all duration-300 group-hover:scale-105 group-hover:bg-info group-hover:text-info-foreground">
@@ -137,7 +137,7 @@ export function Hero() {
             {/* Quick Action 4: Bed Board */}
             <div
               onClick={() => router.push("/beds")}
-              className="group cursor-pointer rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition-all duration-300 hover:translate-y-[-2px] hover:border-primary/10 hover:shadow-md dark:border-white/5 dark:bg-slate-900/50"
+              className="group cursor-pointer rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/10 hover:shadow-md dark:border-white/5 dark:bg-slate-900/50"
             >
               <div className="flex items-center gap-4">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-warning/10 text-warning transition-all duration-300 group-hover:scale-105 group-hover:bg-warning group-hover:text-warning-foreground">

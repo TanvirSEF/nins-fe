@@ -91,11 +91,11 @@ function LoginForm() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-6">
       {/* Background soft teal wash decoration */}
-      <div className="pointer-events-none absolute top-0 right-0 left-0 h-[400px] bg-gradient-to-b from-primary/5 to-transparent" />
+      <div className="pointer-events-none absolute top-0 right-0 left-0 h-100 bg-linear-to-b from-primary/5 to-transparent" />
 
       <Card className="relative w-full max-w-md overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-lg transition-all duration-300 hover:shadow-xl dark:border-white/10 dark:bg-card">
         {/* Decorative teal border top line */}
-        <div className="absolute top-0 right-0 left-0 h-1.5 bg-gradient-to-r from-primary to-info" />
+        <div className="absolute top-0 right-0 left-0 h-1.5 bg-linear-to-r from-primary to-info" />
 
         <CardHeader className="space-y-2 pt-8 text-center">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -104,7 +104,7 @@ function LoginForm() {
           <CardTitle className="pt-2 font-heading text-2xl font-bold tracking-tight text-foreground">
             NINS Gateway
           </CardTitle>
-          <CardDescription className="mx-auto max-w-[280px] text-xs leading-relaxed text-muted-foreground">
+          <CardDescription className="mx-auto max-w-70 text-xs leading-relaxed text-muted-foreground">
             Authorize credentials to access outpatient booking, clinical queue,
             and medical charts.
           </CardDescription>
