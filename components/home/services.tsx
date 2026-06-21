@@ -50,7 +50,7 @@ export function Services() {
             return (
               <div
                 key={index}
-                className="group relative rounded-2xl border border-slate-100 bg-white p-6 shadow-sm transition-all duration-300 hover:translate-y-[-2px] hover:shadow-md dark:border-white/5 dark:bg-slate-900/50"
+                className="group relative rounded-2xl border border-slate-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-white/5 dark:bg-slate-900/50"
               >
                 <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/5 text-primary transition-all duration-300 group-hover:scale-105 group-hover:bg-primary group-hover:text-primary-foreground">
                   <Icon className="h-5 w-5" />

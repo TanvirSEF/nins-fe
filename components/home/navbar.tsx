@@ -53,7 +53,7 @@ export function Navbar() {
             <div className="h-8 w-24 animate-pulse rounded bg-slate-100 dark:bg-white/5" />
           ) : user ? (
             <div className="flex items-center gap-3">
-              <span className="max-w-[120px] truncate text-xs text-muted-foreground">
+              <span className="max-w-30 truncate text-xs text-muted-foreground">
                 {user.name}
               </span>
               <Button
