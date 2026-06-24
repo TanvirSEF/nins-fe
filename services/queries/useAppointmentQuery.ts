@@ -115,3 +115,29 @@ export function useCancelAppointment() {
     },
   })
 }
+
+export interface UpdateAppointmentStatusPayload {
+  id: string
+  status: AppointmentStatus
+}
+
+/**
+ * Set an appointment's status. Backend (`appointment.service.ts`) only gates
+ * PATIENT (cancel-own); DOCTOR, HOSPITAL_STAFF and SUPER_ADMIN can set any
+ * status. Invalidates appointment + doctor-dashboard caches.
+ */
+export function useUpdateAppointmentStatus() {
+  const qc = useQueryClient()
+  return useMutation<Appointment, Error, UpdateAppointmentStatusPayload>({
+    mutationFn: ({ id, status }) =>
+      apiClient<Appointment>(`/appointments/${id}/status`, {
+        method: "PATCH",
+        json: { status },
+      }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["appointments"] })
+      qc.invalidateQueries({ queryKey: ["doctor-dashboard"] })
+      qc.invalidateQueries({ queryKey: ["dashboard"] })
+    },
+  })
+}

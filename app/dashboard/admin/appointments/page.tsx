@@ -1,18 +1,18 @@
 import { DashboardShell } from "@/components/dashboard/DashboardShell"
-import { AdminDashboard } from "@/components/admin/AdminDashboard"
+import { AppointmentsManagement } from "@/components/admin/AppointmentsManagement"
 import { Role } from "@/types"
 
 export const metadata = {
-  title: "Admin Console | NINS",
+  title: "Appointments | NINS",
 }
 
-export default function AdminDashboardPage() {
+export default function AdminAppointmentsPage() {
   return (
     <DashboardShell
       allowedRoles={[Role.SUPER_ADMIN, Role.HOSPITAL_STAFF]}
-      title="Admin Console"
+      title="Appointments"
     >
-      <AdminDashboard />
+      <AppointmentsManagement />
     </DashboardShell>
   )
 }

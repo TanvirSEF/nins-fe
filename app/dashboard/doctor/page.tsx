@@ -1,13 +1,15 @@
-"use client"
-
 import { DashboardShell } from "@/components/dashboard/DashboardShell"
-import { RoleOverview } from "@/components/dashboard/RoleOverview"
+import { DoctorDashboard } from "@/components/doctor/DoctorDashboard"
 import { Role } from "@/types"
+
+export const metadata = {
+  title: "Clinical Workspace | NINS",
+}
 
 export default function DoctorDashboardPage() {
   return (
     <DashboardShell allowedRoles={[Role.DOCTOR]} title="Clinical Workspace">
-      <RoleOverview />
+      <DoctorDashboard />
     </DashboardShell>
   )
 }

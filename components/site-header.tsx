@@ -1,5 +1,6 @@
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
+import { NotificationBell } from "@/components/shared/NotificationBell"
 
 /**
  * Sticky dashboard header: sidebar toggle + dynamic page title. Renders inside
@@ -17,6 +18,9 @@ export function SiteHeader({ title }: { title: string }) {
         <h1 className="font-heading text-base font-semibold tracking-tight">
           {title}
         </h1>
+        <div className="ml-auto">
+          <NotificationBell />
+        </div>
       </div>
     </header>
   )

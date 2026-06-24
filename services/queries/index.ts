@@ -1,9 +1,4 @@
 // Data layer barrel. One hook file per backend resource, per PRD §4/§8.
-// PRD-prescribed set (add as each phase lands):
-//   useAuthQuery, useBedQuery, useDepartmentQuery, useDoctorQuery,
-//   useScheduleQuery, useAppointmentQuery, usePaymentQuery,
-//   useMedicalRecordQuery, usePrescriptionQuery, useDashboardQuery,
-//   useNotificationQuery, useReportQuery
 export { useProfile } from "./useAuthQuery"
 export {
   useLiveBoard,
@@ -22,12 +17,50 @@ export {
   useBookWithPayment,
   useMyTickets,
   useCancelAppointment,
+  useUpdateAppointmentStatus,
 } from "./useAppointmentQuery"
 export type {
   CreateAppointmentPayload,
   BookWithPaymentResult,
   DoctorAppointmentsResult,
   MyTicketsParams,
+  UpdateAppointmentStatusPayload,
 } from "./useAppointmentQuery"
 export { useMyPayments } from "./usePaymentQuery"
 export type { MyPaymentsParams } from "./usePaymentQuery"
+export {
+  useMyRecords,
+  useMedicalRecordByAppointment,
+  useCreateMedicalRecord,
+} from "./useMedicalRecordQuery"
+export type { MyRecordsParams } from "./useMedicalRecordQuery"
+export {
+  useMyPrescriptions,
+  usePrescriptionByAppointment,
+  useCreatePrescription,
+} from "./usePrescriptionQuery"
+export type { MyPrescriptionsParams } from "./usePrescriptionQuery"
+export {
+  useDashboardStats,
+  useDashboardOverview,
+  useAppointmentTrend,
+  useBedStatus,
+} from "./useDashboardQuery"
+export {
+  useDoctorDashboard,
+  useTodayQueue,
+  useDoctorStats,
+} from "./useDoctorDashboardQuery"
+export {
+  useNotifications,
+  useUnreadCount,
+  useMarkAllRead,
+  useMarkRead,
+  useDeleteNotification,
+} from "./useNotificationQuery"
+export {
+  downloadRevenueExcel,
+  downloadRevenuePdf,
+  downloadPatientsExcel,
+  downloadPatientsPdf,
+} from "./useReportQuery"

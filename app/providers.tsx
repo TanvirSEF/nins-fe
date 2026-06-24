@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
 import { AuthProvider } from "@/context/auth-context"
+import { NotificationProvider } from "@/context/notification-provider"
 
 export function Providers({ children }: { children: React.ReactNode }) {
   // Ensure QueryClient is created once on the client to avoid state sharing across requests
@@ -25,7 +26,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <ThemeProvider>
-          {children}
+          <NotificationProvider>
+            {children}
+          </NotificationProvider>
           <Toaster closeButton position="top-right" richColors />
         </ThemeProvider>
       </AuthProvider>

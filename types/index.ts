@@ -247,3 +247,153 @@ export interface Paginated<T> {
   data: T[]
   meta: PaginatedMeta
 }
+
+/* ─── Dashboard (admin) ─────────────────────────────────────────────────── */
+
+export interface OverviewStats {
+  totalPatients: number
+  totalDoctors: number
+  totalDepartments: number
+  totalAppointments: number
+  todayAppointments: number
+  todayCompleted: number
+  todayCancelled: number
+}
+
+/** One day in the 7-day appointment trend (`GET /dashboard/stats/appointments-trend`). */
+export interface AppointmentTrendDay {
+  date: string // YYYY-MM-DD
+  total: number
+  completed: number
+  cancelled: number
+  pending: number
+}
+
+export interface TopDepartment {
+  departmentId: string
+  name: string
+  appointmentCount: number
+}
+
+export interface RecentAppointment {
+  id: string
+  patientName: string
+  doctorName: string
+  date: string
+  status: AppointmentStatus
+  serialNumber: number
+}
+
+/** Full `GET /dashboard/stats` payload (SUPER_ADMIN, HOSPITAL_STAFF). */
+export interface DashboardStats {
+  overview: OverviewStats
+  bedStatus: { icu: BedTypeStats; hdu: BedTypeStats }
+  appointmentTrends: AppointmentTrendDay[]
+  topDepartments: TopDepartment[]
+  recentAppointments: RecentAppointment[]
+}
+
+/* ─── Doctor dashboard ──────────────────────────────────────────────────── */
+
+export interface DoctorInfo {
+  id: string
+  designation: string
+  departmentName: string | null
+  profilePicture: string | null
+}
+
+export interface TodayQueueItem {
+  appointmentId: string
+  serialNumber: number
+  patientName: string
+  patientPhone: string | null
+  status: AppointmentStatus
+  appointmentDate: string
+}
+
+export interface DoctorStats {
+  totalToday: number
+  completedToday: number
+  pendingToday: number
+  upcomingThisWeek: number
+  totalPatientsSeen: number
+}
+
+export interface RecentMedicalRecord {
+  _id: string
+  patientId: { _id: string; name: string; phone: string }
+  doctorId: string
+  chiefComplaint: string
+  diagnosis: string[]
+  createdAt: string
+}
+
+export interface RecentPrescription {
+  _id: string
+  patientId: { _id: string; name: string; phone: string }
+  doctorId: string
+  medicines: PrescriptionMedicine[]
+  createdAt: string
+}
+
+/** Full `GET /doctor-dashboard` payload (DOCTOR). */
+export interface DoctorDashboard {
+  doctor: DoctorInfo
+  todayQueue: TodayQueueItem[]
+  stats: DoctorStats
+  recentRecords: RecentMedicalRecord[]
+  recentPrescriptions: RecentPrescription[]
+}
+
+export interface DoctorStatsResponse {
+  doctor: DoctorInfo
+  stats: DoctorStats
+}
+
+/* ─── Medical record / prescription inputs (mirror backend DTOs) ────────── */
+
+export interface CreateMedicalRecordInput {
+  appointmentId: string
+  chiefComplaint: string
+  presentIllness?: string
+  pastHistory?: string
+  examinationFindings?: string
+  vitals?: Vitals
+  diagnosis: string[]
+  notes?: string
+  followUpDate?: string // YYYY-MM-DD
+}
+
+export interface CreatePrescriptionInput {
+  medicalRecordId: string
+  medicines: PrescriptionMedicine[]
+  tests?: PrescriptionTest[]
+  advice?: string[]
+  notes?: string
+  nextVisitDate?: string // YYYY-MM-DD
+}
+
+/* ─── Notifications ─────────────────────────────────────────────────────── */
+
+export interface NotificationParams {
+  page: number
+  limit: number
+  read?: boolean
+  type?: NotificationType
+  [key: string]: unknown
+}
+
+export interface UnreadCount {
+  count: number
+}
+
+export interface MarkAllReadResult {
+  modified: number
+}
+
+/* ─── Reports ───────────────────────────────────────────────────────────── */
+
+export interface ReportRange {
+  startDate: string
+  endDate?: string
+}

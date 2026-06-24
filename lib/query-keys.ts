@@ -18,4 +18,15 @@ export const qk = {
   dashboardStats: ["dashboard", "stats"] as const,
   doctorDashboard: ["doctor-dashboard"] as const,
   notifications: (p?: Record<string, unknown>) => ["notifications", p] as const,
+  unreadCount: ["notifications", "unread"] as const,
+  medicalRecords: (p?: Record<string, unknown>) =>
+    ["medical-records", p] as const,
+  medicalRecordByAppointment: (id: string) =>
+    ["medical-records", "appointment", id] as const,
+  prescriptions: (p?: Record<string, unknown>) =>
+    ["prescriptions", p] as const,
+  prescriptionByAppointment: (id: string) =>
+    ["prescriptions", "appointment", id] as const,
+  doctorQueue: ["doctor-dashboard", "queue"] as const,
+  doctorStats: ["doctor-dashboard", "stats"] as const,
 }
