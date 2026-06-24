@@ -6,11 +6,31 @@ export {
   useUpdateBedStatus,
 } from "./useBedQuery"
 export type { UpdateBedStatusPayload } from "./useBedQuery"
-export { useDepartments, useDepartment } from "./useDepartmentQuery"
+export {
+  useDepartments,
+  useDepartment,
+  useCreateDepartment,
+  useUpdateDepartment,
+  useDeleteDepartment,
+  useUploadDepartmentImage,
+} from "./useDepartmentQuery"
 export type { DepartmentParams } from "./useDepartmentQuery"
-export { useDoctors, useDoctor } from "./useDoctorQuery"
+export {
+  useDoctors,
+  useDoctor,
+  useCreateDoctor,
+  useUpdateDoctor,
+  useDeleteDoctor,
+  useUploadDoctorPicture,
+} from "./useDoctorQuery"
 export type { DoctorParams } from "./useDoctorQuery"
-export { useSchedules } from "./useScheduleQuery"
+export {
+  useSchedules,
+  useCreateSchedule,
+  useUpdateSchedule,
+  useDeleteSchedule,
+} from "./useScheduleQuery"
+export { useCreateStaff, useDeleteStaff } from "./useStaffQuery"
 export {
   useDoctorAppointments,
   useAppointment,

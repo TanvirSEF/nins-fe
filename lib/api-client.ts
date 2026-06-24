@@ -41,6 +41,13 @@ type Options = RequestInit & {
   token?: string | null
   /** return raw Response (for blob/PDF downloads) instead of parsed JSON */
   raw?: boolean
+  /**
+   * Multipart file upload (e.g. department image / doctor profile picture).
+   * When set, the FormData is sent as the body WITHOUT a Content-Type header
+   * so the browser can set the multipart boundary. The { success, data }
+   * envelope is still unwrapped.
+   */
+  form?: FormData
 }
 
 /**
@@ -59,7 +66,7 @@ export async function apiClient<T>(
   endpoint: string,
   opts: Options = {}
 ): Promise<T> {
-  const { json, params, token, raw, headers, ...rest } = opts
+  const { json, params, token, raw, form, headers, ...rest } = opts
 
   // Token resolution: explicit override wins; otherwise read from storage.
   const effectiveToken = token === undefined ? getToken() : token
@@ -81,11 +88,12 @@ export async function apiClient<T>(
   const res = await fetch(url, {
     ...rest,
     headers: {
-      "Content-Type": "application/json",
+      // For multipart/form-data uploads let the browser set the boundary.
+      ...(form ? {} : { "Content-Type": "application/json" }),
       ...(effectiveToken ? { Authorization: `Bearer ${effectiveToken}` } : {}),
       ...headers,
     },
-    body: json ? JSON.stringify(json) : rest.body,
+    body: json ? JSON.stringify(json) : (form ?? rest.body),
     cache: "no-store", // Backend handles caching; disable Next fetch caching
   })
 

@@ -21,6 +21,7 @@ export interface AuthResponse {
 }
 
 export interface HospitalUnit {
+  _id?: string
   name: string
   code: string
 }
@@ -396,4 +397,70 @@ export interface MarkAllReadResult {
 export interface ReportRange {
   startDate: string
   endDate?: string
+}
+
+/* ─── Admin CRUD inputs (mirror backend DTOs) ──────────────────────────── */
+
+export interface CreateDepartmentInput {
+  name: string
+  code: string
+  description?: string
+  image?: string
+  units?: HospitalUnit[]
+}
+
+export interface UpdateDepartmentInput {
+  name?: string
+  code?: string
+  description?: string
+  image?: string
+  units?: HospitalUnit[]
+}
+
+export interface CreateDoctorInput {
+  userId: string
+  bmdcReg: string
+  designation: string
+  departmentId: string
+  unitId?: string
+  specialties?: string[]
+  qualifications?: string[]
+  bio?: string
+  availability?: string
+  profilePicture?: string
+}
+
+export interface UpdateDoctorInput {
+  bmdcReg?: string
+  designation?: string
+  departmentId?: string
+  unitId?: string
+  specialties?: string[]
+  qualifications?: string[]
+  bio?: string
+  availability?: string
+  profilePicture?: string
+}
+
+export interface CreateScheduleInput {
+  doctorId: string
+  dayOfWeek: number // 0=Sun … 6=Sat
+  startTime: string // HH:mm
+  endTime: string // HH:mm
+  maxPatients?: number
+}
+
+export interface UpdateScheduleInput {
+  dayOfWeek?: number
+  startTime?: string
+  endTime?: string
+  maxPatients?: number
+}
+
+export interface CreateStaffInput {
+  email: string
+  password: string
+  name: string
+  role?: Role
+  phone?: string
 }

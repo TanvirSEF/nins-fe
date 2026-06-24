@@ -1,9 +1,14 @@
 "use client"
 
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { apiClient } from "@/lib/api-client"
 import { qk } from "@/lib/query-keys"
-import type { DoctorProfile, Paginated } from "@/types"
+import type {
+  CreateDoctorInput,
+  DoctorProfile,
+  Paginated,
+  UpdateDoctorInput,
+} from "@/types"
 
 export interface DoctorParams {
   page?: number
@@ -48,5 +53,58 @@ export function useDoctor(id: string) {
       }),
     enabled: !!id,
     staleTime: 5 * 60 * 1000,
+  })
+}
+
+/** Create a doctor profile (SUPER_ADMIN, HOSPITAL_STAFF). Requires a DOCTOR userId. */
+export function useCreateDoctor() {
+  const qc = useQueryClient()
+  return useMutation<DoctorProfile, Error, CreateDoctorInput>({
+    mutationFn: (payload) =>
+      apiClient<DoctorProfile>("/doctors", { method: "POST", json: payload }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["doctors"] }),
+  })
+}
+
+/** Update a doctor profile (SUPER_ADMIN). */
+export function useUpdateDoctor() {
+  const qc = useQueryClient()
+  return useMutation<
+    DoctorProfile,
+    Error,
+    { id: string; body: UpdateDoctorInput }
+  >({
+    mutationFn: ({ id, body }) =>
+      apiClient<DoctorProfile>(`/doctors/${id}`, {
+        method: "PATCH",
+        json: body,
+      }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["doctors"] }),
+  })
+}
+
+/** Delete a doctor profile (SUPER_ADMIN). */
+export function useDeleteDoctor() {
+  const qc = useQueryClient()
+  return useMutation<DoctorProfile, Error, string>({
+    mutationFn: (id) =>
+      apiClient<DoctorProfile>(`/doctors/${id}`, { method: "DELETE" }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["doctors"] }),
+  })
+}
+
+/** Upload a doctor profile picture (SUPER_ADMIN). Multipart field `file`. */
+export function useUploadDoctorPicture() {
+  const qc = useQueryClient()
+  return useMutation<DoctorProfile, Error, { id: string; file: File }>({
+    mutationFn: ({ id, file }) => {
+      const form = new FormData()
+      form.append("file", file)
+      return apiClient<DoctorProfile>(`/doctors/${id}/profile-picture`, {
+        method: "PATCH",
+        form,
+      })
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["doctors"] }),
   })
 }
