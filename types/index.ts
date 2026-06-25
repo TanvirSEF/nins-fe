@@ -403,6 +403,30 @@ export interface Payment {
   updatedAt?: string
 }
 
+/** Admin/staff payment list filters (mirrors backend `PaymentFilterDto`). */
+export interface PaymentParams {
+  page?: number
+  limit?: number
+  status?: PaymentStatus
+  appointmentId?: string
+  [key: string]: unknown
+}
+
+/**
+ * Live transaction lookup (GET /payments/transaction/:tranId). `local` is our
+ * stored record; `sslcommerz` is the raw live gateway response (loosely typed
+ * — render known keys defensively).
+ */
+export interface TransactionLookup {
+  local: {
+    tranId: string
+    status: PaymentStatus
+    amount: number
+    paidAt?: string
+  }
+  sslcommerz: Record<string, unknown>
+}
+
 export interface Vitals {
   bloodPressure?: string
   pulse?: number

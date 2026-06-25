@@ -83,6 +83,13 @@ const ADMIN_NAV: NavItem[] = [
     description: "Confirm, cancel, and oversee outpatient bookings.",
   },
   {
+    label: "Payments",
+    href: "/dashboard/admin/payments",
+    icon: CreditCard,
+    enabled: true,
+    description: "Registration-fee ledger and live transaction verification.",
+  },
+  {
     label: "Leave Requests",
     href: "/dashboard/admin/leave",
     icon: CalendarOff,

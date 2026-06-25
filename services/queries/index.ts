@@ -56,6 +56,11 @@ export type {
 export { useMyPayments } from "./usePaymentQuery"
 export type { MyPaymentsParams } from "./usePaymentQuery"
 export {
+  useAllPayments,
+  usePayment,
+  useTransactionStatus,
+} from "./usePaymentQuery"
+export {
   useMyRecords,
   useMedicalRecordByAppointment,
   useCreateMedicalRecord,

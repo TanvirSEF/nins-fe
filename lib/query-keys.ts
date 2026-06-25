@@ -11,6 +11,9 @@ export const qk = {
   doctorAppts: (doctorId: string, date?: string) =>
     ["appointments", "doctor", doctorId, { date }] as const,
   myPayments: (p?: Record<string, unknown>) => ["payments", "mine", p] as const,
+  payments: (p?: Record<string, unknown>) => ["payments", "all", p] as const,
+  payment: (id: string) => ["payments", "detail", id] as const,
+  transaction: (tranId: string) => ["payments", "transaction", tranId] as const,
   myRecords: (p?: Record<string, unknown>) =>
     ["medical-records", "mine", p] as const,
   myPrescriptions: (p?: Record<string, unknown>) =>
