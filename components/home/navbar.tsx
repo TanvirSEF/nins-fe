@@ -45,6 +45,12 @@ export function Navbar() {
           >
             Beds Status
           </Link>
+          <Link
+            href="/gallery"
+            className="text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Gallery
+          </Link>
         </nav>
 
         {/* Auth CTA Buttons */}
@@ -133,6 +139,13 @@ export function Navbar() {
               className="text-sm font-semibold text-muted-foreground hover:text-foreground"
             >
               Beds Status
+            </Link>
+            <Link
+              href="/gallery"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-sm font-semibold text-muted-foreground hover:text-foreground"
+            >
+              Gallery
             </Link>
           </nav>
 

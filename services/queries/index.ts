@@ -115,3 +115,10 @@ export {
   useRunBackup,
 } from "./useBackupQuery"
 export { useGlobalSearch } from "./useSearchQuery"
+export {
+  useGallery,
+  useGalleryItem,
+  useUploadGalleryImage,
+  useUpdateGalleryItem,
+  useDeleteGalleryItem,
+} from "./useGalleryQuery"

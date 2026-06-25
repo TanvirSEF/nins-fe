@@ -40,4 +40,6 @@ export const qk = {
   backups: ["backup", "list"] as const,
   backupStatus: ["backup", "status"] as const,
   search: (p?: Record<string, unknown>) => ["search", p] as const,
+  gallery: (p?: Record<string, unknown>) => ["gallery", p] as const,
+  galleryItem: (id: string) => ["gallery", "detail", id] as const,
 }

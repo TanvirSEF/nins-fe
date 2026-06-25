@@ -16,6 +16,7 @@ import {
   FlaskConical,
   DatabaseBackup,
   Search,
+  Images,
   type LucideIcon,
 } from "lucide-react"
 import { Role } from "@/types"
@@ -109,6 +110,13 @@ const ADMIN_NAV: NavItem[] = [
     icon: FlaskConical,
     enabled: true,
     description: "Order lab tests, record results, and track report status.",
+  },
+  {
+    label: "Gallery",
+    href: "/dashboard/admin/gallery",
+    icon: Images,
+    enabled: true,
+    description: "Upload and manage public hospital images.",
   },
   {
     label: "Backups",

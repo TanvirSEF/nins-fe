@@ -275,6 +275,51 @@ export interface SearchParams {
   [key: string]: unknown
 }
 
+/* ─── Gallery ───────────────────────────────────────────────────────────── */
+
+export enum GalleryCategory {
+  FACILITY = "FACILITY",
+  EVENT = "EVENT",
+  ACHIEVEMENT = "ACHIEVEMENT",
+  HEALTH_CAMP = "HEALTH_CAMP",
+  OTHER = "OTHER",
+}
+
+export interface GalleryItem {
+  _id: string
+  title: string
+  description?: string
+  imageUrl: string // public R2 URL
+  r2Key: string
+  category: GalleryCategory
+  uploadedBy?: string | User
+  isActive: boolean
+  createdAt?: string
+  updatedAt?: string
+}
+
+/** Mirrors backend `CreateGalleryDto` (sent as multipart text fields). */
+export interface CreateGalleryInput {
+  title: string
+  description?: string
+  category?: GalleryCategory
+}
+
+/** Mirrors backend `UpdateGalleryDto`. */
+export interface UpdateGalleryInput {
+  title?: string
+  description?: string
+  category?: GalleryCategory
+  isActive?: boolean
+}
+
+export interface GalleryParams {
+  page?: number
+  limit?: number
+  category?: GalleryCategory
+  [key: string]: unknown
+}
+
 export enum AppointmentStatus {
   PENDING = "PENDING",
   CONFIRMED = "CONFIRMED",
