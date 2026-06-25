@@ -70,6 +70,137 @@ export interface Schedule {
   updatedAt?: string
 }
 
+export enum LeaveStatus {
+  PENDING = "PENDING",
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
+  CANCELLED = "CANCELLED",
+}
+
+export enum LeaveType {
+  CASUAL = "CASUAL",
+  SICK = "SICK",
+  EMERGENCY = "EMERGENCY",
+  PLANNED = "PLANNED",
+}
+
+export interface Leave {
+  _id: string
+  doctorId: string | DoctorProfile
+  doctorUserId: string | User
+  type: LeaveType
+  startDate: string // YYYY-MM-DD
+  endDate: string // YYYY-MM-DD
+  reason: string
+  status: LeaveStatus
+  reviewedBy?: string | User
+  reviewedAt?: string
+  rejectionReason?: string
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface CreateLeaveInput {
+  type: LeaveType
+  startDate: string // YYYY-MM-DD
+  endDate: string // YYYY-MM-DD
+  reason: string
+}
+
+export interface UpdateLeaveInput {
+  type?: LeaveType
+  startDate?: string
+  endDate?: string
+  reason?: string
+}
+
+export interface ReviewLeaveInput {
+  status: LeaveStatus.APPROVED | LeaveStatus.REJECTED
+  rejectionReason?: string
+}
+
+export interface LeaveParams {
+  page?: number
+  limit?: number
+  status?: LeaveStatus
+  type?: LeaveType
+  doctorId?: string
+  [key: string]: unknown
+}
+
+export enum PathologyStatus {
+  ORDERED = "ORDERED",
+  SAMPLE_COLLECTED = "SAMPLE_COLLECTED",
+  IN_PROGRESS = "IN_PROGRESS",
+  COMPLETED = "COMPLETED",
+  CANCELLED = "CANCELLED",
+}
+
+export enum TestCategory {
+  BLOOD = "BLOOD",
+  IMAGING = "IMAGING",
+  URINE = "URINE",
+  BIOPSY = "BIOPSY",
+  OTHER = "OTHER",
+}
+
+export enum ResultFlag {
+  NORMAL = "NORMAL",
+  HIGH = "HIGH",
+  LOW = "LOW",
+}
+
+export interface ResultValue {
+  parameter: string
+  value: string
+  referenceRange?: string
+  flag?: ResultFlag
+}
+
+export interface PathologyReport {
+  _id: string
+  patientId: string | User
+  doctorId: string | DoctorProfile
+  appointmentId?: string
+  testName: string
+  testCategory: TestCategory
+  notes?: string
+  resultFileId?: string
+  resultSummary?: string
+  resultValues?: ResultValue[]
+  status: PathologyStatus
+  orderedAt: string
+  sampleCollectedAt?: string
+  completedAt?: string
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface CreatePathologyInput {
+  patientId: string
+  testName: string
+  testCategory: TestCategory
+  notes?: string
+  appointmentId?: string
+}
+
+export interface AddResultInput {
+  resultFileId?: string
+  resultSummary?: string
+  resultValues?: ResultValue[]
+  status?: PathologyStatus
+}
+
+export interface PathologyParams {
+  page?: number
+  limit?: number
+  status?: PathologyStatus
+  testCategory?: TestCategory
+  patientId?: string
+  doctorId?: string
+  [key: string]: unknown
+}
+
 export enum AppointmentStatus {
   PENDING = "PENDING",
   CONFIRMED = "CONFIRMED",

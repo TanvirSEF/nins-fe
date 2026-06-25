@@ -11,7 +11,9 @@ import {
   CalendarDays,
   BedDouble,
   CalendarClock,
+  CalendarOff,
   BarChart3,
+  FlaskConical,
   type LucideIcon,
 } from "lucide-react"
 import { Role } from "@/types"
@@ -78,6 +80,13 @@ const ADMIN_NAV: NavItem[] = [
     description: "Confirm, cancel, and oversee outpatient bookings.",
   },
   {
+    label: "Leave Requests",
+    href: "/dashboard/admin/leave",
+    icon: CalendarOff,
+    enabled: true,
+    description: "Approve or reject doctor leave requests.",
+  },
+  {
     label: "Staff",
     href: "/dashboard/admin/staff",
     icon: Users,
@@ -91,6 +100,13 @@ const ADMIN_NAV: NavItem[] = [
     icon: BarChart3,
     enabled: true,
     description: "Export revenue and patient reports as PDF or Excel.",
+  },
+  {
+    label: "Pathology",
+    href: "/dashboard/admin/pathology",
+    icon: FlaskConical,
+    enabled: true,
+    description: "Order lab tests, record results, and track report status.",
   },
 ]
 
@@ -153,6 +169,13 @@ export const NAV_BY_ROLE: Record<Role, NavItem[]> = {
       enabled: true,
       description: "Medicines, tests, and advice from your doctors.",
     },
+    {
+      label: "Lab Reports",
+      href: "/dashboard/patient/pathology",
+      icon: FlaskConical,
+      enabled: true,
+      description: "Your pathology and lab test results.",
+    },
   ],
   [Role.DOCTOR]: [
     {
@@ -174,6 +197,13 @@ export const NAV_BY_ROLE: Record<Role, NavItem[]> = {
       icon: CalendarDays,
       enabled: true,
       description: "Browse all your appointments by date and open consultations.",
+    },
+    {
+      label: "Leave",
+      href: "/dashboard/doctor/leave",
+      icon: CalendarOff,
+      enabled: true,
+      description: "Request time off and track approval status.",
     },
   ],
   [Role.SUPER_ADMIN]: ADMIN_NAV,

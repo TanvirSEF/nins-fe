@@ -91,3 +91,21 @@ export {
   downloadPatientsExcel,
   downloadPatientsPdf,
 } from "./useReportQuery"
+export {
+  useMyLeaves,
+  useAllLeaves,
+  useLeave,
+  useCreateLeave,
+  useUpdateLeave,
+  useReviewLeave,
+  useCancelLeave,
+} from "./useLeaveQuery"
+export {
+  useMyReports,
+  usePatientReports,
+  useAllReports,
+  useReport,
+  useOrderTest,
+  useAddResult,
+  useDeleteReport,
+} from "./usePathologyQuery"
