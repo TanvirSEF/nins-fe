@@ -26,6 +26,7 @@ import type {
 } from "@/types"
 import { AppointmentStatus } from "@/types"
 import { ChipInput } from "./ChipInput"
+import { LabOrderPanel } from "./LabOrderPanel"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -84,6 +85,8 @@ export function Consultation({ appointmentId }: { appointmentId: string }) {
 
   const patient =
     typeof appt.patientId === "object" ? (appt.patientId as User) : undefined
+  const patientId =
+    typeof appt.patientId === "object" ? appt.patientId._id : appt.patientId
   const isCompleted = appt.status === AppointmentStatus.COMPLETED
   const isCancelled = appt.status === AppointmentStatus.CANCELLED
   const hasRecord = !!record.data
@@ -171,6 +174,10 @@ export function Consultation({ appointmentId }: { appointmentId: string }) {
           record={record.data!}
           prescription={prescription.data!}
         />
+      )}
+
+      {isCompleted && !isCancelled && patientId && (
+        <LabOrderPanel patientId={patientId} appointmentId={appointmentId} />
       )}
     </div>
   )
