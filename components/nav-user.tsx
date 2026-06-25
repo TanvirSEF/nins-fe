@@ -17,7 +17,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { EllipsisVertical, LogOut } from "lucide-react"
+import { EllipsisVertical, LogOut, UserCog } from "lucide-react"
 
 function initials(name?: string): string {
   if (!name) return "U"
@@ -37,6 +37,10 @@ export function NavUser() {
   const handleLogout = () => {
     logout()
     router.push("/login")
+  }
+
+  const handleAccount = () => {
+    router.push("/dashboard/account")
   }
 
   return (
@@ -87,6 +91,11 @@ export function NavUser() {
                 </div>
               </div>
             </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleAccount}>
+              <UserCog />
+              Account
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem variant="destructive" onClick={handleLogout}>
               <LogOut />

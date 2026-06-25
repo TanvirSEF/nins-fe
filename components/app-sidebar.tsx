@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import { Activity } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
 import { NavUser } from "@/components/nav-user"
-import { NAV_BY_ROLE, type NavItem } from "@/components/dashboard/nav-config"
+import { getNavForRole, type NavItem } from "@/components/dashboard/nav-config"
 import {
   Sidebar,
   SidebarContent,
@@ -27,7 +27,7 @@ import {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { role } = useAuth()
   const pathname = usePathname()
-  const items = role ? (NAV_BY_ROLE[role] ?? []) : []
+  const items = role ? getNavForRole(role) : []
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>

@@ -1,10 +1,10 @@
 "use client"
 
-import { useQuery } from "@tanstack/react-query"
-import { apiClient } from "@/lib/api-client"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { apiClient, ApiError } from "@/lib/api-client"
 import { qk } from "@/lib/query-keys"
 import { useAuth } from "@/hooks/useAuth"
-import type { User } from "@/types"
+import type { UpdateProfileInput, User } from "@/types"
 
 /**
  * ─── CANONICAL QUERY-HOOK TEMPLATE (Phase 0) ───────────────────────────────────
@@ -36,5 +36,21 @@ export function useProfile() {
     queryFn: () => apiClient<User>("/auth/profile", { method: "GET" }),
     enabled: !!token,
     staleTime: 5 * 60 * 1000,
+  })
+}
+
+/**
+ * Update the signed-in user's own profile (PATCH /auth/profile). The caller is
+ * responsible for syncing the live session via `useAuth().updateUser` — the
+ * profile query cache is updated here for any `useProfile` consumer.
+ */
+export function useUpdateProfile() {
+  const qc = useQueryClient()
+  return useMutation<User, ApiError, UpdateProfileInput>({
+    mutationFn: (payload) =>
+      apiClient<User>("/auth/profile", { method: "PATCH", json: payload }),
+    onSuccess: (data) => {
+      qc.setQueryData(qk.profile, data)
+    },
   })
 }

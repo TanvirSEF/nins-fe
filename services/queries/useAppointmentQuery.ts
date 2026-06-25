@@ -43,6 +43,29 @@ export function useDoctorAppointments(
   })
 }
 
+/**
+ * The signed-in doctor's OWN appointments (optionally scoped to a date).
+ * Unlike `useDoctorAppointments` (a public capacity preview that requires a
+ * date), this fetches the doctor's full non-cancelled history and is gated
+ * only on `doctorId`. The public `/appointments/doctor/:id` endpoint returns
+ * every appointment when no `date` is supplied.
+ */
+export function useMyDoctorAppointments(
+  doctorId: string | undefined,
+  date?: string,
+) {
+  return useQuery<DoctorAppointmentsResult>({
+    queryKey: ["appointments", "doctor", "mine", date ?? "all"],
+    queryFn: () =>
+      apiClient<DoctorAppointmentsResult>(
+        `/appointments/doctor/${doctorId}`,
+        { method: "GET", params: date ? { date } : undefined },
+      ),
+    enabled: !!doctorId,
+    staleTime: 30 * 1000,
+  })
+}
+
 /** Single appointment (authed). `poll` refetches every 2s while PENDING. */
 export function useAppointment(
   id: string | undefined,

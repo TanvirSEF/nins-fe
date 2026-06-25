@@ -9,7 +9,7 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card"
-import { NAV_BY_ROLE } from "./nav-config"
+import { getNavForRole } from "./nav-config"
 import { Role } from "@/types"
 
 const ROLE_TITLE: Record<Role, string> = {
@@ -41,7 +41,7 @@ export function RoleOverview() {
   const { user, role } = useAuth()
   if (!role) return null
 
-  const upcoming = NAV_BY_ROLE[role].filter((item) => !item.enabled)
+  const upcoming = getNavForRole(role).filter((item) => !item.enabled)
   const firstName = user?.name?.split(/\s+/)[0] ?? "there"
 
   return (

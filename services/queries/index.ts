@@ -1,5 +1,5 @@
 // Data layer barrel. One hook file per backend resource, per PRD §4/§8.
-export { useProfile } from "./useAuthQuery"
+export { useProfile, useUpdateProfile } from "./useAuthQuery"
 export {
   useLiveBoard,
   useBeds,
@@ -30,9 +30,16 @@ export {
   useUpdateSchedule,
   useDeleteSchedule,
 } from "./useScheduleQuery"
-export { useCreateStaff, useDeleteStaff } from "./useStaffQuery"
+export {
+  useStaff,
+  useCreateStaff,
+  useUpdateStaff,
+  useDeleteStaff,
+} from "./useStaffQuery"
+export type { StaffParams } from "./useStaffQuery"
 export {
   useDoctorAppointments,
+  useMyDoctorAppointments,
   useAppointment,
   useBookWithPayment,
   useMyTickets,

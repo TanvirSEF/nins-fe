@@ -20,6 +20,12 @@ export interface AuthResponse {
   token: string
 }
 
+/** Mirrors backend `UpdateProfileDto` (PATCH /auth/profile). */
+export interface UpdateProfileInput {
+  name?: string
+  phone?: string
+}
+
 export interface HospitalUnit {
   _id?: string
   name: string
@@ -461,6 +467,15 @@ export interface CreateStaffInput {
   email: string
   password: string
   name: string
+  role?: Role
+  phone?: string
+}
+
+/** Mirrors backend `UpdateUserDto` (PartialType<CreateUserDto>). */
+export interface UpdateStaffInput {
+  email?: string
+  password?: string
+  name?: string
   role?: Role
   phone?: string
 }

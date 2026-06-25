@@ -20,6 +20,8 @@ export interface AuthContextType {
     phone?: string
   ) => Promise<AuthResponse>
   logout: () => void
+  /** Patch the cached session user in place (e.g. after profile edits). */
+  updateUser: (user: User) => void
 }
 
 export const AuthContext = React.createContext<AuthContextType | undefined>(
@@ -118,6 +120,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     queryClient.clear()
   }, [queryClient])
 
+  // Replace the cached session user without a refetch — used after a successful
+  // profile update so the sidebar/header name updates instantly.
+  const updateUser = React.useCallback((next: User) => {
+    setUser(next)
+  }, [])
+
   // Auto-logout on session expiry. apiClient dispatches `auth:unauthorized` on
   // any 401 that goes through it; auth endpoints are excluded because a 401
   // there means bad credentials (a form error), not an expired session.
@@ -147,8 +155,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       login,
       register,
       logout,
+      updateUser,
     }),
-    [user, token, isLoading, logout]
+    [user, token, isLoading, logout, updateUser]
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

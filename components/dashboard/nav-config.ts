@@ -28,6 +28,11 @@ export interface NavItem {
   enabled: boolean
   /** One-line summary shown on the role overview's roadmap cards. */
   description?: string
+  /**
+   * When set, the item is only shown to these roles. Used to scope
+   * SUPER_ADMIN-only items out of the shared admin nav.
+   */
+  roles?: Role[]
 }
 
 const ADMIN_NAV: NavItem[] = [
@@ -73,6 +78,14 @@ const ADMIN_NAV: NavItem[] = [
     description: "Confirm, cancel, and oversee outpatient bookings.",
   },
   {
+    label: "Staff",
+    href: "/dashboard/admin/staff",
+    icon: Users,
+    enabled: true,
+    description: "Create portal accounts and assign roles.",
+    roles: [Role.SUPER_ADMIN],
+  },
+  {
     label: "Reports",
     href: "/dashboard/admin/reports",
     icon: BarChart3,
@@ -80,6 +93,17 @@ const ADMIN_NAV: NavItem[] = [
     description: "Export revenue and patient reports as PDF or Excel.",
   },
 ]
+
+/**
+ * Role-scoped nav tree (applies each item's optional `roles` filter on top of
+ * NAV_BY_ROLE). Single source of truth for both the sidebar and the role
+ * overview so a SUPER_ADMIN-only item never leaks into HOSPITAL_STAFF.
+ */
+export function getNavForRole(role: Role): NavItem[] {
+  return (NAV_BY_ROLE[role] ?? []).filter(
+    (item) => !item.roles || item.roles.includes(role),
+  )
+}
 
 /**
  * Role → nav tree. Routes mirror PRD §7 (patient booking terminal, doctor
@@ -148,8 +172,8 @@ export const NAV_BY_ROLE: Record<Role, NavItem[]> = {
       label: "Appointments",
       href: "/dashboard/doctor/appointments",
       icon: CalendarDays,
-      enabled: false,
-      description: "Open a consultation to record vitals and prescribe.",
+      enabled: true,
+      description: "Browse all your appointments by date and open consultations.",
     },
   ],
   [Role.SUPER_ADMIN]: ADMIN_NAV,
