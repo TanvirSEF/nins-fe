@@ -37,4 +37,7 @@ export const qk = {
     ["pathology", "patient", patientId, p] as const,
   reports: (p?: Record<string, unknown>) => ["pathology", "all", p] as const,
   report: (id: string) => ["pathology", "detail", id] as const,
+  backups: ["backup", "list"] as const,
+  backupStatus: ["backup", "status"] as const,
+  search: (p?: Record<string, unknown>) => ["search", p] as const,
 }

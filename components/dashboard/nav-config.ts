@@ -14,6 +14,8 @@ import {
   CalendarOff,
   BarChart3,
   FlaskConical,
+  DatabaseBackup,
+  Search,
   type LucideIcon,
 } from "lucide-react"
 import { Role } from "@/types"
@@ -107,6 +109,21 @@ const ADMIN_NAV: NavItem[] = [
     icon: FlaskConical,
     enabled: true,
     description: "Order lab tests, record results, and track report status.",
+  },
+  {
+    label: "Backups",
+    href: "/dashboard/admin/backups",
+    icon: DatabaseBackup,
+    enabled: true,
+    description: "On-demand MongoDB snapshots stored in R2.",
+    roles: [Role.SUPER_ADMIN],
+  },
+  {
+    label: "Search",
+    href: "/dashboard/search",
+    icon: Search,
+    enabled: true,
+    description: "Find patients, doctors, and appointments.",
   },
 ]
 
@@ -204,6 +221,13 @@ export const NAV_BY_ROLE: Record<Role, NavItem[]> = {
       icon: CalendarOff,
       enabled: true,
       description: "Request time off and track approval status.",
+    },
+    {
+      label: "Search",
+      href: "/dashboard/search",
+      icon: Search,
+      enabled: true,
+      description: "Find patients, doctors, and appointments.",
     },
   ],
   [Role.SUPER_ADMIN]: ADMIN_NAV,

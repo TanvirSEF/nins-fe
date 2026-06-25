@@ -109,3 +109,9 @@ export {
   useAddResult,
   useDeleteReport,
 } from "./usePathologyQuery"
+export {
+  useBackups,
+  useBackupStatus,
+  useRunBackup,
+} from "./useBackupQuery"
+export { useGlobalSearch } from "./useSearchQuery"

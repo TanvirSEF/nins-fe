@@ -201,6 +201,80 @@ export interface PathologyParams {
   [key: string]: unknown
 }
 
+/* ─── Backup (SUPER_ADMIN) ──────────────────────────────────────────────── */
+
+/** One backup object in R2 (GET /backup). */
+export interface BackupInfo {
+  key: string
+  size: number // bytes
+  lastModified: string
+}
+
+/** Result of POST /backup/run / GET /backup/status. */
+export interface BackupResult {
+  success: boolean
+  key?: string
+  sizeBytes?: number
+  error?: string
+}
+
+/* ─── Search (DOCTOR / STAFF / ADMIN) ───────────────────────────────────── */
+
+export type SearchType = "patient" | "doctor" | "appointment"
+
+export interface SearchPatientResult {
+  type: "patient"
+  id: string
+  name: string
+  email: string
+  phone?: string
+  createdAt?: string
+}
+
+export interface SearchDoctorResult {
+  type: "doctor"
+  id: string
+  name: string
+  email?: string
+  phone?: string
+  designation: string
+  department?: string | null
+  bmdcReg: string
+  profilePicture?: string
+}
+
+export interface SearchAppointmentResult {
+  type: "appointment"
+  id: string
+  patientName: string
+  patientPhone?: string | null
+  appointmentDate: string
+  serialNumber: number
+  status: AppointmentStatus
+}
+
+export type SearchResult =
+  | SearchPatientResult
+  | SearchDoctorResult
+  | SearchAppointmentResult
+
+/**
+ * Shape returned by GET /search. NOTE: the backend uses `results` (not `data`)
+ * for this endpoint — so this is NOT the standard `Paginated<T>`.
+ */
+export interface SearchResponse {
+  results: SearchResult[]
+  meta: PaginatedMeta
+}
+
+export interface SearchParams {
+  q: string
+  type?: SearchType
+  page?: number
+  limit?: number
+  [key: string]: unknown
+}
+
 export enum AppointmentStatus {
   PENDING = "PENDING",
   CONFIRMED = "CONFIRMED",
