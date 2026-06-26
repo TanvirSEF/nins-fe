@@ -21,7 +21,9 @@ const LIMIT = 10
 const ALL = "all"
 
 function appointmentOf(p: Payment): Appointment | undefined {
-  return typeof p.appointmentId === "object" ? p.appointmentId : undefined
+  return typeof p.appointmentId === "object" && p.appointmentId !== null
+    ? p.appointmentId
+    : undefined
 }
 
 const STATUS_TONE: Record<PaymentStatus, string> = {

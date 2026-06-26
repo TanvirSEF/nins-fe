@@ -4,11 +4,15 @@ import type { DoctorProfile } from "@/types"
 import { RemoteImage } from "./RemoteImage"
 
 export function doctorName(d: DoctorProfile): string {
-  return typeof d.userId === "object" ? d.userId.name : "Doctor"
+  return typeof d.userId === "object" && d.userId !== null
+    ? d.userId.name
+    : "Doctor"
 }
 
 export function doctorDeptName(d: DoctorProfile): string {
-  return typeof d.departmentId === "object" ? d.departmentId.name : ""
+  return typeof d.departmentId === "object" && d.departmentId !== null
+    ? d.departmentId.name
+    : ""
 }
 
 function initials(name: string): string {

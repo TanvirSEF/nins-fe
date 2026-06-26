@@ -44,11 +44,13 @@ const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 const ALL = "all"
 
 function scheduleOf(a: Appointment): Schedule | undefined {
-  return typeof a.scheduleId === "object" ? a.scheduleId : undefined
+  return typeof a.scheduleId === "object" && a.scheduleId !== null
+    ? a.scheduleId
+    : undefined
 }
 
 function designationOf(a: Appointment): string {
-  return typeof a.doctorId === "object"
+  return typeof a.doctorId === "object" && a.doctorId !== null
     ? (a.doctorId as DoctorProfile).designation
     : ""
 }

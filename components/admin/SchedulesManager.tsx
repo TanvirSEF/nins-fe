@@ -48,7 +48,9 @@ import { CalendarDays, Loader2, Pencil, Plus, Trash2 } from "lucide-react"
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 
 function userNameOf(d: DoctorProfile): string {
-  return typeof d.userId === "object" ? (d.userId as User).name : "Doctor"
+  return typeof d.userId === "object" && d.userId !== null
+    ? (d.userId as User).name
+    : "Doctor"
 }
 
 function toasts(error: unknown, fallback: string) {

@@ -58,7 +58,7 @@ const FLAG_TONE: Record<ResultFlag, string> = {
 }
 
 function designationOf(r: PathologyReport): string {
-  return typeof r.doctorId === "object"
+  return typeof r.doctorId === "object" && r.doctorId !== null
     ? (r.doctorId as DoctorProfile).designation
     : ""
 }

@@ -39,17 +39,19 @@ import {
 const LIMIT = 10
 
 function doctorOf(p: Prescription): DoctorProfile | undefined {
-  return typeof p.doctorId === "object" ? (p.doctorId as DoctorProfile) : undefined
+  return typeof p.doctorId === "object" && p.doctorId !== null
+    ? (p.doctorId as DoctorProfile)
+    : undefined
 }
 
 function appointmentOf(p: Prescription): Appointment | undefined {
-  return typeof p.appointmentId === "object"
+  return typeof p.appointmentId === "object" && p.appointmentId !== null
     ? (p.appointmentId as Appointment)
     : undefined
 }
 
 function recordOf(p: Prescription): MedicalRecord | undefined {
-  return typeof p.medicalRecordId === "object"
+  return typeof p.medicalRecordId === "object" && p.medicalRecordId !== null
     ? (p.medicalRecordId as MedicalRecord)
     : undefined
 }

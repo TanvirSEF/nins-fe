@@ -70,13 +70,19 @@ function toasts(error: unknown, fallback: string) {
 }
 
 function deptIdOf(d: DoctorProfile): string {
-  return typeof d.departmentId === "object" ? d.departmentId._id : d.departmentId
+  return typeof d.departmentId === "object" && d.departmentId !== null
+    ? d.departmentId._id
+    : d.departmentId
 }
 function deptNameOf(d: DoctorProfile): string {
-  return typeof d.departmentId === "object" ? d.departmentId.name : ""
+  return typeof d.departmentId === "object" && d.departmentId !== null
+    ? d.departmentId.name
+    : ""
 }
 function userNameOf(d: DoctorProfile): string {
-  return typeof d.userId === "object" ? (d.userId as User).name : "Doctor"
+  return typeof d.userId === "object" && d.userId !== null
+    ? (d.userId as User).name
+    : "Doctor"
 }
 
 export function DoctorsManager() {
@@ -92,7 +98,10 @@ export function DoctorsManager() {
 
   const confirmDelete = async () => {
     if (!deleting) return
-    const userId = typeof deleting.userId === "object" ? deleting.userId._id : deleting.userId
+    const userId =
+      typeof deleting.userId === "object" && deleting.userId !== null
+        ? deleting.userId._id
+        : deleting.userId
     try {
       await remove.mutateAsync(deleting._id)
       // Best-effort: also remove the linked DOCTOR user to keep the staff list clean.

@@ -70,12 +70,12 @@ function toasts(error: unknown, fallback: string) {
 }
 
 function doctorName(l: Leave): string {
-  return typeof l.doctorUserId === "object"
+  return typeof l.doctorUserId === "object" && l.doctorUserId !== null
     ? (l.doctorUserId as User).name
     : "Doctor"
 }
 function designationOf(l: Leave): string {
-  return typeof l.doctorId === "object"
+  return typeof l.doctorId === "object" && l.doctorId !== null
     ? (l.doctorId as DoctorProfile).designation
     : ""
 }

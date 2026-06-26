@@ -22,11 +22,13 @@ import { FileText, Stethoscope, CalendarDays } from "lucide-react"
 const LIMIT = 10
 
 function doctorOf(r: MedicalRecord): DoctorProfile | undefined {
-  return typeof r.doctorId === "object" ? (r.doctorId as DoctorProfile) : undefined
+  return typeof r.doctorId === "object" && r.doctorId !== null
+    ? (r.doctorId as DoctorProfile)
+    : undefined
 }
 
 function appointmentOf(r: MedicalRecord): Appointment | undefined {
-  return typeof r.appointmentId === "object"
+  return typeof r.appointmentId === "object" && r.appointmentId !== null
     ? (r.appointmentId as Appointment)
     : undefined
 }

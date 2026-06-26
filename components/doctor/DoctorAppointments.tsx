@@ -22,7 +22,9 @@ const STATUS_TONE: Record<AppointmentStatus, string> = {
 }
 
 function patientName(patientId: string | User): string {
-  return typeof patientId === "object" ? patientId.name : "Patient"
+  return typeof patientId === "object" && patientId !== null
+    ? patientId.name
+    : "Patient"
 }
 
 /**

@@ -84,9 +84,13 @@ export function Consultation({ appointmentId }: { appointmentId: string }) {
   }
 
   const patient =
-    typeof appt.patientId === "object" ? (appt.patientId as User) : undefined
+    typeof appt.patientId === "object" && appt.patientId !== null
+      ? (appt.patientId as User)
+      : undefined
   const patientId =
-    typeof appt.patientId === "object" ? appt.patientId._id : appt.patientId
+    typeof appt.patientId === "object" && appt.patientId !== null
+      ? appt.patientId._id
+      : appt.patientId
   const isCompleted = appt.status === AppointmentStatus.COMPLETED
   const isCancelled = appt.status === AppointmentStatus.CANCELLED
   const hasRecord = !!record.data

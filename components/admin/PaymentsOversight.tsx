@@ -58,13 +58,19 @@ const STATUS_TONE: Record<PaymentStatus, string> = {
 }
 
 function patientName(p: Payment): string {
-  return typeof p.patientId === "object" ? (p.patientId as User).name : "—"
+  return typeof p.patientId === "object" && p.patientId !== null
+    ? (p.patientId as User).name
+    : "—"
 }
 function patientEmail(p: Payment): string {
-  return typeof p.patientId === "object" ? (p.patientId as User).email : ""
+  return typeof p.patientId === "object" && p.patientId !== null
+    ? (p.patientId as User).email
+    : ""
 }
 function appointmentOf(p: Payment): Appointment | undefined {
-  return typeof p.appointmentId === "object" ? p.appointmentId : undefined
+  return typeof p.appointmentId === "object" && p.appointmentId !== null
+    ? p.appointmentId
+    : undefined
 }
 function fmtDate(s?: string): string {
   if (!s) return "—"

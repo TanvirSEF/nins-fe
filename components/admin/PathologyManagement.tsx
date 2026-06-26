@@ -101,10 +101,12 @@ function toasts(error: unknown, fallback: string) {
   msgs.forEach((m) => toast.error(m))
 }
 function patientName(r: PathologyReport): string {
-  return typeof r.patientId === "object" ? (r.patientId as User).name : "Patient"
+  return typeof r.patientId === "object" && r.patientId !== null
+    ? (r.patientId as User).name
+    : "Patient"
 }
 function designationOf(r: PathologyReport): string {
-  return typeof r.doctorId === "object"
+  return typeof r.doctorId === "object" && r.doctorId !== null
     ? (r.doctorId as DoctorProfile).designation
     : ""
 }
