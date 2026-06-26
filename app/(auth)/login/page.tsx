@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { useAuth } from "@/hooks/useAuth"
 import { ApiError } from "@/lib/api-client"
+import { resolvePostLoginPath } from "@/lib/role-routes"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -58,21 +59,23 @@ function LoginForm() {
   // Redirect if already logged in
   React.useEffect(() => {
     if (user) {
-      const redirectUrl = searchParams.get("redirect") || "/dashboard"
-      router.push(redirectUrl)
+      router.push(
+        resolvePostLoginPath(searchParams.get("redirect"), user.role),
+      )
     }
   }, [user, router, searchParams])
 
   const onSubmit = async (values: LoginFormValues) => {
     setIsSubmitting(true)
     try {
-      await login(values.email, values.password)
+      const { user: loggedIn } = await login(values.email, values.password)
       toast.success("Access Granted", {
         description:
           "Welcome to the National Institute of Neurosciences Portal.",
       })
-      const redirectUrl = searchParams.get("redirect") || "/dashboard"
-      router.push(redirectUrl)
+      router.push(
+        resolvePostLoginPath(searchParams.get("redirect"), loggedIn.role),
+      )
     } catch (error) {
       const messages =
         error instanceof ApiError
