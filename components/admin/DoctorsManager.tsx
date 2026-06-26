@@ -701,7 +701,8 @@ function PictureDialog({
         <DialogHeader>
           <DialogTitle>Profile photo</DialogTitle>
           <DialogDescription>
-            {userNameOf(doctor!)} — JPEG, PNG, or WebP up to 5&nbsp;MB.
+            {doctor ? userNameOf(doctor) : "Doctor"} — JPEG, PNG, or WebP up to
+            5&nbsp;MB.
           </DialogDescription>
         </DialogHeader>
         <div className="px-1 py-2">
