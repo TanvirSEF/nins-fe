@@ -1,10 +1,11 @@
 import { describe, it, expect, vi, afterEach } from "vitest"
 import { apiClient, ApiError } from "@/lib/api-client"
+import { clearToken, getToken } from "@/lib/auth"
 
 /**
  * Guards the contract the entire data layer depends on: envelope unwrap,
  * error normalization (string | string[]), query-param building, Bearer auth,
- * raw downloads, and the 401 → auth:unauthorized signal.
+ * cookie credentials, raw downloads, and the 401 → silent-refresh → retry flow.
  */
 
 function mockFetch(
@@ -22,7 +23,10 @@ const json = (status: number, body: unknown) =>
   })
 
 describe("apiClient", () => {
-  afterEach(() => vi.unstubAllGlobals())
+  afterEach(() => {
+    vi.unstubAllGlobals()
+    clearToken()
+  })
 
   it("unwraps the { success, data } envelope", async () => {
     mockFetch(async () => json(200, { success: true, data: { id: 1 } }))
@@ -51,6 +55,13 @@ describe("apiClient", () => {
     expect(headers.Authorization).toBe("Bearer abc")
   })
 
+  it("sends credentials: include so the refresh cookie travels", async () => {
+    const fn = mockFetch(async () => json(200, { success: true, data: {} }))
+    await apiClient("/x")
+    const init = (fn.mock.calls[0]?.[1] ?? {}) as RequestInit
+    expect(init.credentials).toBe("include")
+  })
+
   it("returns the raw Response when raw:true", async () => {
     mockFetch(async () => new Response("blob-bytes", { status: 200 }))
     const res = await apiClient<Response>("/x", { raw: true })
@@ -75,12 +86,57 @@ describe("apiClient", () => {
     })
   })
 
-  it("dispatches auth:unauthorized on a 401", async () => {
-    mockFetch(async () => json(401, { statusCode: 401, message: "no" }))
-    const handler = vi.fn()
-    window.addEventListener("auth:unauthorized", handler)
-    await expect(apiClient("/x")).rejects.toBeInstanceOf(ApiError)
-    expect(handler).toHaveBeenCalledTimes(1)
-    window.removeEventListener("auth:unauthorized", handler)
+  describe("401 silent-refresh retry", () => {
+    it("refreshes once, stores the new token, and retries with it", async () => {
+      const fn = mockFetch(async (input) => {
+        const url = String(input)
+        if (url.endsWith("/auth/refresh")) {
+          return json(200, {
+            success: true,
+            data: { user: { id: "u1" }, accessToken: "fresh-token" },
+          })
+        }
+        // First /x call expires, the retry (after refresh) succeeds.
+        const seen = (fn.mock.calls ?? []).filter(
+          (c) => !String(c[0]).endsWith("/auth/refresh"),
+        ).length
+        return seen === 1
+          ? json(401, { statusCode: 401, message: "expired" })
+          : json(200, { success: true, data: { ok: true } })
+      })
+
+      const result = await apiClient<{ ok: boolean }>("/x")
+      expect(result).toEqual({ ok: true })
+      expect(getToken()).toBe("fresh-token")
+
+      // call order: /x (401) → /auth/refresh → /x retry (200)
+      const calls = fn.mock.calls.map((c) => String(c[0]))
+      expect(calls).toEqual(["/x", "/auth/refresh", "/x"])
+      const retryInit = (fn.mock.calls[2]?.[1] ?? {}) as RequestInit
+      const headers = (retryInit.headers ?? {}) as Record<string, string>
+      expect(headers.Authorization).toBe("Bearer fresh-token")
+    })
+
+    it("dispatches auth:unauthorized once when the refresh also fails", async () => {
+      mockFetch(async (input) =>
+        String(input).endsWith("/auth/refresh")
+          ? json(401, { statusCode: 401, message: "no cookie" })
+          : json(401, { statusCode: 401, message: "expired" }),
+      )
+      const handler = vi.fn()
+      window.addEventListener("auth:unauthorized", handler)
+      await expect(apiClient("/x")).rejects.toBeInstanceOf(ApiError)
+      expect(handler).toHaveBeenCalledTimes(1)
+      window.removeEventListener("auth:unauthorized", handler)
+    })
+
+    it("does not recurse on a 401 from /auth/refresh", async () => {
+      const fn = mockFetch(async (input) =>
+        json(401, { statusCode: 401, message: String(input) }),
+      )
+      await expect(apiClient("/auth/refresh")).rejects.toBeInstanceOf(ApiError)
+      // Exactly one fetch — no refresh-of-the-refresh.
+      expect(fn).toHaveBeenCalledTimes(1)
+    })
   })
 })

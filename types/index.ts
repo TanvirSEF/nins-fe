@@ -17,7 +17,8 @@ export interface User {
 
 export interface AuthResponse {
   user: User
-  token: string
+  /** Short-lived access token; the long-lived refresh token lives in an httpOnly cookie. */
+  accessToken: string
 }
 
 /** Mirrors backend `UpdateProfileDto` (PATCH /auth/profile). */

@@ -3,8 +3,17 @@
 import * as React from "react"
 import { useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
-import { apiClient, AUTH_ENDPOINTS } from "@/lib/api-client"
-import { getToken, setToken, clearToken } from "@/lib/auth"
+import {
+  apiClient,
+  AUTH_ENDPOINTS,
+  refreshSession,
+} from "@/lib/api-client"
+import {
+  getToken,
+  setToken,
+  clearToken,
+  subscribe,
+} from "@/lib/auth"
 import { User, Role, AuthResponse } from "@/types"
 
 export interface AuthContextType {
@@ -30,41 +39,28 @@ export const AuthContext = React.createContext<AuthContextType | undefined>(
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = React.useState<User | null>(null)
-  const [token, setTokenState] = React.useState<string | null>(null)
   const [isLoading, setIsLoading] = React.useState(true)
   const queryClient = useQueryClient()
   const router = useRouter()
 
-  // Load token from storage and fetch profile
-  const fetchProfile = React.useCallback(async (savedToken: string) => {
-    try {
-      const profileUser = await apiClient<User>("/auth/profile", {
-        method: "GET",
-        token: savedToken,
-      })
-      setUser(profileUser)
-      setTokenState(savedToken)
-    } catch (error) {
-      console.error("Failed to restore auth session:", error)
-      clearToken()
-      setUser(null)
-      setTokenState(null)
-    } finally {
+  // The access token lives in an external in-memory store (lib/auth). Mirror it
+  // into React the idiomatic way — re-renders on rotation, null during SSR.
+  const token = React.useSyncExternalStore(subscribe, getToken, () => null)
+
+  // Rehydrate the session on load. There is no token in storage (memory is blank
+  // after a reload), so we ask the backend to rotate the httpOnly refresh cookie
+  // into a fresh access token. A null result just means "not logged in".
+  React.useEffect(() => {
+    let active = true
+    refreshSession().then((session) => {
+      if (!active) return
+      if (session) setUser(session.user)
       setIsLoading(false)
+    })
+    return () => {
+      active = false
     }
   }, [])
-
-  React.useEffect(() => {
-    const savedToken = getToken()
-    if (savedToken) {
-      // Async session hydration: state updates happen after `await`, not
-      // synchronously, so this is the intended external-system sync pattern.
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      fetchProfile(savedToken)
-    } else {
-      setIsLoading(false)
-    }
-  }, [fetchProfile])
 
   const login = async (email: string, password: string) => {
     setIsLoading(true)
@@ -73,14 +69,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         method: "POST",
         json: { email, password },
       })
-      setToken(response.token)
-      setTokenState(response.token)
+      setToken(response.accessToken) // refresh cookie set by the backend
       setUser(response.user)
       return response
     } catch (error) {
-      setUser(null)
-      setTokenState(null)
       clearToken()
+      setUser(null)
       throw error
     } finally {
       setIsLoading(false)
@@ -99,14 +93,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         method: "POST",
         json: { name, email, password, phone },
       })
-      setToken(response.token)
-      setTokenState(response.token)
+      setToken(response.accessToken)
       setUser(response.user)
       return response
     } catch (error) {
-      setUser(null)
-      setTokenState(null)
       clearToken()
+      setUser(null)
       throw error
     } finally {
       setIsLoading(false)
@@ -114,10 +106,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const logout = React.useCallback(() => {
+    // Clear local state first so the UI reacts instantly, then best-effort tell
+    // the server to revoke the refresh token (clears the cookie + Redis entry).
     clearToken()
     setUser(null)
-    setTokenState(null)
     queryClient.clear()
+    apiClient("/auth/logout", { method: "POST", token: null }).catch(() => {})
   }, [queryClient])
 
   // Replace the cached session user without a refetch — used after a successful
@@ -127,8 +121,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   // Auto-logout on session expiry. apiClient dispatches `auth:unauthorized` on
-  // any 401 that goes through it; auth endpoints are excluded because a 401
-  // there means bad credentials (a form error), not an expired session.
+  // any 401 that survives the silent-refresh retry; auth endpoints are excluded.
   React.useEffect(() => {
     if (typeof window === "undefined") return
     const handler = (e: Event) => {
