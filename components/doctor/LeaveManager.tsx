@@ -298,7 +298,7 @@ function LeaveCard({
   )
 }
 
-/* ─── Create / Edit form ─────────────────────────────────────────────── */
+/* Create / Edit form */
 
 const schema = z
   .object({
@@ -465,7 +465,7 @@ function LeaveForm({ leave, onDone }: { leave: Leave | null; onDone: () => void 
   )
 }
 
-/* ─── helpers ─────────────────────────────────────────────────────────── */
+/* helpers */
 
 function Field({
   label,

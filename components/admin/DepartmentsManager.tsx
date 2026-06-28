@@ -228,7 +228,7 @@ export function DepartmentsManager() {
   )
 }
 
-/* ─── Create / Edit form ──────────────────────────────────────────────── */
+/* Create / Edit form */
 
 const schema = z.object({
   name: z.string().trim().min(1, "Name is required"),
@@ -422,7 +422,7 @@ function DepartmentForm({
   )
 }
 
-/* ─── Image upload dialog ─────────────────────────────────────────────── */
+/* Image upload dialog */
 
 function ImageDialog({
   department,
@@ -463,7 +463,7 @@ function ImageDialog({
   )
 }
 
-/* ─── helpers ─────────────────────────────────────────────────────────── */
+/* helpers */
 
 function Field({
   label,

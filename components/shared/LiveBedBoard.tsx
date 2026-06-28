@@ -55,9 +55,7 @@ export function LiveBedBoard({ compact = false }: { compact?: boolean }) {
   return compact ? <BedBoardCompact /> : <BedBoardFull />
 }
 
-/* ─────────────────────────────────────────────────────────────────────────── */
-/* Full board                                                                  */
-/* ─────────────────────────────────────────────────────────────────────────── */
+/* Full board */
 
 function BedBoardFull() {
   const [activeType, setActiveType] = React.useState<BedType>(BedType.ICU)
@@ -277,9 +275,7 @@ function BedCell({
   )
 }
 
-/* ─────────────────────────────────────────────────────────────────────────── */
-/* Staff update drawer                                                         */
-/* ─────────────────────────────────────────────────────────────────────────── */
+/* Staff update drawer */
 
 const bedStatusSchema = z
   .object({
@@ -422,9 +418,7 @@ function StaffBedSheet({
   )
 }
 
-/* ─────────────────────────────────────────────────────────────────────────── */
-/* Compact board (homepage)                                                    */
-/* ─────────────────────────────────────────────────────────────────────────── */
+/* Compact board (homepage) */
 
 function BedBoardCompact() {
   const liveBoard = useLiveBoard()
@@ -499,9 +493,7 @@ function CompactStat({
   )
 }
 
-/* ─────────────────────────────────────────────────────────────────────────── */
-/* Shared bits                                                                 */
-/* ─────────────────────────────────────────────────────────────────────────── */
+/* Shared bits */
 
 function SummaryCard({
   label,

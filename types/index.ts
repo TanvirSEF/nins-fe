@@ -202,7 +202,7 @@ export interface PathologyParams {
   [key: string]: unknown
 }
 
-/* ─── Backup (SUPER_ADMIN) ──────────────────────────────────────────────── */
+/* Backup (SUPER_ADMIN) */
 
 /** One backup object in R2 (GET /backup). */
 export interface BackupInfo {
@@ -219,7 +219,7 @@ export interface BackupResult {
   error?: string
 }
 
-/* ─── Search (DOCTOR / STAFF / ADMIN) ───────────────────────────────────── */
+/* Search (DOCTOR / STAFF / ADMIN) */
 
 export type SearchType = "patient" | "doctor" | "appointment"
 
@@ -276,7 +276,7 @@ export interface SearchParams {
   [key: string]: unknown
 }
 
-/* ─── Gallery ───────────────────────────────────────────────────────────── */
+/* Gallery */
 
 export enum GalleryCategory {
   FACILITY = "FACILITY",
@@ -530,7 +530,7 @@ export interface Paginated<T> {
   meta: PaginatedMeta
 }
 
-/* ─── Dashboard (admin) ─────────────────────────────────────────────────── */
+/* Dashboard (admin) */
 
 export interface OverviewStats {
   totalPatients: number
@@ -575,7 +575,7 @@ export interface DashboardStats {
   recentAppointments: RecentAppointment[]
 }
 
-/* ─── Doctor dashboard ──────────────────────────────────────────────────── */
+/* Doctor dashboard */
 
 export interface DoctorInfo {
   id: string
@@ -632,7 +632,7 @@ export interface DoctorStatsResponse {
   stats: DoctorStats
 }
 
-/* ─── Medical record / prescription inputs (mirror backend DTOs) ────────── */
+/* Medical record / prescription inputs (mirror backend DTOs) */
 
 export interface CreateMedicalRecordInput {
   appointmentId: string
@@ -655,7 +655,7 @@ export interface CreatePrescriptionInput {
   nextVisitDate?: string // YYYY-MM-DD
 }
 
-/* ─── Notifications ─────────────────────────────────────────────────────── */
+/* Notifications */
 
 export interface NotificationParams {
   page: number
@@ -673,14 +673,14 @@ export interface MarkAllReadResult {
   modified: number
 }
 
-/* ─── Reports ───────────────────────────────────────────────────────────── */
+/* Reports */
 
 export interface ReportRange {
   startDate: string
   endDate?: string
 }
 
-/* ─── Admin CRUD inputs (mirror backend DTOs) ──────────────────────────── */
+/* Admin CRUD inputs (mirror backend DTOs) */
 
 export interface CreateDepartmentInput {
   name: string

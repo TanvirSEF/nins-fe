@@ -243,7 +243,7 @@ export function StaffManager() {
   )
 }
 
-/* ─── Create / Edit form ─────────────────────────────────────────────── */
+/* Create / Edit form */
 
 function buildSchema(isEdit: boolean) {
   return z.object({
@@ -463,7 +463,7 @@ function StaffForm({ user, onDone }: { user: User | null; onDone: () => void }) 
   )
 }
 
-/* ─── helpers ─────────────────────────────────────────────────────────── */
+/* helpers */
 
 function Field({
   label,

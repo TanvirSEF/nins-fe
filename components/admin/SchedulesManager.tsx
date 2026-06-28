@@ -232,7 +232,7 @@ export function SchedulesManager() {
   )
 }
 
-/* ─── Create / Edit form ──────────────────────────────────────────────── */
+/* Create / Edit form */
 
 const schema = z
   .object({

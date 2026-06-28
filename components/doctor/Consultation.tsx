@@ -208,7 +208,7 @@ function ConsultationHeader({
   )
 }
 
-/* ─── Medical record form ──────────────────────────────────────────────── */
+/* Medical record form */
 
 const medicalSchema = z.object({
   chiefComplaint: z.string().trim().min(1, "Chief complaint is required"),
@@ -356,7 +356,7 @@ function MedicalRecordForm({ appointmentId }: { appointmentId: string }) {
   )
 }
 
-/* ─── Prescription form ────────────────────────────────────────────────── */
+/* Prescription form */
 
 const prescriptionSchema = z.object({
   medicines: z.array(
@@ -579,7 +579,7 @@ function PrescriptionForm({ medicalRecordId }: { medicalRecordId: string }) {
   )
 }
 
-/* ─── Read-only dispense summary ───────────────────────────────────────── */
+/* Read-only dispense summary */
 
 function DispenseSummary({
   record,
@@ -647,7 +647,7 @@ function DispenseSummary({
   )
 }
 
-/* ─── helpers ──────────────────────────────────────────────────────────── */
+/* helpers */
 
 function Field({
   label,

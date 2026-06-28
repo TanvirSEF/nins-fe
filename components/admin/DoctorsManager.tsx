@@ -255,7 +255,7 @@ export function DoctorsManager() {
   )
 }
 
-/* ─── Department/unit selector (shared) ───────────────────────────────── */
+/* Department/unit selector (shared) */
 
 function useDepartmentOptions() {
   return useDepartments({ page: 1, limit: 100 })
@@ -319,7 +319,7 @@ function DepartmentUnitFields({
   )
 }
 
-/* ─── Onboard form (create DOCTOR user + profile, with cleanup) ────────── */
+/* Onboard form (create DOCTOR user + profile, with cleanup) */
 
 const onboardSchema = z.object({
   name: z.string().trim().min(1, "Name is required"),
@@ -526,7 +526,7 @@ function OnboardForm({ onDone }: { onDone: () => void }) {
   )
 }
 
-/* ─── Edit form (profile fields only) ─────────────────────────────────── */
+/* Edit form (profile fields only) */
 
 const editSchema = z.object({
   bmdcReg: z.string().trim().min(1, "BMDC reg is required"),
@@ -684,7 +684,7 @@ function EditForm({
   )
 }
 
-/* ─── Profile picture dialog ──────────────────────────────────────────── */
+/* Profile picture dialog */
 
 function PictureDialog({
   doctor,
@@ -726,7 +726,7 @@ function PictureDialog({
   )
 }
 
-/* ─── small shared bits ───────────────────────────────────────────────── */
+/* small shared bits */
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (

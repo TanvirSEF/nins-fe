@@ -104,7 +104,7 @@ export function BookingWizard() {
   )
 }
 
-/* ── Step 1: Department ─────────────────────────────────────────────────── */
+/* Step 1: Department */
 
 function DepartmentStep({
   selected,
@@ -145,7 +145,7 @@ function DepartmentStep({
   )
 }
 
-/* ── Step 2: Doctor ─────────────────────────────────────────────────────── */
+/* Step 2: Doctor */
 
 function DoctorStep({
   departmentId,
@@ -190,7 +190,7 @@ function DoctorStep({
   )
 }
 
-/* ── Step 3: Date + Slot ────────────────────────────────────────────────── */
+/* Step 3: Date + Slot */
 
 function DateSlotStep({
   doctor,
@@ -309,7 +309,7 @@ function DateSlotStep({
   )
 }
 
-/* ── Step 4: Checkout ───────────────────────────────────────────────────── */
+/* Step 4: Checkout */
 
 function CheckoutStep({
   doctor,
@@ -376,7 +376,7 @@ function CheckoutStep({
   )
 }
 
-/* ── small shared bits ──────────────────────────────────────────────────── */
+/* small shared bits */
 
 function StepHeading({ title }: { title: string }) {
   return <h2 className="font-heading text-lg font-bold text-foreground">{title}</h2>

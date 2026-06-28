@@ -231,7 +231,7 @@ export function GalleryManager() {
   )
 }
 
-/* ─── Upload form ────────────────────────────────────────────────────── */
+/* Upload form */
 
 const uploadSchema = z.object({
   title: z.string().trim().min(2, "Title is required"),
@@ -414,7 +414,7 @@ function UploadForm({ onDone }: { onDone: () => void }) {
   )
 }
 
-/* ─── Edit form ──────────────────────────────────────────────────────── */
+/* Edit form */
 
 const editSchema = z.object({
   title: z.string().trim().min(2, "Title is required"),
@@ -564,7 +564,7 @@ function EditForm({
   )
 }
 
-/* ─── helpers ─────────────────────────────────────────────────────────── */
+/* helpers */
 
 function Field({
   label,

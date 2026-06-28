@@ -222,7 +222,7 @@ export function PaymentsOversight() {
   )
 }
 
-/* ─── Payment detail ─────────────────────────────────────────────────── */
+/* Payment detail */
 
 function DetailDialog({
   payment,
@@ -296,7 +296,7 @@ function Row({
   )
 }
 
-/* ─── Live transaction verify ────────────────────────────────────────── */
+/* Live transaction verify */
 
 function VerifyDialog({
   open,

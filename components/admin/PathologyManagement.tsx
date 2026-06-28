@@ -309,7 +309,7 @@ export function PathologyManagement() {
   )
 }
 
-/* ─── Order test ─────────────────────────────────────────────────────── */
+/* Order test */
 
 const orderSchema = z.object({
   patientId: z.string().min(1, "Select a patient"),
@@ -474,7 +474,7 @@ function OrderTestDialog({
   )
 }
 
-/* ─── Add / edit result ──────────────────────────────────────────────── */
+/* Add / edit result */
 
 const resultSchema = z.object({
   resultSummary: z.string().optional(),
@@ -700,7 +700,7 @@ function AddResultForm({
   )
 }
 
-/* ─── helpers ─────────────────────────────────────────────────────────── */
+/* helpers */
 
 function Field({
   label,

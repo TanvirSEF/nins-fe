@@ -175,7 +175,7 @@ export function SearchDirectory() {
   )
 }
 
-/* ─── Grouped results ────────────────────────────────────────────────── */
+/* Grouped results */
 
 function ResultGroups({ results }: { results: SearchResult[] }) {
   const groups: { label: string; items: SearchResult[] }[] = []
