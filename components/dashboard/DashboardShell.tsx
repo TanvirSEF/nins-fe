@@ -14,11 +14,7 @@ interface DashboardShellProps {
   title: string
 }
 
-/**
- * Dashboard chrome built on the shadcn sidebar primitive (dashboard-01 layout):
- * SidebarProvider → AppSidebar (role-aware) + SidebarInset (SiteHeader + main).
- * RoleGate enforces per-segment access; the shared /dashboard layout handles auth.
- */
+/** Dashboard chrome: SidebarProvider → AppSidebar (role-aware) + SidebarInset. RoleGate enforces per-segment access; the /dashboard layout handles auth. */
 export function DashboardShell({
   children,
   allowedRoles,

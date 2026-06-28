@@ -25,11 +25,7 @@ export interface NavItem {
   label: string
   href: string
   icon: LucideIcon
-  /**
-   * Phase 0 ships only the role landing page; every other item points at a
-   * route built in a later phase. Disabled items render as inert rows so they
-   * can never 404 — they get enabled when their page lands.
-   */
+  /** Disabled items render as inert rows so unbuilt routes can never 404. */
   enabled: boolean
   /** One-line summary shown on the role overview's roadmap cards. */
   description?: string

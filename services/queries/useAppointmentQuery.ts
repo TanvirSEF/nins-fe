@@ -44,11 +44,9 @@ export function useDoctorAppointments(
 }
 
 /**
- * The signed-in doctor's OWN appointments (optionally scoped to a date).
- * Unlike `useDoctorAppointments` (a public capacity preview that requires a
- * date), this fetches the doctor's full non-cancelled history and is gated
- * only on `doctorId`. The public `/appointments/doctor/:id` endpoint returns
- * every appointment when no `date` is supplied.
+ * The signed-in doctor's OWN appointments (the public `/appointments/doctor/:id`
+ * returns the full history when no date is given). Unlike the public capacity
+ * preview `useDoctorAppointments`, this is gated only on `doctorId`.
  */
 export function useMyDoctorAppointments(
   doctorId: string | undefined,

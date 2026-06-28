@@ -43,13 +43,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const queryClient = useQueryClient()
   const router = useRouter()
 
-  // The access token lives in an external in-memory store (lib/auth). Mirror it
-  // into React the idiomatic way — re-renders on rotation, null during SSR.
+  // Mirror the in-memory token store into React (re-renders on rotation, null during SSR).
   const token = React.useSyncExternalStore(subscribe, getToken, () => null)
 
-  // Rehydrate the session on load. There is no token in storage (memory is blank
-  // after a reload), so we ask the backend to rotate the httpOnly refresh cookie
-  // into a fresh access token. A null result just means "not logged in".
+  // Rehydrate on load: memory is blank after a reload, so rotate the httpOnly
+  // refresh cookie into a fresh access token. Null just means "not logged in".
   React.useEffect(() => {
     let active = true
     refreshSession().then((session) => {
