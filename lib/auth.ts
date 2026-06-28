@@ -1,16 +1,4 @@
-/**
- * In-memory access-token store.
- *
- * The access token is NEVER persisted to localStorage: a stolen token dies
- * within ~15 min (its own expiry), and the long-lived refresh token lives in an
- * httpOnly cookie the browser manages for us — invisible to JS. On reload, the
- * AuthProvider rehydrates this store via POST /auth/refresh (the cookie is sent
- * automatically).
- *
- * This is a client-only module: it's imported solely by client components /
- * the apiClient, so the module-level state is never shared across server
- * requests.
- */
+/** In-memory access-token store (never persisted — a stolen token dies at its ~15m expiry; the long-lived refresh token lives in an httpOnly cookie). AuthProvider rehydrates this on reload via POST /auth/refresh. Client-only. */
 let accessToken: string | null = null
 const listeners = new Set<() => void>()
 

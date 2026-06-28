@@ -4,14 +4,7 @@ import type { User } from "@/types"
 const BASE =
   process.env.NEXT_PUBLIC_API_URL || "https://nins.zephlotech.com/api"
 
-/**
- * Endpoints whose 401 must NOT trigger the silent-refresh-retry or an auto-logout.
- * - login/register: a 401 means bad credentials / email taken — a normal form
- *   error the caller must render, not an expired session.
- * - refresh: a 401 means the refresh cookie is gone and the session is over. It's
- *   handled by `refreshSession` returning null; letting it retry/notify here would
- *   recurse (refresh → 401 → refresh → …).
- */
+/** 401s here must not trigger silent-refresh-retry or auto-logout: a login/register 401 is a form error to render, and a refresh 401 (handled by refreshSession) would recurse. */
 export const AUTH_ENDPOINTS = [
   "/auth/login",
   "/auth/register",
@@ -111,13 +104,7 @@ function buildRequest(
 
 let inflightRefresh: Promise<AuthSession | null> | null = null
 
-/**
- * Silently rotate the access token using the httpOnly refresh cookie. Single-
- * flight: many concurrent 401s (and the AuthProvider hydration) share one
- * network round-trip. Returns the session on success and pushes the new access
- * token into the in-memory store; returns null when the refresh cookie is absent
- * or expired (session truly over).
- */
+/** Silently rotate the access token via the httpOnly refresh cookie. Single-flight: concurrent 401s share one round-trip. Returns null when the cookie is absent/expired. */
 export function refreshSession(): Promise<AuthSession | null> {
   if (!inflightRefresh) {
     inflightRefresh = (async () => {
