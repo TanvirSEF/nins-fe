@@ -5,12 +5,10 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
-  ───────────────────────────────────────────────────────────────────────────
   NINS Design System — tokens mapped to PRD Section 2.
   Fonts are injected by app/layout.tsx as CSS variables:
     --font-sans (Inter), --font-heading (Plus Jakarta Sans),
     --font-ui (Geist), --font-mono (Geist Mono), --font-bengali (Noto Sans Bengali)
-  ───────────────────────────────────────────────────────────────────────────
 */
 @theme inline {
     /* Typography */
@@ -85,9 +83,7 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   LIGHT THEME — clinical canvas + Deep Govt Teal primary
-   ═══════════════════════════════════════════════════════════════════════════ */
+/* LIGHT THEME — clinical canvas + Deep Govt Teal primary */
 :root {
     /* Surfaces — Slate Light Canvas #F8FAFC, pure white cards */
     --background: oklch(0.984 0.003 247.86);
@@ -150,9 +146,7 @@
     --sidebar-ring: oklch(0.952 0.028 196);
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   DARK THEME — slate-dark canvas, brighter teal primary for contrast
-   ═══════════════════════════════════════════════════════════════════════════ */
+/* DARK THEME — slate-dark canvas, brighter teal primary for contrast */
 .dark {
     --background: oklch(0.21 0.025 255);              /* deep slate */
     --foreground: oklch(0.97 0.005 247);
