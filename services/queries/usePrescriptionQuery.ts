@@ -1,14 +1,9 @@
 "use client"
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { apiClient } from "@/lib/api-client"
-import { qk } from "@/lib/query-keys"
-import { useAuth } from "@/hooks/useAuth"
-import type {
-  CreatePrescriptionInput,
-  Paginated,
-  Prescription,
-} from "@/types"
+import { MOCK_PRESCRIPTIONS, paginate, mockDelay } from "@/lib/mock-data"
+import type { CreatePrescriptionInput, Paginated, Prescription } from "@/types"
+import { toast } from "sonner"
 
 export interface MyPrescriptionsParams {
   page: number
@@ -16,48 +11,40 @@ export interface MyPrescriptionsParams {
   [key: string]: unknown
 }
 
-/** The logged-in patient's prescriptions (paginated). */
 export function useMyPrescriptions(params: MyPrescriptionsParams) {
-  const { token } = useAuth()
+  const data = paginate(MOCK_PRESCRIPTIONS, params.page, params.limit)
   return useQuery<Paginated<Prescription>>({
-    queryKey: qk.myPrescriptions(params),
-    queryFn: () =>
-      apiClient<Paginated<Prescription>>(
-        "/prescriptions/patient/my-prescriptions",
-        { method: "GET", params: { page: params.page, limit: params.limit } },
-      ),
-    enabled: !!token,
-    staleTime: 30 * 1000,
+    queryKey: ["prescriptions", "my", params],
+    queryFn: () => Promise.resolve(data),
+    initialData: data,
+    staleTime: Infinity,
   })
 }
 
-/** Prescription for a given appointment (used in the doctor consultation). */
-export function usePrescriptionByAppointment(
-  appointmentId: string | undefined,
-) {
-  return useQuery<Prescription>({
-    queryKey: qk.prescriptionByAppointment(appointmentId ?? ""),
-    queryFn: () =>
-      apiClient<Prescription>(
-        `/prescriptions/appointment/${appointmentId}`,
-        { method: "GET" },
-      ),
+export function usePrescriptionByAppointment(appointmentId: string | undefined) {
+  const presc = MOCK_PRESCRIPTIONS.find((p) => {
+    const aid = typeof p.appointmentId === "object" ? p.appointmentId._id : p.appointmentId
+    return aid === appointmentId
+  }) ?? null
+  return useQuery<Prescription | null>({
+    queryKey: ["prescriptions", "by-appointment", appointmentId],
+    queryFn: () => Promise.resolve(presc),
+    initialData: presc,
     enabled: !!appointmentId,
-    staleTime: 30 * 1000,
+    staleTime: Infinity,
   })
 }
 
-/** Create a prescription (DOCTOR). Requires an ACTIVE medical record id. */
 export function useCreatePrescription() {
   const qc = useQueryClient()
   return useMutation<Prescription, Error, CreatePrescriptionInput>({
-    mutationFn: (payload) =>
-      apiClient<Prescription>("/prescriptions", {
-        method: "POST",
-        json: payload,
-      }),
+    mutationFn: async () => {
+      await mockDelay()
+      return MOCK_PRESCRIPTIONS[0]
+    },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["prescriptions"] })
+      toast.success("Prescription saved (demo mode)")
     },
   })
 }

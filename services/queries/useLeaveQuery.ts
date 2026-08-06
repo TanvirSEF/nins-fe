@@ -1,9 +1,8 @@
 "use client"
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { apiClient, ApiError } from "@/lib/api-client"
-import { qk } from "@/lib/query-keys"
-import { useAuth } from "@/hooks/useAuth"
+import { MOCK_LEAVES, paginate, mockDelay } from "@/lib/mock-data"
+import { DEMO_USER } from "@/lib/mock-data"
 import type {
   CreateLeaveInput,
   Leave,
@@ -12,102 +11,109 @@ import type {
   ReviewLeaveInput,
   UpdateLeaveInput,
 } from "@/types"
+import { LeaveStatus } from "@/types"
+import { toast } from "sonner"
 
-/**
- * Leave-management data layer (PRD §6 — mirrored from backend `leave` module).
- * Doctor owns create/update/cancel of their requests; SUPER_ADMIN +
- * HOSPITAL_STAFF review (approve/reject). Backend side-effects (notifications,
- * auto-cancel of conflicting appointments on approval) happen server-side —
- * the UI just invalidates `['leave']` after every mutation.
- */
-
-/** Doctor's own leave requests, paginated + filterable (GET /leave/my-leaves). */
 export function useMyLeaves(params: LeaveParams = {}) {
-  const { token } = useAuth()
+  let filtered = MOCK_LEAVES
+  if (params.status) filtered = filtered.filter((l) => l.status === params.status)
+  if (params.type) filtered = filtered.filter((l) => l.type === params.type)
+  const data = paginate(filtered, params.page ?? 1, params.limit ?? 10)
   return useQuery<Paginated<Leave>>({
-    queryKey: qk.myLeaves(params),
-    queryFn: () =>
-      apiClient<Paginated<Leave>>("/leave/my-leaves", {
-        method: "GET",
-        params: {
-          page: params.page,
-          limit: params.limit,
-          status: params.status,
-          type: params.type,
-        },
-      }),
-    enabled: !!token,
-    staleTime: 30 * 1000,
+    queryKey: ["leave", "my", params],
+    queryFn: () => Promise.resolve(data),
+    initialData: data,
+    staleTime: Infinity,
   })
 }
 
-/** All leave requests, paginated + filterable (GET /leave — STAFF+ADMIN). */
 export function useAllLeaves(params: LeaveParams = {}) {
-  const { token } = useAuth()
+  let filtered = MOCK_LEAVES
+  if (params.status) filtered = filtered.filter((l) => l.status === params.status)
+  if (params.type) filtered = filtered.filter((l) => l.type === params.type)
+  const data = paginate(filtered, params.page ?? 1, params.limit ?? 10)
   return useQuery<Paginated<Leave>>({
-    queryKey: qk.leaves(params),
-    queryFn: () =>
-      apiClient<Paginated<Leave>>("/leave", {
-        method: "GET",
-        params: {
-          page: params.page,
-          limit: params.limit,
-          status: params.status,
-          type: params.type,
-          doctorId: params.doctorId,
-        },
-      }),
-    enabled: !!token,
-    staleTime: 30 * 1000,
+    queryKey: ["leave", "all", params],
+    queryFn: () => Promise.resolve(data),
+    initialData: data,
+    staleTime: Infinity,
   })
 }
 
-/** Single leave request, populated (GET /leave/:id). */
 export function useLeave(id: string | undefined) {
-  const { token } = useAuth()
+  const leave = MOCK_LEAVES.find((l) => l._id === id) ?? MOCK_LEAVES[0]
   return useQuery<Leave>({
-    queryKey: id ? qk.leave(id) : ["leave", "detail", "none"],
-    queryFn: () => apiClient<Leave>(`/leave/${id}`, { method: "GET" }),
-    enabled: !!token && !!id,
-    staleTime: 30 * 1000,
+    queryKey: ["leave", "detail", id],
+    queryFn: () => Promise.resolve(leave),
+    initialData: leave,
+    enabled: !!id,
+    staleTime: Infinity,
   })
 }
 
-/** Request leave (DOCTOR). */
 export function useCreateLeave() {
   const qc = useQueryClient()
-  return useMutation<Leave, ApiError, CreateLeaveInput>({
-    mutationFn: (payload) =>
-      apiClient<Leave>("/leave", { method: "POST", json: payload }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["leave"] }),
+  return useMutation<Leave, Error, CreateLeaveInput>({
+    mutationFn: async (payload) => {
+      await mockDelay()
+      return { ...MOCK_LEAVES[0], ...payload, _id: "leave-new-" + Date.now() }
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["leave"] })
+      toast.success("Leave request submitted (demo mode)")
+    },
   })
 }
 
-/** Update own PENDING leave request (DOCTOR). */
 export function useUpdateLeave() {
   const qc = useQueryClient()
-  return useMutation<Leave, ApiError, { id: string; body: UpdateLeaveInput }>({
-    mutationFn: ({ id, body }) =>
-      apiClient<Leave>(`/leave/${id}`, { method: "PATCH", json: body }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["leave"] }),
+  return useMutation<Leave, Error, { id: string; body: UpdateLeaveInput }>({
+    mutationFn: async ({ id }) => {
+      await mockDelay()
+      return MOCK_LEAVES.find((l) => l._id === id) ?? MOCK_LEAVES[0]
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["leave"] })
+      toast.success("Leave request updated (demo mode)")
+    },
   })
 }
 
-/** Approve / reject a leave request (STAFF+ADMIN). */
 export function useReviewLeave() {
   const qc = useQueryClient()
-  return useMutation<Leave, ApiError, { id: string; body: ReviewLeaveInput }>({
-    mutationFn: ({ id, body }) =>
-      apiClient<Leave>(`/leave/${id}/review`, { method: "PATCH", json: body }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["leave"] }),
+  return useMutation<Leave, Error, { id: string; body: ReviewLeaveInput }>({
+    mutationFn: async ({ id, body }) => {
+      await mockDelay()
+      const leave = MOCK_LEAVES.find((l) => l._id === id) ?? MOCK_LEAVES[0]
+      return {
+        ...leave,
+        status: body.status,
+        reviewedBy: DEMO_USER,
+        reviewedAt: new Date().toISOString(),
+        rejectionReason: body.rejectionReason,
+      }
+    },
+    onSuccess: (_, vars) => {
+      qc.invalidateQueries({ queryKey: ["leave"] })
+      toast.success(
+        vars.body.status === LeaveStatus.APPROVED
+          ? "Leave approved (demo mode)"
+          : "Leave rejected (demo mode)"
+      )
+    },
   })
 }
 
-/** Cancel / delete a leave request (owner or ADMIN). */
 export function useCancelLeave() {
   const qc = useQueryClient()
-  return useMutation<Leave, ApiError, string>({
-    mutationFn: (id) => apiClient<Leave>(`/leave/${id}`, { method: "DELETE" }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["leave"] }),
+  return useMutation<Leave, Error, string>({
+    mutationFn: async (id) => {
+      await mockDelay()
+      return MOCK_LEAVES.find((l) => l._id === id) ?? MOCK_LEAVES[0]
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["leave"] })
+      toast.success("Leave request cancelled (demo mode)")
+    },
   })
 }

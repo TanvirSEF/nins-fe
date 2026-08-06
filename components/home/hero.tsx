@@ -7,7 +7,6 @@ import { Skeleton } from "@/components/ui/skeleton"
 const HeroCta = dynamic(
   () => import("./hero-cta").then((m) => ({ default: m.HeroCta })),
   {
-    ssr: false,
     loading: () => (
       <div className="flex flex-wrap gap-3 pt-2">
         <Skeleton className="h-11 w-52 rounded-xl" />
@@ -21,7 +20,6 @@ const HeroQuickActions = dynamic(
   () =>
     import("./hero-cta").then((m) => ({ default: m.HeroQuickActions })),
   {
-    ssr: false,
     loading: () => (
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:col-span-5 lg:grid-cols-1">
         {Array.from({ length: 4 }).map((_, i) => (

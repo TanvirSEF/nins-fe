@@ -1,15 +1,14 @@
 "use client"
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { apiClient } from "@/lib/api-client"
-import { qk } from "@/lib/query-keys"
+import { MOCK_APPOINTMENTS, paginate, mockDelay } from "@/lib/mock-data"
 import type { Appointment, Paginated } from "@/types"
 import { AppointmentStatus } from "@/types"
+import { toast } from "sonner"
 
 export interface CreateAppointmentPayload {
   doctorId: string
   scheduleId: string
-  /** YYYY-MM-DD */
   appointmentDate: string
 }
 
@@ -26,78 +25,6 @@ export interface DoctorAppointmentsResult {
   totalBooked: number
 }
 
-/** Public capacity preview for a doctor on a given date. */
-export function useDoctorAppointments(
-  doctorId: string | undefined,
-  date: string | undefined,
-) {
-  return useQuery<DoctorAppointmentsResult>({
-    queryKey: qk.doctorAppts(doctorId ?? "", date),
-    queryFn: () =>
-      apiClient<DoctorAppointmentsResult>(
-        `/appointments/doctor/${doctorId}`,
-        { method: "GET", params: { date }, token: null },
-      ),
-    enabled: !!(doctorId && date),
-    staleTime: 30 * 1000,
-  })
-}
-
-/**
- * The signed-in doctor's OWN appointments (the public `/appointments/doctor/:id`
- * returns the full history when no date is given). Unlike the public capacity
- * preview `useDoctorAppointments`, this is gated only on `doctorId`.
- */
-export function useMyDoctorAppointments(
-  doctorId: string | undefined,
-  date?: string,
-) {
-  return useQuery<DoctorAppointmentsResult>({
-    queryKey: ["appointments", "doctor", "mine", date ?? "all"],
-    queryFn: () =>
-      apiClient<DoctorAppointmentsResult>(
-        `/appointments/doctor/${doctorId}`,
-        { method: "GET", params: date ? { date } : undefined },
-      ),
-    enabled: !!doctorId,
-    staleTime: 30 * 1000,
-  })
-}
-
-/** Single appointment (authed). `poll` refetches every 2s while PENDING. */
-export function useAppointment(
-  id: string | undefined,
-  opts?: { poll?: boolean },
-) {
-  return useQuery<Appointment>({
-    queryKey: ["appointments", "detail", id],
-    queryFn: () =>
-      apiClient<Appointment>(`/appointments/${id}`, { method: "GET" }),
-    enabled: !!id,
-    staleTime: 2 * 1000,
-    refetchInterval: opts?.poll
-      ? (q) =>
-          q.state.data?.status === AppointmentStatus.PENDING ? 2000 : false
-      : false,
-  })
-}
-
-/** Book an appointment + initiate SSLCommerz payment (PATIENT). */
-export function useBookWithPayment() {
-  const qc = useQueryClient()
-  return useMutation<BookWithPaymentResult, Error, CreateAppointmentPayload>({
-    mutationFn: (payload) =>
-      apiClient<BookWithPaymentResult>("/appointments/book", {
-        method: "POST",
-        json: payload,
-        // authed — token auto-injected
-      }),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["appointments"] })
-    },
-  })
-}
-
 export interface MyTicketsParams {
   page: number
   limit: number
@@ -105,60 +32,140 @@ export interface MyTicketsParams {
   [key: string]: unknown
 }
 
-/** The logged-in patient's appointments (paginated, optional status filter). */
-export function useMyTickets(params: MyTicketsParams) {
-  return useQuery<Paginated<Appointment>>({
-    queryKey: qk.myTickets(params),
-    queryFn: () =>
-      apiClient<Paginated<Appointment>>("/appointments/my-tickets", {
-        method: "GET",
-        params: {
-          page: params.page,
-          limit: params.limit,
-          status: params.status,
-        },
-      }),
-    staleTime: 30 * 1000,
-  })
-}
-
-/** Cancel one of the patient's own appointments (PATCH status → CANCELLED). */
-export function useCancelAppointment() {
-  const qc = useQueryClient()
-  return useMutation<Appointment, Error, string>({
-    mutationFn: (id) =>
-      apiClient<Appointment>(`/appointments/${id}/status`, {
-        method: "PATCH",
-        json: { status: AppointmentStatus.CANCELLED },
-      }),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["appointments", "mine"] })
-    },
-  })
-}
-
 export interface UpdateAppointmentStatusPayload {
   id: string
   status: AppointmentStatus
 }
 
-/**
- * Set an appointment's status. Backend (`appointment.service.ts`) only gates
- * PATIENT (cancel-own); DOCTOR, HOSPITAL_STAFF and SUPER_ADMIN can set any
- * status. Invalidates appointment + doctor-dashboard caches.
- */
+export function useDoctorAppointments(
+  doctorId: string | undefined,
+  date: string | undefined,
+) {
+  const appointments = MOCK_APPOINTMENTS.filter((a) => {
+    const doc = typeof a.doctorId === "object" ? a.doctorId._id : a.doctorId
+    return doc === doctorId && (!date || a.appointmentDate === date)
+  })
+  const result: DoctorAppointmentsResult = {
+    doctorId: doctorId ?? "",
+    date,
+    appointments,
+    totalBooked: appointments.length,
+  }
+  return useQuery<DoctorAppointmentsResult>({
+    queryKey: ["appointments", "doctor", doctorId, date],
+    queryFn: () => Promise.resolve(result),
+    initialData: result,
+    enabled: !!(doctorId && date),
+    staleTime: Infinity,
+  })
+}
+
+export function useMyDoctorAppointments(
+  doctorId: string | undefined,
+  date?: string,
+) {
+  const appointments = MOCK_APPOINTMENTS.filter((a) => {
+    const doc = typeof a.doctorId === "object" ? a.doctorId._id : a.doctorId
+    return doc === doctorId && (!date || a.appointmentDate === date)
+  })
+  const result: DoctorAppointmentsResult = {
+    doctorId: doctorId ?? "",
+    date,
+    appointments,
+    totalBooked: appointments.length,
+  }
+  return useQuery<DoctorAppointmentsResult>({
+    queryKey: ["appointments", "doctor", "mine", date ?? "all"],
+    queryFn: () => Promise.resolve(result),
+    initialData: result,
+    enabled: !!doctorId,
+    staleTime: Infinity,
+  })
+}
+
+export function useAppointment(id: string | undefined, opts?: { poll?: boolean }) {
+  const appt = MOCK_APPOINTMENTS.find((a) => a._id === id) ?? MOCK_APPOINTMENTS[0]
+  return useQuery<Appointment>({
+    queryKey: ["appointments", "detail", id],
+    queryFn: () => Promise.resolve(appt),
+    initialData: appt,
+    enabled: !!id,
+    staleTime: Infinity,
+    refetchInterval: false,
+  })
+}
+
+export function useBookWithPayment() {
+  const qc = useQueryClient()
+  return useMutation<BookWithPaymentResult, Error, CreateAppointmentPayload>({
+    mutationFn: async () => {
+      await mockDelay(800)
+      return {
+        appointmentId: "appt-demo-new",
+        tranId: "TXN-DEMO-" + Date.now(),
+        gatewayPageURL: "/dashboard/patient/book?demo=success",
+      }
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["appointments"] })
+      toast.success("Appointment booked (demo mode)")
+    },
+  })
+}
+
+export function useMyTickets(params: MyTicketsParams) {
+  let filtered = MOCK_APPOINTMENTS
+  if (params.status) {
+    filtered = filtered.filter((a) => a.status === params.status)
+  }
+  const data = paginate(filtered, params.page, params.limit)
+  return useQuery<Paginated<Appointment>>({
+    queryKey: ["appointments", "my-tickets", params],
+    queryFn: () => Promise.resolve(data),
+    initialData: data,
+    staleTime: Infinity,
+  })
+}
+
+export function useCancelAppointment() {
+  const qc = useQueryClient()
+  return useMutation<Appointment, Error, string>({
+    mutationFn: async (id) => {
+      await mockDelay()
+      const a = MOCK_APPOINTMENTS.find((a) => a._id === id) ?? MOCK_APPOINTMENTS[0]
+      return { ...a, status: AppointmentStatus.CANCELLED }
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["appointments"] })
+      toast.success("Appointment cancelled (demo mode)")
+    },
+  })
+}
+
 export function useUpdateAppointmentStatus() {
   const qc = useQueryClient()
   return useMutation<Appointment, Error, UpdateAppointmentStatusPayload>({
-    mutationFn: ({ id, status }) =>
-      apiClient<Appointment>(`/appointments/${id}/status`, {
-        method: "PATCH",
-        json: { status },
-      }),
+    mutationFn: async ({ id, status }) => {
+      await mockDelay()
+      const a = MOCK_APPOINTMENTS.find((a) => a._id === id) ?? MOCK_APPOINTMENTS[0]
+      return { ...a, status }
+    },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["appointments"] })
-      qc.invalidateQueries({ queryKey: ["doctor-dashboard"] })
-      qc.invalidateQueries({ queryKey: ["dashboard"] })
+      toast.success("Appointment status updated (demo mode)")
     },
+  })
+}
+
+// Admin all-appointments list
+export function useAllAppointments(params: { page?: number; limit?: number; status?: AppointmentStatus; [key: string]: unknown } = {}) {
+  let filtered = MOCK_APPOINTMENTS
+  if (params.status) filtered = filtered.filter((a) => a.status === params.status)
+  const data = paginate(filtered, params.page ?? 1, params.limit ?? 10)
+  return useQuery<Paginated<Appointment>>({
+    queryKey: ["appointments", "all", params],
+    queryFn: () => Promise.resolve(data),
+    initialData: data,
+    staleTime: Infinity,
   })
 }

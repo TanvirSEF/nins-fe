@@ -1,9 +1,12 @@
 "use client"
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { apiClient } from "@/lib/api-client"
-import { qk } from "@/lib/query-keys"
-import { useAuth } from "@/hooks/useAuth"
+import {
+  MOCK_NOTIFICATIONS,
+  MOCK_UNREAD_COUNT,
+  paginate,
+  mockDelay,
+} from "@/lib/mock-data"
 import type {
   AppNotification,
   MarkAllReadResult,
@@ -11,57 +14,41 @@ import type {
   Paginated,
   UnreadCount,
 } from "@/types"
+import { toast } from "sonner"
 
-/** Current user's notifications (paginated, optional read/type filter). */
 export function useNotifications(params: NotificationParams) {
-  const { token } = useAuth()
+  let filtered = MOCK_NOTIFICATIONS
+  if (params.read !== undefined) {
+    filtered = filtered.filter((n) => n.read === params.read)
+  }
+  const data = paginate(filtered, params.page, params.limit)
   return useQuery<Paginated<AppNotification>>({
-    queryKey: qk.notifications(params),
-    queryFn: () =>
-      apiClient<Paginated<AppNotification>>("/notifications", {
-        method: "GET",
-        params: {
-          page: params.page,
-          limit: params.limit,
-          read:
-            params.read === undefined ? undefined : String(params.read),
-          type: params.type,
-        },
-      }),
-    enabled: !!token,
-    staleTime: 30 * 1000,
-    // Polling fallback: the socket push is the primary signal, but until the
-    // backend's Redis adapter is deployed (and as a resilience net if a socket
-    // drops), refresh the list periodically so the bell stays current.
-    refetchInterval: 30 * 1000,
+    queryKey: ["notifications", params],
+    queryFn: () => Promise.resolve(data),
+    initialData: data,
+    staleTime: Infinity,
   })
 }
 
-/** Unread notification count (drives the bell badge). */
 export function useUnreadCount() {
-  const { token } = useAuth()
   return useQuery<UnreadCount>({
-    queryKey: qk.unreadCount,
-    queryFn: () =>
-      apiClient<UnreadCount>("/notifications/unread-count", {
-        method: "GET",
-      }),
-    enabled: !!token,
-    staleTime: 30 * 1000,
-    // Polling fallback so the badge updates even without the socket push.
-    refetchInterval: 20 * 1000,
+    queryKey: ["notifications", "unread-count"],
+    queryFn: () => Promise.resolve(MOCK_UNREAD_COUNT),
+    initialData: MOCK_UNREAD_COUNT,
+    staleTime: Infinity,
   })
 }
 
 export function useMarkAllRead() {
   const qc = useQueryClient()
   return useMutation<MarkAllReadResult, Error, void>({
-    mutationFn: () =>
-      apiClient<MarkAllReadResult>("/notifications/read-all", {
-        method: "PATCH",
-      }),
+    mutationFn: async () => {
+      await mockDelay(400)
+      return { modified: MOCK_NOTIFICATIONS.filter((n) => !n.read).length }
+    },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["notifications"] })
+      toast.success("All notifications marked as read (demo mode)")
     },
   })
 }
@@ -69,10 +56,10 @@ export function useMarkAllRead() {
 export function useMarkRead() {
   const qc = useQueryClient()
   return useMutation<AppNotification, Error, string>({
-    mutationFn: (id) =>
-      apiClient<AppNotification>(`/notifications/${id}/read`, {
-        method: "PATCH",
-      }),
+    mutationFn: async (id) => {
+      await mockDelay(300)
+      return MOCK_NOTIFICATIONS.find((n) => n._id === id) ?? MOCK_NOTIFICATIONS[0]
+    },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["notifications"] })
     },
@@ -82,12 +69,13 @@ export function useMarkRead() {
 export function useDeleteNotification() {
   const qc = useQueryClient()
   return useMutation<AppNotification, Error, string>({
-    mutationFn: (id) =>
-      apiClient<AppNotification>(`/notifications/${id}`, {
-        method: "DELETE",
-      }),
+    mutationFn: async (id) => {
+      await mockDelay(300)
+      return MOCK_NOTIFICATIONS.find((n) => n._id === id) ?? MOCK_NOTIFICATIONS[0]
+    },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["notifications"] })
+      toast.success("Notification deleted (demo mode)")
     },
   })
 }

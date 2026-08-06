@@ -1,20 +1,13 @@
 "use client"
 
 import * as React from "react"
-import { useQueryClient } from "@tanstack/react-query"
-import { useRouter } from "next/navigation"
-import {
-  apiClient,
-  AUTH_ENDPOINTS,
-  refreshSession,
-} from "@/lib/api-client"
-import {
-  getToken,
-  setToken,
-  clearToken,
-  subscribe,
-} from "@/lib/auth"
-import { User, Role, AuthResponse } from "@/types"
+import { DEMO_USER } from "@/lib/mock-data"
+import type { User, Role, AuthResponse } from "@/types"
+
+// ---------------------------------------------------------------------------
+// DEMO MODE: Auth context returns a hardcoded SUPER_ADMIN user. No API calls,
+// no session refresh, no network dependency. Login accepts any credentials.
+// ---------------------------------------------------------------------------
 
 export interface AuthContextType {
   user: User | null
@@ -29,7 +22,6 @@ export interface AuthContextType {
     phone?: string
   ) => Promise<AuthResponse>
   logout: () => void
-  /** Patch the cached session user in place (e.g. after profile edits). */
   updateUser: (user: User) => void
 }
 
@@ -37,118 +29,59 @@ export const AuthContext = React.createContext<AuthContextType | undefined>(
   undefined
 )
 
+const DEMO_TOKEN = "demo-access-token"
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = React.useState<User | null>(null)
-  const [isLoading, setIsLoading] = React.useState(true)
-  const queryClient = useQueryClient()
-  const router = useRouter()
+  // Start logged in as the demo user immediately — no loading spinner needed.
+  const [user, setUser] = React.useState<User | null>(DEMO_USER)
+  const [token, setTokenState] = React.useState<string | null>(DEMO_TOKEN)
+  const isLoading = false
 
-  // Mirror the in-memory token store into React (re-renders on rotation, null during SSR).
-  const token = React.useSyncExternalStore(subscribe, getToken, () => null)
+  const login = React.useCallback(
+    async (_email: string, _password: string): Promise<AuthResponse> => {
+      setUser(DEMO_USER)
+      setTokenState(DEMO_TOKEN)
+      return { user: DEMO_USER, accessToken: DEMO_TOKEN }
+    },
+    []
+  )
 
-  // Rehydrate on load: memory is blank after a reload, so rotate the httpOnly
-  // refresh cookie into a fresh access token. Null just means "not logged in".
-  React.useEffect(() => {
-    let active = true
-    refreshSession().then((session) => {
-      if (!active) return
-      if (session) setUser(session.user)
-      setIsLoading(false)
-    })
-    return () => {
-      active = false
-    }
-  }, [])
-
-  const login = async (email: string, password: string) => {
-    setIsLoading(true)
-    try {
-      const response = await apiClient<AuthResponse>("/auth/login", {
-        method: "POST",
-        json: { email, password },
-      })
-      setToken(response.accessToken) // refresh cookie set by the backend
-      setUser(response.user)
-      return response
-    } catch (error) {
-      clearToken()
-      setUser(null)
-      throw error
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const register = async (
-    name: string,
-    email: string,
-    password: string,
-    phone?: string
-  ) => {
-    setIsLoading(true)
-    try {
-      const response = await apiClient<AuthResponse>("/auth/register", {
-        method: "POST",
-        json: { name, email, password, phone },
-      })
-      setToken(response.accessToken)
-      setUser(response.user)
-      return response
-    } catch (error) {
-      clearToken()
-      setUser(null)
-      throw error
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  const register = React.useCallback(
+    async (
+      name: string,
+      _email: string,
+      _password: string,
+      _phone?: string
+    ): Promise<AuthResponse> => {
+      const newUser: User = { ...DEMO_USER, name }
+      setUser(newUser)
+      setTokenState(DEMO_TOKEN)
+      return { user: newUser, accessToken: DEMO_TOKEN }
+    },
+    []
+  )
 
   const logout = React.useCallback(() => {
-    // Clear local state first so the UI reacts instantly, then best-effort tell
-    // the server to revoke the refresh token (clears the cookie + Redis entry).
-    clearToken()
     setUser(null)
-    queryClient.clear()
-    apiClient("/auth/logout", { method: "POST", token: null }).catch(() => {})
-  }, [queryClient])
+    setTokenState(null)
+  }, [])
 
-  // Replace the cached session user without a refetch — used after a successful
-  // profile update so the sidebar/header name updates instantly.
   const updateUser = React.useCallback((next: User) => {
     setUser(next)
   }, [])
-
-  // Auto-logout on session expiry. apiClient dispatches `auth:unauthorized` on
-  // any 401 that survives the silent-refresh retry; auth endpoints are excluded.
-  React.useEffect(() => {
-    if (typeof window === "undefined") return
-    const handler = (e: Event) => {
-      const { endpoint } = (e as CustomEvent).detail ?? {}
-      if (
-        endpoint &&
-        (AUTH_ENDPOINTS as readonly string[]).includes(endpoint)
-      ) {
-        return
-      }
-      logout()
-      router.push("/login")
-    }
-    window.addEventListener("auth:unauthorized", handler)
-    return () => window.removeEventListener("auth:unauthorized", handler)
-  }, [logout, router])
 
   const value = React.useMemo(
     () => ({
       user,
       token,
-      role: user?.role || null,
+      role: user?.role ?? null,
       isLoading,
       login,
       register,
       logout,
       updateUser,
     }),
-    [user, token, isLoading, logout, updateUser]
+    [user, token, login, register, logout, updateUser]
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

@@ -1,14 +1,9 @@
 "use client"
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { apiClient } from "@/lib/api-client"
-import { qk } from "@/lib/query-keys"
-import { useAuth } from "@/hooks/useAuth"
-import type {
-  CreateMedicalRecordInput,
-  MedicalRecord,
-  Paginated,
-} from "@/types"
+import { MOCK_MEDICAL_RECORDS, paginate, mockDelay } from "@/lib/mock-data"
+import type { CreateMedicalRecordInput, MedicalRecord, Paginated } from "@/types"
+import { toast } from "sonner"
 
 export interface MyRecordsParams {
   page: number
@@ -16,48 +11,40 @@ export interface MyRecordsParams {
   [key: string]: unknown
 }
 
-/** The logged-in patient's medical records (paginated). */
 export function useMyRecords(params: MyRecordsParams) {
-  const { token } = useAuth()
+  const data = paginate(MOCK_MEDICAL_RECORDS, params.page, params.limit)
   return useQuery<Paginated<MedicalRecord>>({
-    queryKey: qk.myRecords(params),
-    queryFn: () =>
-      apiClient<Paginated<MedicalRecord>>(
-        "/medical-records/patient/my-records",
-        { method: "GET", params: { page: params.page, limit: params.limit } },
-      ),
-    enabled: !!token,
-    staleTime: 30 * 1000,
+    queryKey: ["medical-records", "my", params],
+    queryFn: () => Promise.resolve(data),
+    initialData: data,
+    staleTime: Infinity,
   })
 }
 
-/** Medical record for a given appointment (used in the doctor consultation). */
-export function useMedicalRecordByAppointment(
-  appointmentId: string | undefined,
-) {
-  return useQuery<MedicalRecord>({
-    queryKey: qk.medicalRecordByAppointment(appointmentId ?? ""),
-    queryFn: () =>
-      apiClient<MedicalRecord>(
-        `/medical-records/appointment/${appointmentId}`,
-        { method: "GET" },
-      ),
+export function useMedicalRecordByAppointment(appointmentId: string | undefined) {
+  const record = MOCK_MEDICAL_RECORDS.find((r) => {
+    const aid = typeof r.appointmentId === "object" ? r.appointmentId._id : r.appointmentId
+    return aid === appointmentId
+  }) ?? null
+  return useQuery<MedicalRecord | null>({
+    queryKey: ["medical-records", "by-appointment", appointmentId],
+    queryFn: () => Promise.resolve(record),
+    initialData: record,
     enabled: !!appointmentId,
-    staleTime: 30 * 1000,
+    staleTime: Infinity,
   })
 }
 
-/** Create a medical record (DOCTOR). Requires a COMPLETED appointment. */
 export function useCreateMedicalRecord() {
   const qc = useQueryClient()
   return useMutation<MedicalRecord, Error, CreateMedicalRecordInput>({
-    mutationFn: (payload) =>
-      apiClient<MedicalRecord>("/medical-records", {
-        method: "POST",
-        json: payload,
-      }),
+    mutationFn: async () => {
+      await mockDelay()
+      return MOCK_MEDICAL_RECORDS[0]
+    },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["medical-records"] })
+      toast.success("Medical record saved (demo mode)")
     },
   })
 }

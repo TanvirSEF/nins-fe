@@ -1,14 +1,14 @@
 "use client"
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { apiClient } from "@/lib/api-client"
-import { qk } from "@/lib/query-keys"
+import { MOCK_DEPARTMENTS, paginate, mockDelay } from "@/lib/mock-data"
 import type {
   CreateDepartmentInput,
   Department,
   Paginated,
   UpdateDepartmentInput,
 } from "@/types"
+import { toast } from "sonner"
 
 export interface DepartmentParams {
   page?: number
@@ -16,83 +16,79 @@ export interface DepartmentParams {
   [key: string]: unknown
 }
 
-/** Public department directory (paginated). */
 export function useDepartments(params: DepartmentParams = {}) {
+  const data = paginate(MOCK_DEPARTMENTS, params.page ?? 1, params.limit ?? 10)
   return useQuery<Paginated<Department>>({
-    queryKey: qk.departments(params),
-    queryFn: () =>
-      apiClient<Paginated<Department>>("/departments", {
-        method: "GET",
-        params: { page: params.page, limit: params.limit },
-        token: null, // public
-      }),
-    staleTime: 5 * 60 * 1000,
+    queryKey: ["departments", params],
+    queryFn: () => Promise.resolve(data),
+    initialData: data,
+    staleTime: Infinity,
   })
 }
 
-/** Public single department. */
 export function useDepartment(id: string) {
+  const dept = MOCK_DEPARTMENTS.find((d) => d._id === id) ?? MOCK_DEPARTMENTS[0]
   return useQuery<Department>({
     queryKey: ["departments", "detail", id],
-    queryFn: () =>
-      apiClient<Department>(`/departments/${id}`, {
-        method: "GET",
-        token: null, // public
-      }),
+    queryFn: () => Promise.resolve(dept),
+    initialData: dept,
     enabled: !!id,
-    staleTime: 5 * 60 * 1000,
+    staleTime: Infinity,
   })
 }
 
-/** Create a department (SUPER_ADMIN). */
 export function useCreateDepartment() {
   const qc = useQueryClient()
   return useMutation<Department, Error, CreateDepartmentInput>({
-    mutationFn: (payload) =>
-      apiClient<Department>("/departments", { method: "POST", json: payload }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["departments"] }),
+    mutationFn: async () => {
+      await mockDelay()
+      return MOCK_DEPARTMENTS[0]
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["departments"] })
+      toast.success("Department created (demo mode)")
+    },
   })
 }
 
-/** Update a department (SUPER_ADMIN). */
 export function useUpdateDepartment() {
   const qc = useQueryClient()
-  return useMutation<
-    Department,
-    Error,
-    { id: string; body: UpdateDepartmentInput }
-  >({
-    mutationFn: ({ id, body }) =>
-      apiClient<Department>(`/departments/${id}`, {
-        method: "PATCH",
-        json: body,
-      }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["departments"] }),
+  return useMutation<Department, Error, { id: string; body: UpdateDepartmentInput }>({
+    mutationFn: async ({ id }) => {
+      await mockDelay()
+      return MOCK_DEPARTMENTS.find((d) => d._id === id) ?? MOCK_DEPARTMENTS[0]
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["departments"] })
+      toast.success("Department updated (demo mode)")
+    },
   })
 }
 
-/** Delete a department (SUPER_ADMIN). */
 export function useDeleteDepartment() {
   const qc = useQueryClient()
   return useMutation<Department, Error, string>({
-    mutationFn: (id) =>
-      apiClient<Department>(`/departments/${id}`, { method: "DELETE" }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["departments"] }),
+    mutationFn: async () => {
+      await mockDelay()
+      return MOCK_DEPARTMENTS[0]
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["departments"] })
+      toast.success("Department deleted (demo mode)")
+    },
   })
 }
 
-/** Upload a department image (SUPER_ADMIN). Multipart field `file`. */
 export function useUploadDepartmentImage() {
   const qc = useQueryClient()
   return useMutation<Department, Error, { id: string; file: File }>({
-    mutationFn: ({ id, file }) => {
-      const form = new FormData()
-      form.append("file", file)
-      return apiClient<Department>(`/departments/${id}/image`, {
-        method: "PATCH",
-        form,
-      })
+    mutationFn: async () => {
+      await mockDelay(800)
+      return MOCK_DEPARTMENTS[0]
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["departments"] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["departments"] })
+      toast.success("Image uploaded (demo mode)")
+    },
   })
 }

@@ -1,110 +1,104 @@
 "use client"
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { apiClient } from "@/lib/api-client"
-import { qk } from "@/lib/query-keys"
+import { MOCK_DOCTORS, paginate, mockDelay } from "@/lib/mock-data"
 import type {
   CreateDoctorInput,
   DoctorProfile,
   Paginated,
   UpdateDoctorInput,
 } from "@/types"
+import { toast } from "sonner"
 
 export interface DoctorParams {
   page?: number
   limit?: number
-  /** Exact MongoId match. */
   departmentId?: string
-  /** Exact match. */
   designation?: string
-  /** Fuzzy / case-insensitive regex over `specialties`. */
   specialty?: string
   [key: string]: unknown
 }
 
-/** Public doctor directory (paginated + filterable). */
 export function useDoctors(params: DoctorParams = {}) {
+  let filtered = MOCK_DOCTORS
+  if (params.departmentId) {
+    filtered = filtered.filter((d) => {
+      const dept = typeof d.departmentId === "object" ? d.departmentId._id : d.departmentId
+      return dept === params.departmentId
+    })
+  }
+  const data = paginate(filtered, params.page ?? 1, params.limit ?? 10)
   return useQuery<Paginated<DoctorProfile>>({
-    queryKey: qk.doctors(params),
-    queryFn: () =>
-      apiClient<Paginated<DoctorProfile>>("/doctors", {
-        method: "GET",
-        params: {
-          page: params.page,
-          limit: params.limit,
-          departmentId: params.departmentId,
-          designation: params.designation,
-          specialty: params.specialty,
-        },
-        token: null, // public
-      }),
-    staleTime: 5 * 60 * 1000,
+    queryKey: ["doctors", params],
+    queryFn: () => Promise.resolve(data),
+    initialData: data,
+    staleTime: Infinity,
   })
 }
 
-/** Public single doctor (populated userId + departmentId). */
 export function useDoctor(id: string) {
+  const doctor = MOCK_DOCTORS.find((d) => d._id === id) ?? MOCK_DOCTORS[0]
   return useQuery<DoctorProfile>({
-    queryKey: qk.doctor(id),
-    queryFn: () =>
-      apiClient<DoctorProfile>(`/doctors/${id}`, {
-        method: "GET",
-        token: null, // public
-      }),
+    queryKey: ["doctors", "detail", id],
+    queryFn: () => Promise.resolve(doctor),
+    initialData: doctor,
     enabled: !!id,
-    staleTime: 5 * 60 * 1000,
+    staleTime: Infinity,
   })
 }
 
-/** Create a doctor profile (SUPER_ADMIN, HOSPITAL_STAFF). Requires a DOCTOR userId. */
 export function useCreateDoctor() {
   const qc = useQueryClient()
   return useMutation<DoctorProfile, Error, CreateDoctorInput>({
-    mutationFn: (payload) =>
-      apiClient<DoctorProfile>("/doctors", { method: "POST", json: payload }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["doctors"] }),
+    mutationFn: async () => {
+      await mockDelay()
+      return MOCK_DOCTORS[0]
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["doctors"] })
+      toast.success("Doctor created (demo mode)")
+    },
   })
 }
 
-/** Update a doctor profile (SUPER_ADMIN). */
 export function useUpdateDoctor() {
   const qc = useQueryClient()
-  return useMutation<
-    DoctorProfile,
-    Error,
-    { id: string; body: UpdateDoctorInput }
-  >({
-    mutationFn: ({ id, body }) =>
-      apiClient<DoctorProfile>(`/doctors/${id}`, {
-        method: "PATCH",
-        json: body,
-      }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["doctors"] }),
+  return useMutation<DoctorProfile, Error, { id: string; body: UpdateDoctorInput }>({
+    mutationFn: async ({ id }) => {
+      await mockDelay()
+      return MOCK_DOCTORS.find((d) => d._id === id) ?? MOCK_DOCTORS[0]
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["doctors"] })
+      toast.success("Doctor updated (demo mode)")
+    },
   })
 }
 
-/** Delete a doctor profile (SUPER_ADMIN). */
 export function useDeleteDoctor() {
   const qc = useQueryClient()
   return useMutation<DoctorProfile, Error, string>({
-    mutationFn: (id) =>
-      apiClient<DoctorProfile>(`/doctors/${id}`, { method: "DELETE" }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["doctors"] }),
+    mutationFn: async (id) => {
+      await mockDelay()
+      return MOCK_DOCTORS.find((d) => d._id === id) ?? MOCK_DOCTORS[0]
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["doctors"] })
+      toast.success("Doctor removed (demo mode)")
+    },
   })
 }
 
-/** Upload a doctor profile picture (SUPER_ADMIN). Multipart field `file`. */
 export function useUploadDoctorPicture() {
   const qc = useQueryClient()
   return useMutation<DoctorProfile, Error, { id: string; file: File }>({
-    mutationFn: ({ id, file }) => {
-      const form = new FormData()
-      form.append("file", file)
-      return apiClient<DoctorProfile>(`/doctors/${id}/profile-picture`, {
-        method: "PATCH",
-        form,
-      })
+    mutationFn: async () => {
+      await mockDelay(800)
+      return MOCK_DOCTORS[0]
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["doctors"] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["doctors"] })
+      toast.success("Profile picture uploaded (demo mode)")
+    },
   })
 }

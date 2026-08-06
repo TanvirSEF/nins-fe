@@ -1,62 +1,30 @@
-import { apiClient } from "@/lib/api-client"
+import { toast } from "sonner"
+import { mockDelay } from "@/lib/mock-data"
 
 /**
- * Report exports return binary blobs. Each helper fetches with `raw: true`,
- * reads `.blob()`, and triggers a browser download — mirroring `lib/ticket.ts`.
- * Roles: SUPER_ADMIN, HOSPITAL_STAFF. Revenue reports require a date range;
- * patient reports accept an optional range.
+ * DEMO MODE: Report download functions show a toast instead of triggering a
+ * real download. No network calls made.
  */
 
 type Range = { startDate?: string; endDate?: string }
 
-async function downloadReport(
-  endpoint: string,
-  params: Range,
-  fallbackName: string,
-  ext: "xlsx" | "pdf",
-): Promise<void> {
-  const res = await apiClient<Response>(endpoint, {
-    method: "GET",
-    params,
-    raw: true,
-  })
-  const blob = await res.blob()
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement("a")
-  a.href = url
-  // Prefer the server-supplied filename from Content-Disposition, else synthesize.
-  const disposition = res.headers.get("content-disposition") ?? ""
-  const match = /filename="?([^";]+)"?/.exec(disposition)
-  a.download = match ? match[1] : `${fallbackName}.${ext}`
-  document.body.appendChild(a)
-  a.click()
-  a.remove()
-  URL.revokeObjectURL(url)
+async function fakeDl(name: string): Promise<void> {
+  await mockDelay(1000)
+  toast.success(`${name} ready — download disabled in demo mode`)
 }
 
-export function downloadRevenueExcel(range: {
-  startDate: string
-  endDate: string
-}) {
-  return downloadReport("/reports/revenue/excel", range, "revenue-report", "xlsx")
+export function downloadRevenueExcel(_range: { startDate: string; endDate: string }) {
+  return fakeDl("Revenue Excel Report")
 }
 
-export function downloadRevenuePdf(range: {
-  startDate: string
-  endDate: string
-}) {
-  return downloadReport("/reports/revenue/pdf", range, "revenue-report", "pdf")
+export function downloadRevenuePdf(_range: { startDate: string; endDate: string }) {
+  return fakeDl("Revenue PDF Report")
 }
 
-export function downloadPatientsExcel(range: Range) {
-  return downloadReport(
-    "/reports/patients/excel",
-    range,
-    "patients-report",
-    "xlsx",
-  )
+export function downloadPatientsExcel(_range: Range) {
+  return fakeDl("Patients Excel Report")
 }
 
-export function downloadPatientsPdf(range: Range) {
-  return downloadReport("/reports/patients/pdf", range, "patients-report", "pdf")
+export function downloadPatientsPdf(_range: Range) {
+  return fakeDl("Patients PDF Report")
 }

@@ -1,52 +1,36 @@
 "use client"
 
 import { useQuery } from "@tanstack/react-query"
-import { apiClient } from "@/lib/api-client"
-import { qk } from "@/lib/query-keys"
-import { useAuth } from "@/hooks/useAuth"
-import type {
-  DoctorDashboard,
-  DoctorStatsResponse,
-  TodayQueueItem,
-} from "@/types"
+import { MOCK_DOCTOR_DASHBOARD } from "@/lib/mock-data"
+import type { DoctorDashboard, DoctorStatsResponse, TodayQueueItem } from "@/types"
 
-const STALE = 30 * 1000
-
-/** Full doctor dashboard payload (DOCTOR). */
 export function useDoctorDashboard() {
-  const { token } = useAuth()
   return useQuery<DoctorDashboard>({
-    queryKey: qk.doctorDashboard,
-    queryFn: () =>
-      apiClient<DoctorDashboard>("/doctor-dashboard", { method: "GET" }),
-    enabled: !!token,
-    staleTime: STALE,
+    queryKey: ["doctor-dashboard"],
+    queryFn: () => Promise.resolve(MOCK_DOCTOR_DASHBOARD),
+    initialData: MOCK_DOCTOR_DASHBOARD,
+    staleTime: Infinity,
   })
 }
 
-/** Today's patient queue, ordered by serial number (DOCTOR). */
 export function useTodayQueue() {
-  const { token } = useAuth()
   return useQuery<TodayQueueItem[]>({
-    queryKey: qk.doctorQueue,
-    queryFn: () =>
-      apiClient<TodayQueueItem[]>("/doctor-dashboard/today-queue", {
-        method: "GET",
-      }),
-    enabled: !!token,
-    staleTime: STALE,
+    queryKey: ["doctor-dashboard", "today-queue"],
+    queryFn: () => Promise.resolve(MOCK_DOCTOR_DASHBOARD.todayQueue),
+    initialData: MOCK_DOCTOR_DASHBOARD.todayQueue,
+    staleTime: Infinity,
   })
 }
 
 export function useDoctorStats() {
-  const { token } = useAuth()
+  const res: DoctorStatsResponse = {
+    doctor: MOCK_DOCTOR_DASHBOARD.doctor,
+    stats: MOCK_DOCTOR_DASHBOARD.stats,
+  }
   return useQuery<DoctorStatsResponse>({
-    queryKey: qk.doctorStats,
-    queryFn: () =>
-      apiClient<DoctorStatsResponse>("/doctor-dashboard/stats", {
-        method: "GET",
-      }),
-    enabled: !!token,
-    staleTime: STALE,
+    queryKey: ["doctor-dashboard", "stats"],
+    queryFn: () => Promise.resolve(res),
+    initialData: res,
+    staleTime: Infinity,
   })
 }

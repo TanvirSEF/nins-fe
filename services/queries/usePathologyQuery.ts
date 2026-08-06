@@ -1,9 +1,7 @@
 "use client"
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { apiClient, ApiError } from "@/lib/api-client"
-import { qk } from "@/lib/query-keys"
-import { useAuth } from "@/hooks/useAuth"
+import { MOCK_PATHOLOGY, paginate, mockDelay } from "@/lib/mock-data"
 import type {
   AddResultInput,
   CreatePathologyInput,
@@ -11,130 +9,102 @@ import type {
   PathologyParams,
   PathologyReport,
 } from "@/types"
+import { toast } from "sonner"
 
-/**
- * Pathology data layer (mirrors backend `pathology-reports` module). Patient
- * views own reports; DOCTOR/STAFF order tests + add results; SUPER_ADMIN
- * deletes. Backend emits TEST_ORDERED + PATHOLOGY_REPORT_READY notifications
- * on create/result — the UI just invalidates `['pathology']` after mutations.
- */
-
-/** Patient's own reports (GET /pathology-reports/my-reports). */
 export function useMyReports(params: PathologyParams = {}) {
-  const { token } = useAuth()
+  let filtered = MOCK_PATHOLOGY
+  if (params.status) filtered = filtered.filter((r) => r.status === params.status)
+  if (params.testCategory) filtered = filtered.filter((r) => r.testCategory === params.testCategory)
+  const data = paginate(filtered, params.page ?? 1, params.limit ?? 10)
   return useQuery<Paginated<PathologyReport>>({
-    queryKey: qk.myReports(params),
-    queryFn: () =>
-      apiClient<Paginated<PathologyReport>>("/pathology-reports/my-reports", {
-        method: "GET",
-        params: {
-          page: params.page,
-          limit: params.limit,
-          status: params.status,
-          testCategory: params.testCategory,
-        },
-      }),
-    enabled: !!token,
-    staleTime: 30 * 1000,
+    queryKey: ["pathology", "my", params],
+    queryFn: () => Promise.resolve(data),
+    initialData: data,
+    staleTime: Infinity,
   })
 }
 
-/** A specific patient's reports (GET /pathology-reports/patient/:id — DOCTOR/STAFF/ADMIN). */
 export function usePatientReports(
   patientId: string | undefined,
   params: PathologyParams = {},
 ) {
-  const { token } = useAuth()
+  let filtered = MOCK_PATHOLOGY.filter((r) => {
+    const pid = typeof r.patientId === "object" ? r.patientId._id : r.patientId
+    return pid === patientId
+  })
+  if (params.status) filtered = filtered.filter((r) => r.status === params.status)
+  const data = paginate(filtered, params.page ?? 1, params.limit ?? 10)
   return useQuery<Paginated<PathologyReport>>({
-    queryKey: qk.patientReports(patientId ?? "none", params),
-    queryFn: () =>
-      apiClient<Paginated<PathologyReport>>(
-        `/pathology-reports/patient/${patientId}`,
-        {
-          method: "GET",
-          params: {
-            page: params.page,
-            limit: params.limit,
-            status: params.status,
-            testCategory: params.testCategory,
-          },
-        },
-      ),
-    enabled: !!token && !!patientId,
-    staleTime: 30 * 1000,
+    queryKey: ["pathology", "patient", patientId, params],
+    queryFn: () => Promise.resolve(data),
+    initialData: data,
+    enabled: !!patientId,
+    staleTime: Infinity,
   })
 }
 
-/** All reports (GET /pathology-reports — STAFF+ADMIN). */
 export function useAllReports(params: PathologyParams = {}) {
-  const { token } = useAuth()
+  let filtered = MOCK_PATHOLOGY
+  if (params.status) filtered = filtered.filter((r) => r.status === params.status)
+  if (params.testCategory) filtered = filtered.filter((r) => r.testCategory === params.testCategory)
+  const data = paginate(filtered, params.page ?? 1, params.limit ?? 10)
   return useQuery<Paginated<PathologyReport>>({
-    queryKey: qk.reports(params),
-    queryFn: () =>
-      apiClient<Paginated<PathologyReport>>("/pathology-reports", {
-        method: "GET",
-        params: {
-          page: params.page,
-          limit: params.limit,
-          status: params.status,
-          testCategory: params.testCategory,
-          patientId: params.patientId,
-          doctorId: params.doctorId,
-        },
-      }),
-    enabled: !!token,
-    staleTime: 30 * 1000,
+    queryKey: ["pathology", "all", params],
+    queryFn: () => Promise.resolve(data),
+    initialData: data,
+    staleTime: Infinity,
   })
 }
 
-/** Single report, populated (GET /pathology-reports/:id). */
 export function useReport(id: string | undefined) {
-  const { token } = useAuth()
+  const report = MOCK_PATHOLOGY.find((r) => r._id === id) ?? MOCK_PATHOLOGY[0]
   return useQuery<PathologyReport>({
-    queryKey: id ? qk.report(id) : ["pathology", "detail", "none"],
-    queryFn: () =>
-      apiClient<PathologyReport>(`/pathology-reports/${id}`, {
-        method: "GET",
-      }),
-    enabled: !!token && !!id,
-    staleTime: 30 * 1000,
+    queryKey: ["pathology", "detail", id],
+    queryFn: () => Promise.resolve(report),
+    initialData: report,
+    enabled: !!id,
+    staleTime: Infinity,
   })
 }
 
-/** Order a pathology test (DOCTOR/STAFF). */
 export function useOrderTest() {
   const qc = useQueryClient()
-  return useMutation<PathologyReport, ApiError, CreatePathologyInput>({
-    mutationFn: (payload) =>
-      apiClient<PathologyReport>("/pathology-reports", {
-        method: "POST",
-        json: payload,
-      }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["pathology"] }),
+  return useMutation<PathologyReport, Error, CreatePathologyInput>({
+    mutationFn: async () => {
+      await mockDelay()
+      return MOCK_PATHOLOGY[0]
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["pathology"] })
+      toast.success("Test ordered (demo mode)")
+    },
   })
 }
 
-/** Add/upload a result (STAFF/DOCTOR). Defaults to COMPLETED. */
 export function useAddResult() {
   const qc = useQueryClient()
-  return useMutation<PathologyReport, ApiError, { id: string; body: AddResultInput }>({
-    mutationFn: ({ id, body }) =>
-      apiClient<PathologyReport>(`/pathology-reports/${id}/result`, {
-        method: "PATCH",
-        json: body,
-      }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["pathology"] }),
+  return useMutation<PathologyReport, Error, { id: string; body: AddResultInput }>({
+    mutationFn: async ({ id }) => {
+      await mockDelay()
+      return MOCK_PATHOLOGY.find((r) => r._id === id) ?? MOCK_PATHOLOGY[0]
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["pathology"] })
+      toast.success("Result added (demo mode)")
+    },
   })
 }
 
-/** Delete a report (SUPER_ADMIN). */
 export function useDeleteReport() {
   const qc = useQueryClient()
-  return useMutation<PathologyReport, ApiError, string>({
-    mutationFn: (id) =>
-      apiClient<PathologyReport>(`/pathology-reports/${id}`, {
-        method: "DELETE",
-      }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["pathology"] }),
+  return useMutation<PathologyReport, Error, string>({
+    mutationFn: async (id) => {
+      await mockDelay()
+      return MOCK_PATHOLOGY.find((r) => r._id === id) ?? MOCK_PATHOLOGY[0]
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["pathology"] })
+      toast.success("Report deleted (demo mode)")
+    },
   })
 }

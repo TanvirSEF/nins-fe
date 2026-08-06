@@ -1,8 +1,9 @@
 "use client"
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { apiClient } from "@/lib/api-client"
+import { MOCK_USERS, paginate, mockDelay } from "@/lib/mock-data"
 import type { CreateStaffInput, Paginated, UpdateStaffInput, User } from "@/types"
+import { toast } from "sonner"
 
 export interface StaffParams {
   page?: number
@@ -10,44 +11,54 @@ export interface StaffParams {
   [key: string]: unknown
 }
 
-/** Paginated list of all users — the SUPER_ADMIN management view (GET /staff). */
 export function useStaff(params: StaffParams = {}) {
+  const data = paginate(MOCK_USERS, params.page ?? 1, params.limit ?? 10)
   return useQuery<Paginated<User>>({
     queryKey: ["staff", params],
-    queryFn: () =>
-      apiClient<Paginated<User>>("/staff", {
-        method: "GET",
-        params: { page: params.page, limit: params.limit },
-      }),
-    staleTime: 30 * 1000,
+    queryFn: () => Promise.resolve(data),
+    initialData: data,
+    staleTime: Infinity,
   })
 }
 
-/** Create a user (SUPER_ADMIN only). */
 export function useCreateStaff() {
   const qc = useQueryClient()
   return useMutation<User, Error, CreateStaffInput>({
-    mutationFn: (payload) =>
-      apiClient<User>("/staff", { method: "POST", json: payload }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["staff"] }),
+    mutationFn: async () => {
+      await mockDelay()
+      return MOCK_USERS[0]
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["staff"] })
+      toast.success("Staff account created (demo mode)")
+    },
   })
 }
 
-/** Update a user (SUPER_ADMIN only). */
 export function useUpdateStaff() {
   const qc = useQueryClient()
   return useMutation<User, Error, { id: string; body: UpdateStaffInput }>({
-    mutationFn: ({ id, body }) =>
-      apiClient<User>(`/staff/${id}`, { method: "PATCH", json: body }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["staff"] }),
+    mutationFn: async ({ id }) => {
+      await mockDelay()
+      return MOCK_USERS.find((u) => u._id === id) ?? MOCK_USERS[0]
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["staff"] })
+      toast.success("Staff account updated (demo mode)")
+    },
   })
 }
 
-/** Delete a user (SUPER_ADMIN only). */
 export function useDeleteStaff() {
   const qc = useQueryClient()
   return useMutation<User, Error, string>({
-    mutationFn: (id) => apiClient<User>(`/staff/${id}`, { method: "DELETE" }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["staff"] }),
+    mutationFn: async (id) => {
+      await mockDelay()
+      return MOCK_USERS.find((u) => u._id === id) ?? MOCK_USERS[0]
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["staff"] })
+      toast.success("Staff account deleted (demo mode)")
+    },
   })
 }

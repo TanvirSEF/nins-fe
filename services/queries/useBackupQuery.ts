@@ -1,48 +1,47 @@
 "use client"
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { apiClient, ApiError } from "@/lib/api-client"
-import { qk } from "@/lib/query-keys"
-import { useAuth } from "@/hooks/useAuth"
+import { MOCK_BACKUPS, mockDelay } from "@/lib/mock-data"
 import type { BackupInfo, BackupResult } from "@/types"
+import { toast } from "sonner"
 
-/**
- * Backup data layer (SUPER_ADMIN only). Backups live in R2 (mongodump →
- * tar.gz); there is no download/restore endpoint — just list, run, status.
- */
-
-/** All backup objects in R2, newest first (GET /backup). */
 export function useBackups() {
-  const { token } = useAuth()
   return useQuery<BackupInfo[]>({
-    queryKey: qk.backups,
-    queryFn: () => apiClient<BackupInfo[]>("/backup", { method: "GET" }),
-    enabled: !!token,
-    staleTime: 30 * 1000,
+    queryKey: ["backup", "list"],
+    queryFn: () => Promise.resolve(MOCK_BACKUPS),
+    initialData: MOCK_BACKUPS,
+    staleTime: Infinity,
   })
 }
 
-/** In-memory last backup result (GET /backup/status). */
 export function useBackupStatus() {
-  const { token } = useAuth()
+  const lastBackup: BackupResult = {
+    success: true,
+    key: MOCK_BACKUPS[0].key,
+    sizeBytes: MOCK_BACKUPS[0].size,
+  }
   return useQuery<{ lastBackup: BackupResult | null }>({
-    queryKey: qk.backupStatus,
-    queryFn: () =>
-      apiClient<{ lastBackup: BackupResult | null }>("/backup/status", {
-        method: "GET",
-      }),
-    enabled: !!token,
-    staleTime: 10 * 1000,
+    queryKey: ["backup", "status"],
+    queryFn: () => Promise.resolve({ lastBackup }),
+    initialData: { lastBackup },
+    staleTime: Infinity,
   })
 }
 
-/** Trigger an immediate backup (POST /backup/run). */
 export function useRunBackup() {
   const qc = useQueryClient()
-  return useMutation<BackupResult, ApiError, void>({
-    mutationFn: () => apiClient<BackupResult>("/backup/run", { method: "POST" }),
+  return useMutation<BackupResult, Error, void>({
+    mutationFn: async () => {
+      await mockDelay(2000) // feels realistic for a backup
+      return {
+        success: true,
+        key: `backup/nins-db-${new Date().toISOString().replace(/[:.]/g, "-")}.gz`,
+        sizeBytes: 12582912,
+      }
+    },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["backup"] })
+      toast.success("Backup completed successfully (demo mode)")
     },
   })
 }
