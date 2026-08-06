@@ -1,15 +1,34 @@
 "use client"
 
+// The outer Navbar shell needs "use client" only for the mobile menu toggle
+// (useState). The heavy auth logic lives in navbar-auth.tsx which is loaded
+// dynamically — the server shell renders links immediately without waiting for
+// the auth network round-trip.
+
 import * as React from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useAuth } from "@/hooks/useAuth"
-import { Button } from "@/components/ui/button"
-import { Activity, LogOut, LayoutDashboard, Menu, X } from "lucide-react"
+import dynamic from "next/dynamic"
+import { Activity, Menu, X } from "lucide-react"
+
+// Auth island — loaded after hydration so static links paint on the server.
+// The loading skeleton matches the button dimensions to prevent layout shift.
+const NavbarAuth = dynamic(
+  () => import("./navbar-auth").then((m) => ({ default: m.NavbarAuth })),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-8 w-24 animate-pulse rounded bg-slate-100 dark:bg-white/5" />
+    ),
+  },
+)
+
+const NavbarAuthMobile = dynamic(
+  () =>
+    import("./navbar-auth").then((m) => ({ default: m.NavbarAuthMobile })),
+  { ssr: false },
+)
 
 export function Navbar() {
-  const { user, logout, isLoading } = useAuth()
-  const router = useRouter()
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
 
   return (
@@ -25,7 +44,7 @@ export function Navbar() {
           </span>
         </Link>
 
-        {/* Desktop Navigation */}
+        {/* Desktop Navigation — static, no JS needed */}
         <nav className="hidden items-center gap-6 md:flex">
           <Link
             href="/departments"
@@ -53,53 +72,9 @@ export function Navbar() {
           </Link>
         </nav>
 
-        {/* Auth CTA Buttons */}
+        {/* Auth CTA — dynamic client island */}
         <div className="hidden items-center gap-3 md:flex">
-          {isLoading ? (
-            <div className="h-8 w-24 animate-pulse rounded bg-slate-100 dark:bg-white/5" />
-          ) : user ? (
-            <div className="flex items-center gap-3">
-              <span className="max-w-30 truncate text-xs text-muted-foreground">
-                {user.name}
-              </span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => router.push("/dashboard")}
-                className="flex h-8 items-center gap-1.5 border-slate-200 text-xs hover:bg-slate-50 hover:text-foreground"
-              >
-                <LayoutDashboard className="h-3.5 w-3.5" />
-                Workspace
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={logout}
-                className="flex h-8 items-center gap-1.5 text-xs text-destructive hover:bg-destructive/10 hover:text-destructive"
-              >
-                <LogOut className="h-3.5 w-3.5" />
-                Sign Out
-              </Button>
-            </div>
-          ) : (
-            <>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => router.push("/login")}
-                className="h-8 text-xs text-foreground hover:bg-slate-50"
-              >
-                Gateway Sign In
-              </Button>
-              <Button
-                size="sm"
-                onClick={() => router.push("/register")}
-                className="h-8 bg-primary text-xs font-semibold text-primary-foreground hover:bg-primary/95"
-              >
-                Register File
-              </Button>
-            </>
-          )}
+          <NavbarAuth />
         </div>
 
         {/* Mobile Menu Button */}
@@ -150,66 +125,7 @@ export function Navbar() {
           </nav>
 
           <div className="flex flex-col gap-2 border-t border-slate-50 pt-2 dark:border-white/5">
-            {isLoading ? (
-              <div className="h-8 w-full animate-pulse rounded bg-slate-100 dark:bg-white/5" />
-            ) : user ? (
-              <>
-                <div className="px-2 py-1 text-xs text-muted-foreground">
-                  Logged in as:{" "}
-                  <span className="font-semibold text-foreground">
-                    {user.name}
-                  </span>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    setMobileMenuOpen(false)
-                    router.push("/dashboard")
-                  }}
-                  className="flex h-9 w-full items-center justify-center gap-1.5 border-slate-200 text-xs"
-                >
-                  <LayoutDashboard className="h-3.5 w-3.5" />
-                  Workspace Dashboard
-                </Button>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => {
-                    setMobileMenuOpen(false)
-                    logout()
-                  }}
-                  className="flex h-9 w-full items-center justify-center gap-1.5 text-xs"
-                >
-                  <LogOut className="h-3.5 w-3.5" />
-                  Sign Out
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    setMobileMenuOpen(false)
-                    router.push("/login")
-                  }}
-                  className="h-9 w-full border-slate-200 text-xs"
-                >
-                  Gateway Sign In
-                </Button>
-                <Button
-                  size="sm"
-                  onClick={() => {
-                    setMobileMenuOpen(false)
-                    router.push("/register")
-                  }}
-                  className="h-9 w-full bg-primary text-xs font-semibold text-primary-foreground hover:bg-primary/95"
-                >
-                  Register File
-                </Button>
-              </>
-            )}
+            <NavbarAuthMobile onClose={() => setMobileMenuOpen(false)} />
           </div>
         </div>
       )}

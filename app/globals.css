@@ -11,12 +11,14 @@
     --font-ui (Geist), --font-mono (Geist Mono), --font-bengali (Noto Sans Bengali)
 */
 @theme inline {
-    /* Typography */
+    /* Typography — only Inter (--font-sans) and Plus Jakarta Sans (--font-heading)
+       are loaded as Google Fonts. All other stacks fall back to system faces. */
     --font-heading: var(--font-heading), "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
     --font-sans: var(--font-sans), "Inter", ui-sans-serif, system-ui, sans-serif;
-    --font-ui: var(--font-ui), "Geist", ui-sans-serif, system-ui, sans-serif;
-    --font-mono: var(--font-mono), "Geist Mono", ui-monospace, monospace;
-    --font-bengali: var(--font-bengali), "Noto Sans Bengali", var(--font-sans), sans-serif;
+    /* ui → same as sans; mono → system monospace; bengali → system Bengali faces */
+    --font-ui: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", monospace;
+    --font-bengali: "Noto Sans Bengali", "SolaimanLipi", var(--font-sans), sans-serif;
 
     /* Color mappings (Tailwind utilities resolve from these) */
     --color-background: var(--background);

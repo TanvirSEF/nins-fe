@@ -1,36 +1,35 @@
-"use client"
-
-import * as React from "react"
 import { Activity, HeartHandshake, Stethoscope, ScanLine } from "lucide-react"
 
-export function Services() {
-  const serviceItems = [
-    {
-      title: "Stroke & Neurovascular",
-      description:
-        "Thrombolytic therapy, stroke unit monitoring, and endovascular interventions for acute strokes.",
-      icon: Activity,
-    },
-    {
-      title: "Neuro-Intensive Care",
-      description:
-        "Advanced life support systems, intracranial pressure monitoring, and 24/7 dedicated critical care.",
-      icon: HeartHandshake,
-    },
-    {
-      title: "Specialist Outpatient",
-      description:
-        "Comprehensive outpatient consults with professors of neurology, neurosurgery, and pediatric neurology.",
-      icon: Stethoscope,
-    },
-    {
-      title: "Advanced Neuroimaging",
-      description:
-        "High-resolution 3T MRI, multi-slice CT scanners, EEG, EMG, and digital angiographies.",
-      icon: ScanLine,
-    },
-  ]
+// Pure static data — no hooks, no interactivity → Server Component.
+// Zero JS sent to the browser for this section.
+const serviceItems = [
+  {
+    title: "Stroke & Neurovascular",
+    description:
+      "Thrombolytic therapy, stroke unit monitoring, and endovascular interventions for acute strokes.",
+    icon: Activity,
+  },
+  {
+    title: "Neuro-Intensive Care",
+    description:
+      "Advanced life support systems, intracranial pressure monitoring, and 24/7 dedicated critical care.",
+    icon: HeartHandshake,
+  },
+  {
+    title: "Specialist Outpatient",
+    description:
+      "Comprehensive outpatient consults with professors of neurology, neurosurgery, and pediatric neurology.",
+    icon: Stethoscope,
+  },
+  {
+    title: "Advanced Neuroimaging",
+    description:
+      "High-resolution 3T MRI, multi-slice CT scanners, EEG, EMG, and digital angiographies.",
+    icon: ScanLine,
+  },
+]
 
+export function Services() {
   return (
     <section className="bg-slate-50/30 py-16 lg:py-24 dark:bg-slate-950/10">
       <div className="mx-auto max-w-7xl px-6">

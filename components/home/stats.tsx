@@ -1,40 +1,39 @@
-"use client"
-
-import * as React from "react"
 import { Users, BedDouble, ShieldAlert, BadgeCheck } from "lucide-react"
 
-export function Stats() {
-  const statItems = [
-    {
-      value: "100+",
-      label: "Clinicians",
-      description: "Specialist neurosurgeons & neurologists",
-      icon: Users,
-      colorClass: "text-primary bg-primary/10",
-    },
-    {
-      value: "250+",
-      label: "Beds Capacity",
-      description: "Fully-equipped ICU, HDU, and clinical wards",
-      icon: BedDouble,
-      colorClass: "text-info bg-info/10",
-    },
-    {
-      value: "24/7",
-      label: "Emergency Care",
-      description: "Immediate response stroke & head trauma team",
-      icon: ShieldAlert,
-      colorClass: "text-destructive bg-destructive/10",
-    },
-    {
-      value: "99.8%",
-      label: "Success Rate",
-      description: "Precision micro-neurosurgical procedures",
-      icon: BadgeCheck,
-      colorClass: "text-success bg-success/10",
-    },
-  ]
+// Pure static data — no hooks, no interactivity → Server Component.
+// Zero JS sent to the browser for this section.
+const statItems = [
+  {
+    value: "100+",
+    label: "Clinicians",
+    description: "Specialist neurosurgeons & neurologists",
+    icon: Users,
+    colorClass: "text-primary bg-primary/10",
+  },
+  {
+    value: "250+",
+    label: "Beds Capacity",
+    description: "Fully-equipped ICU, HDU, and clinical wards",
+    icon: BedDouble,
+    colorClass: "text-info bg-info/10",
+  },
+  {
+    value: "24/7",
+    label: "Emergency Care",
+    description: "Immediate response stroke & head trauma team",
+    icon: ShieldAlert,
+    colorClass: "text-destructive bg-destructive/10",
+  },
+  {
+    value: "99.8%",
+    label: "Success Rate",
+    description: "Precision micro-neurosurgical procedures",
+    icon: BadgeCheck,
+    colorClass: "text-success bg-success/10",
+  },
+]
 
+export function Stats() {
   return (
     <section className="border-y border-slate-100 bg-white py-12 dark:border-white/5 dark:bg-slate-950">
       <div className="mx-auto max-w-7xl px-6">
