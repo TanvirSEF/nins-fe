@@ -50,8 +50,8 @@ export default function Page() {
       {/* Navbar with Dropdowns & Auth */}
       <Navbar />
 
-      {/* Main Master Homepage Flow */}
-      <main className="flex-1 space-y-12 sm:space-y-16">
+      {/* Main Master Homepage Flow (Removed compounding space-y margins for clean section rhythm) */}
+      <main className="flex-1">
         {/* 1. Hero Section: 100% Full-Width Slider */}
         <Hero />
 
