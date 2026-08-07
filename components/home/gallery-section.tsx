@@ -3,7 +3,7 @@
 import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { Image as ImageIcon, ArrowRight, X, ZoomIn } from "lucide-react"
+import { Image as ImageIcon, ArrowRight, X, ZoomIn, ChevronLeft, ChevronRight } from "lucide-react"
 
 const galleryCategories = ["All Photos", "Events & Ceremonies", "Official Visits", "Awareness & Seminars"]
 
@@ -13,35 +13,35 @@ const galleryImages = [
     src: "/images/Financial_Assistance_Distribution_Ceremony_for_Stroke_and_Paralysis_Patients.webp",
     title: "Financial Assistance Distribution Ceremony",
     category: "Events & Ceremonies",
-    subtitle: "Support for Stroke & Paralysis Patients",
+    subtitle: "Support for Stroke & Paralysis Patients at NINS Hospital",
   },
   {
     id: 2,
     src: "/images/Shahid President Ziaur Rahman -Sports Tournament-2026.webp",
     title: "Annual Sports Tournament 2026",
     category: "Events & Ceremonies",
-    subtitle: "NINS Cultural & Athletics Program",
+    subtitle: "NINS Cultural & Athletics Program for Physicians & Staff",
   },
   {
     id: 3,
     src: "/images/Routine_Visit_of_Director.webp",
     title: "Routine Inspection Visit of Director",
     category: "Official Visits",
-    subtitle: "Ensuring High Standards in Clinical Wards",
+    subtitle: "Ensuring High Standards in Clinical Wards & ICU Units",
   },
   {
     id: 4,
     src: "/images/Transport_and_Bridge_Ministry_Visit.webp",
     title: "Ministry Delegation Visit to NINS",
     category: "Official Visits",
-    subtitle: "High-Level Inspection of Facilities",
+    subtitle: "High-Level Inspection of Facilities & Infrastructure",
   },
   {
     id: 5,
     src: "/images/Pre_Inaugural_Inspection_Discussion_Meeting_1.webp",
     title: "Pre-Inaugural Discussion Meeting",
     category: "Official Visits",
-    subtitle: "Strategic Healthcare Expansion Review",
+    subtitle: "Strategic Healthcare Expansion & Clinical Review",
   },
   {
     id: 6,
@@ -54,11 +54,32 @@ const galleryImages = [
 
 export function GallerySection() {
   const [activeCategory, setActiveCategory] = React.useState("All Photos")
-  const [selectedImage, setSelectedImage] = React.useState<typeof galleryImages[0] | null>(null)
+  const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null)
 
   const filteredGallery = galleryImages.filter(
     (item) => activeCategory === "All Photos" || item.category === activeCategory
   )
+
+  // Keyboard navigation for Lightbox
+  React.useEffect(() => {
+    if (selectedIndex === null) return
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault()
+        setSelectedIndex((prev) => (prev !== null && prev > 0 ? prev - 1 : filteredGallery.length - 1))
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault()
+        setSelectedIndex((prev) => (prev !== null && prev < filteredGallery.length - 1 ? prev + 1 : 0))
+      } else if (e.key === "Escape") {
+        e.preventDefault()
+        setSelectedIndex(null)
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [selectedIndex, filteredGallery.length])
 
   return (
     <section className="relative overflow-hidden bg-white py-16 lg:py-24 dark:bg-slate-950 border-t border-slate-100 dark:border-white/5">
@@ -92,7 +113,10 @@ export function GallerySection() {
           {galleryCategories.map((category) => (
             <button
               key={category}
-              onClick={() => setActiveCategory(category)}
+              onClick={() => {
+                setActiveCategory(category)
+                setSelectedIndex(null)
+              }}
               className={`rounded-lg px-4 py-2 text-xs font-semibold transition-all ${
                 activeCategory === category
                   ? "bg-primary text-primary-foreground shadow-xs"
@@ -106,10 +130,10 @@ export function GallerySection() {
 
         {/* Photo Grid */}
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredGallery.map((item) => (
+          {filteredGallery.map((item, idx) => (
             <div
               key={item.id}
-              onClick={() => setSelectedImage(item)}
+              onClick={() => setSelectedIndex(idx)}
               className="group cursor-pointer overflow-hidden rounded-2xl border border-slate-200/80 bg-slate-50 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900"
             >
               <div className="relative h-56 w-full overflow-hidden">
@@ -143,37 +167,80 @@ export function GallerySection() {
           ))}
         </div>
 
-        {/* Lightbox Modal */}
-        {selectedImage && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 p-4 backdrop-blur-md animate-in fade-in duration-200">
-            <div className="relative max-w-4xl w-full overflow-hidden rounded-3xl border border-white/10 bg-slate-900 shadow-2xl">
+        {/* Fullscreen Lightbox Modal with Keyboard & Prev/Next Support */}
+        {selectedIndex !== null && filteredGallery[selectedIndex] && (
+          <div className="fixed inset-0 z-50 flex flex-col bg-slate-950/98 p-4 text-white backdrop-blur-xl animate-in fade-in duration-200">
+            {/* Top Header Bar */}
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-semibold text-primary uppercase tracking-wider">
+                  NINS Photo Showcase
+                </span>
+                <span className="rounded-full bg-white/10 px-3 py-0.5 text-xs font-medium text-slate-300">
+                  {selectedIndex + 1} of {filteredGallery.length}
+                </span>
+              </div>
               <button
-                onClick={() => setSelectedImage(null)}
-                className="absolute top-4 right-4 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-slate-950/70 text-white backdrop-blur-md hover:bg-rose-600 transition-colors"
+                onClick={() => setSelectedIndex(null)}
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-rose-600"
+                title="Close (Esc)"
               >
                 <X className="h-5 w-5" />
               </button>
+            </div>
 
-              <div className="relative h-[360px] sm:h-[480px] w-full">
+            {/* Photo Canvas & Navigation */}
+            <div className="relative flex flex-1 items-center justify-center py-4 overflow-hidden">
+              {/* Previous Button */}
+              <button
+                onClick={() =>
+                  setSelectedIndex(selectedIndex > 0 ? selectedIndex - 1 : filteredGallery.length - 1)
+                }
+                className="absolute left-2 sm:left-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-slate-900/80 text-white backdrop-blur-md border border-white/20 shadow-xl transition-transform hover:scale-110 hover:bg-primary"
+                title="Previous (Left Arrow)"
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </button>
+
+              {/* Full Image Display */}
+              <div className="relative h-full w-full max-w-7xl flex items-center justify-center">
                 <Image
-                  src={selectedImage.src}
-                  alt={selectedImage.title}
+                  src={filteredGallery[selectedIndex].src}
+                  alt={filteredGallery[selectedIndex].title}
                   fill
-                  className="object-contain"
+                  className="object-contain rounded-xl shadow-2xl transition-all duration-300"
+                  priority
                 />
               </div>
 
-              <div className="p-6 bg-slate-950 border-t border-white/10 text-white space-y-1">
-                <span className="text-xs font-semibold text-primary uppercase tracking-wider">
-                  {selectedImage.category}
-                </span>
-                <h3 className="font-heading text-lg font-bold">
-                  {selectedImage.title}
+              {/* Next Button */}
+              <button
+                onClick={() =>
+                  setSelectedIndex(selectedIndex < filteredGallery.length - 1 ? selectedIndex + 1 : 0)
+                }
+                className="absolute right-2 sm:right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-slate-900/80 text-white backdrop-blur-md border border-white/20 shadow-xl transition-transform hover:scale-110 hover:bg-primary"
+                title="Next (Right Arrow)"
+              >
+                <ChevronRight className="h-6 w-6" />
+              </button>
+            </div>
+
+            {/* Bottom Caption & Keyboard Instructions */}
+            <div className="mx-auto max-w-4xl w-full rounded-2xl border border-white/10 bg-slate-900/90 p-4 backdrop-blur-md space-y-1">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h3 className="font-heading text-base sm:text-lg font-bold text-white">
+                  {filteredGallery[selectedIndex].title}
                 </h3>
-                <p className="text-xs text-slate-400">
-                  {selectedImage.subtitle}
-                </p>
+                <span className="rounded-md bg-primary/80 px-2.5 py-0.5 text-xs font-semibold text-primary-foreground">
+                  {filteredGallery[selectedIndex].category}
+                </span>
               </div>
+              <p className="text-xs sm:text-sm text-slate-300">
+                {filteredGallery[selectedIndex].subtitle}
+              </p>
+              <p className="text-[11px] text-slate-400 pt-1">
+                Tip: Press ⬅️ / ➡️ Arrow keys on keyboard to switch photos. Press Esc to close.
+              </p>
             </div>
           </div>
         )}

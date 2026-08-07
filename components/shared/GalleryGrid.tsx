@@ -9,21 +9,15 @@ import { RemoteImage } from "@/components/shared/RemoteImage"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from "@/components/ui/dialog"
-import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { ImageIcon } from "lucide-react"
+import { ImageIcon, ZoomIn, ChevronLeft, ChevronRight, X } from "lucide-react"
 
-const LIMIT = 12
+const LIMIT = 16
 const ALL = "all"
 
 const CATEGORY_LABEL: Record<GalleryCategory, string> = {
@@ -42,11 +36,11 @@ const CATEGORY_OPTIONS = [
   GalleryCategory.OTHER,
 ] as const
 
-/** Public hospital gallery grid with category filter, lightbox, pagination. */
+/** Public hospital gallery grid with category filter, fullscreen keyboard-navigable lightbox. */
 export function GalleryGrid() {
   const [page, setPage] = React.useState(1)
   const [category, setCategory] = React.useState<GalleryCategory | undefined>()
-  const [active, setActive] = React.useState<GalleryItem | null>(null)
+  const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null)
 
   const { data, isLoading, isError, refetch } = useGallery({
     page,
@@ -54,10 +48,34 @@ export function GalleryGrid() {
     category,
   })
 
+  const items = data?.data ?? []
+
   const onCategoryChange = (v: string) => {
     setCategory(v === ALL ? undefined : (v as GalleryCategory))
     setPage(1)
+    setSelectedIndex(null)
   }
+
+  // Keyboard navigation for Lightbox
+  React.useEffect(() => {
+    if (selectedIndex === null) return
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault()
+        setSelectedIndex((prev) => (prev !== null && prev > 0 ? prev - 1 : items.length - 1))
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault()
+        setSelectedIndex((prev) => (prev !== null && prev < items.length - 1 ? prev + 1 : 0))
+      } else if (e.key === "Escape") {
+        e.preventDefault()
+        setSelectedIndex(null)
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [selectedIndex, items.length])
 
   return (
     <div className="space-y-8">
@@ -78,39 +96,42 @@ export function GalleryGrid() {
       {isLoading ? (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {Array.from({ length: 8 }).map((_, i) => (
-            <Skeleton key={i} className="aspect-square w-full rounded-xl" />
+            <Skeleton key={i} className="aspect-4/3 w-full rounded-2xl" />
           ))}
         </div>
       ) : isError ? (
         <DirectoryError onRetry={refetch} />
-      ) : data && data.data.length > 0 ? (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {data.data.map((item) => (
+      ) : items.length > 0 ? (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {items.map((item, idx) => (
             <button
               key={item._id}
               type="button"
-              onClick={() => setActive(item)}
-              className="group overflow-hidden rounded-xl border border-border bg-card text-left transition-shadow hover:shadow-md"
+              onClick={() => setSelectedIndex(idx)}
+              className="group overflow-hidden rounded-2xl border border-slate-200/80 bg-card text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-white/10"
             >
-              <div className="relative aspect-square overflow-hidden bg-muted">
+              <div className="relative aspect-4/3 w-full overflow-hidden bg-slate-950">
                 <RemoteImage
                   src={item.imageUrl}
                   alt={item.title}
-                  width={400}
-                  height={400}
-                  className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  width={600}
+                  height={450}
+                  className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-108"
                   fallback={<ImageIcon className="size-8 text-muted-foreground" />}
                 />
-                <Badge className="absolute top-2 left-2 bg-background/80 backdrop-blur">
+                <Badge className="absolute top-2.5 left-2.5 bg-slate-950/80 text-white backdrop-blur-md border border-white/10">
                   {CATEGORY_LABEL[item.category]}
                 </Badge>
+                <div className="absolute top-2.5 right-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-slate-950/60 text-white backdrop-blur-md opacity-0 transition-opacity group-hover:opacity-100">
+                  <ZoomIn className="h-4 w-4" />
+                </div>
               </div>
-              <div className="p-3">
-                <p className="truncate font-heading text-sm font-semibold text-foreground">
+              <div className="p-4 space-y-1">
+                <p className="font-heading text-sm font-bold text-foreground line-clamp-1 group-hover:text-primary transition-colors">
                   {item.title}
                 </p>
                 {item.description && (
-                  <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">
+                  <p className="line-clamp-2 text-xs text-muted-foreground leading-relaxed">
                     {item.description}
                   </p>
                 )}
@@ -124,52 +145,90 @@ export function GalleryGrid() {
         </p>
       )}
 
-      {data && data.data.length > 0 && (
+      {data && items.length > 0 && (
         <Pagination page={page} meta={data.meta} onPageChange={setPage} />
       )}
 
-      <Lightbox item={active} onClose={() => setActive(null)} />
-    </div>
-  )
-}
+      {/* Fullscreen Lightbox Modal with Keyboard Navigation */}
+      {selectedIndex !== null && items[selectedIndex] && (
+        <div className="fixed inset-0 z-50 flex flex-col bg-slate-950/98 p-4 text-white backdrop-blur-xl animate-in fade-in duration-200">
+          {/* Top Bar: Counter & Close */}
+          <div className="flex items-center justify-between pb-3 border-b border-white/10">
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-semibold text-primary uppercase tracking-wider">
+                NINS Photo Showcase
+              </span>
+              <span className="rounded-full bg-white/10 px-3 py-0.5 text-xs font-medium text-slate-300">
+                {selectedIndex + 1} of {items.length}
+              </span>
+            </div>
+            <button
+              onClick={() => setSelectedIndex(null)}
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-rose-600"
+              title="Close (Esc)"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
 
-function Lightbox({
-  item,
-  onClose,
-}: {
-  item: GalleryItem | null
-  onClose: () => void
-}) {
-  return (
-    <Dialog open={!!item} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-3xl p-0 overflow-hidden">
-        {item && (
-          <>
-            <DialogTitle className="sr-only">{item.title}</DialogTitle>
-            <div className="bg-muted">
+          {/* Main Photo Area with Left/Right Navigation */}
+          <div className="relative flex flex-1 items-center justify-center py-4 overflow-hidden">
+            {/* Previous Button */}
+            <button
+              onClick={() =>
+                setSelectedIndex(selectedIndex > 0 ? selectedIndex - 1 : items.length - 1)
+              }
+              className="absolute left-2 sm:left-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-slate-900/80 text-white backdrop-blur-md border border-white/20 shadow-xl transition-transform hover:scale-110 hover:bg-primary"
+              title="Previous (Left Arrow)"
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </button>
+
+            {/* Main High-Res Image (Full View) */}
+            <div className="relative h-full w-full max-w-7xl flex items-center justify-center">
               <RemoteImage
-                src={item.imageUrl}
-                alt={item.title}
-                width={1024}
-                height={768}
-                className="max-h-[70vh] w-full object-contain"
-                fallback={<ImageIcon className="size-10 text-muted-foreground" />}
+                src={items[selectedIndex].imageUrl}
+                alt={items[selectedIndex].title}
+                width={1920}
+                height={1280}
+                className="max-h-full max-w-full object-contain rounded-xl shadow-2xl transition-all duration-300"
+                fallback={<ImageIcon className="size-16 text-muted-foreground" />}
               />
             </div>
-            <div className="space-y-1 p-4">
-              <div className="flex items-center gap-2">
-                <h3 className="font-heading text-base font-semibold text-foreground">
-                  {item.title}
-                </h3>
-                <Badge variant="secondary">{CATEGORY_LABEL[item.category]}</Badge>
-              </div>
-              {item.description && (
-                <DialogDescription>{item.description}</DialogDescription>
-              )}
+
+            {/* Next Button */}
+            <button
+              onClick={() =>
+                setSelectedIndex(selectedIndex < items.length - 1 ? selectedIndex + 1 : 0)
+              }
+              className="absolute right-2 sm:right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-slate-900/80 text-white backdrop-blur-md border border-white/20 shadow-xl transition-transform hover:scale-110 hover:bg-primary"
+              title="Next (Right Arrow)"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </button>
+          </div>
+
+          {/* Bottom Caption & Details Bar */}
+          <div className="mx-auto max-w-4xl w-full rounded-2xl border border-white/10 bg-slate-900/90 p-4 backdrop-blur-md space-y-1">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h3 className="font-heading text-base sm:text-lg font-bold text-white">
+                {items[selectedIndex].title}
+              </h3>
+              <Badge className="bg-primary text-primary-foreground">
+                {CATEGORY_LABEL[items[selectedIndex].category]}
+              </Badge>
             </div>
-          </>
-        )}
-      </DialogContent>
-    </Dialog>
+            {items[selectedIndex].description && (
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                {items[selectedIndex].description}
+              </p>
+            )}
+            <p className="text-[11px] text-slate-400 pt-1">
+              Tip: Use Left/Right Arrow keys on your keyboard to navigate photos. Press Esc to exit.
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
