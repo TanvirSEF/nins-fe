@@ -69,9 +69,41 @@ const navItems: NavItem[] = [
       { label: "Maintenance Committee", href: "/academic/maintenance" },
     ],
   },
-  { label: "Services", href: "/services" },
-  { label: "Diagnostic Facilities", href: "/diagnostic-facilities" },
-  { label: "Publications", href: "/publications" },
+  {
+    label: "Services",
+    children: [
+      { label: "Indoor Patient", href: "/services/indoor-patient" },
+      { label: "Outdoor Patient", href: "/services/outdoor-patient" },
+      { label: "Emergency", href: "/services/emergency" },
+      { label: "Intensive Care Unit (ICU)", href: "/services/icu" },
+      { label: "Pain Medicine Unit", href: "/services/pain-medicine" },
+      { label: "Neurology Clinic Distribution", href: "/services/neurology-clinic" },
+    ],
+  },
+  {
+    label: "Diagnostic Facilities",
+    children: [
+      { label: "Neuro-Radiology & Imaging test", href: "/diagnostic-facilities/neuroradiology" },
+      { label: "MRI & CT SCAN PRICE LIST", href: "/diagnostic-facilities/mri-ct-price-list" },
+      { label: "Neuro-Pathology Test", href: "/diagnostic-facilities/neuropathology" },
+      { label: "Microbiology & Immunology Tests", href: "/diagnostic-facilities/microbiology" },
+      { label: "Biochemical test", href: "/diagnostic-facilities/biochemical" },
+      { label: "Blood Transfusion Tests", href: "/diagnostic-facilities/blood-transfusion" },
+      { label: "Neuro-Physiology Tests", href: "/diagnostic-facilities/neurophysiology" },
+      { label: "Neuro-intervention", href: "/diagnostic-facilities/neuro-intervention" },
+      { label: "Diagnostic Tests", href: "/diagnostic-facilities/diagnostic-tests" },
+      { label: "OT Charge", href: "/diagnostic-facilities/ot-charge" },
+    ],
+  },
+  {
+    label: "Publications",
+    children: [
+      { label: "Journal", href: "/publications/journal" },
+      { label: "Yearbook", href: "/publications/yearbook" },
+      { label: "Health Bulletin", href: "/publications/health-bulletin" },
+      { label: "International Published Articles", href: "/publications/international-articles" },
+    ],
+  },
   { label: "NOC", href: "/noc" },
   { label: "IRB", href: "/irb" },
   { label: "Notice", href: "/notice" },
@@ -82,6 +114,18 @@ const navItems: NavItem[] = [
 function DropdownNavItem({ item }: { item: NavItem }) {
   const [open, setOpen] = React.useState(false)
   const ref = React.useRef<HTMLDivElement>(null)
+  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null)
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    setOpen(true)
+  }
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setOpen(false)
+    }, 150)
+  }
 
   // Close on outside click
   React.useEffect(() => {
@@ -91,7 +135,10 @@ function DropdownNavItem({ item }: { item: NavItem }) {
       }
     }
     document.addEventListener("mousedown", handleClick)
-    return () => document.removeEventListener("mousedown", handleClick)
+    return () => {
+      document.removeEventListener("mousedown", handleClick)
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
   }, [])
 
   if (!item.children) {
@@ -106,7 +153,12 @@ function DropdownNavItem({ item }: { item: NavItem }) {
   }
 
   return (
-    <div ref={ref} className="relative">
+    <div
+      ref={ref}
+      className="relative"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <button
         onClick={() => setOpen((v) => !v)}
         className="flex items-center gap-1 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
@@ -118,13 +170,13 @@ function DropdownNavItem({ item }: { item: NavItem }) {
       </button>
 
       {open && (
-        <div className="animate-in absolute left-0 top-full z-50 mt-2 min-w-[220px] rounded-lg border border-border bg-card p-1 shadow-lg fade-in slide-in-from-top-1 duration-150">
+        <div className="animate-in absolute left-0 top-full z-50 mt-1 min-w-[240px] rounded-lg border border-border bg-card/95 p-1.5 shadow-xl backdrop-blur-md fade-in slide-in-from-top-1 duration-150">
           {item.children.map((child) => (
             <Link
               key={child.href}
               href={child.href}
               onClick={() => setOpen(false)}
-              className="block rounded-md px-3 py-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+              className="block rounded-md px-3 py-2 text-xs font-medium text-muted-foreground transition-all hover:bg-accent hover:text-accent-foreground"
             >
               {child.label}
             </Link>
