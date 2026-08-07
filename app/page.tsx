@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { Navbar } from "@/components/home/navbar"
 import { Hero } from "@/components/home/hero"
 import { Stats } from "@/components/home/stats"
@@ -8,6 +9,28 @@ import { LiveBedBoard } from "@/components/shared/LiveBedBoard"
 export default function Page() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <div className="w-full bg-white border-b print:hidden">
+        <div className="mx-auto flex w-full max-w-7xl justify-center px-4 py-2">
+          <Image
+            src="/images/nins-header.webp"
+            alt="NINS Header"
+            width={1200}
+            height={150}
+            className="h-auto max-h-[120px] w-auto object-contain"
+            priority
+          />
+        </div>
+      </div>
+      <div className="w-full bg-destructive py-1.5 text-destructive-foreground print:hidden">
+        <div className="mx-auto max-w-7xl px-4">
+          {/* eslint-disable-next-line jsx-a11y/no-distracting-elements */}
+          <marquee className="flex items-center text-sm font-medium tracking-wide">
+            Notice: Welcome to National Institute of Neurosciences &amp; Hospital
+            (NINS). Emergency services are available 24/7. OPD registration is
+            open from 8:00 AM to 2:00 PM.
+          </marquee>
+        </div>
+      </div>
       <Navbar />
       <main className="flex-1">
         <Hero />
