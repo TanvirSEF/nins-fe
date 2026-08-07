@@ -14,7 +14,6 @@ const PathologyManagement = dynamic(
       default: m.PathologyManagement,
     })),
   {
-    ssr: false,
     loading: () => <PageSkeleton />,
   },
 )

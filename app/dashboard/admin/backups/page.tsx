@@ -14,7 +14,6 @@ const BackupManager = dynamic(
       default: m.BackupManager,
     })),
   {
-    ssr: false,
     loading: () => <PageSkeleton />,
   },
 )

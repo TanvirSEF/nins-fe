@@ -14,7 +14,6 @@ const DepartmentsManager = dynamic(
       default: m.DepartmentsManager,
     })),
   {
-    ssr: false,
     loading: () => <PageSkeleton />,
   },
 )

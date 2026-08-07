@@ -14,7 +14,6 @@ const PaymentsOversight = dynamic(
       default: m.PaymentsOversight,
     })),
   {
-    ssr: false,
     loading: () => <PageSkeleton />,
   },
 )

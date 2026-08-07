@@ -14,7 +14,6 @@ const AppointmentsManagement = dynamic(
       default: m.AppointmentsManagement,
     })),
   {
-    ssr: false,
     loading: () => <PageSkeleton />,
   },
 )

@@ -14,7 +14,6 @@ const SchedulesManager = dynamic(
       default: m.SchedulesManager,
     })),
   {
-    ssr: false,
     loading: () => <PageSkeleton />,
   },
 )

@@ -14,7 +14,6 @@ const StaffManager = dynamic(
       default: m.StaffManager,
     })),
   {
-    ssr: false,
     loading: () => <PageSkeleton />,
   },
 )

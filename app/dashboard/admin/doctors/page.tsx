@@ -15,7 +15,6 @@ const DoctorsManager = dynamic(
       default: m.DoctorsManager,
     })),
   {
-    ssr: false,
     loading: () => <PageSkeleton />,
   },
 )

@@ -14,7 +14,6 @@ const GalleryManager = dynamic(
       default: m.GalleryManager,
     })),
   {
-    ssr: false,
     loading: () => <PageSkeleton />,
   },
 )

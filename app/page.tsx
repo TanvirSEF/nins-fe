@@ -21,14 +21,14 @@ export default function Page() {
           />
         </div>
       </div>
-      <div className="w-full bg-destructive py-1.5 text-destructive-foreground print:hidden">
-        <div className="mx-auto max-w-7xl px-4">
-          {/* eslint-disable-next-line jsx-a11y/no-distracting-elements */}
-          <marquee className="flex items-center text-sm font-medium tracking-wide">
-            Notice: Welcome to National Institute of Neurosciences &amp; Hospital
-            (NINS). Emergency services are available 24/7. OPD registration is
-            open from 8:00 AM to 2:00 PM.
-          </marquee>
+      <div className="w-full overflow-hidden bg-destructive py-1.5 text-destructive-foreground print:hidden">
+        <div className="flex animate-[marquee_30s_linear_infinite] whitespace-nowrap">
+          <span className="mx-16 text-sm font-medium tracking-wide">
+            Notice: Welcome to National Institute of Neurosciences &amp; Hospital (NINS). Emergency services are available 24/7. OPD registration is open from 8:00 AM to 2:00 PM.
+          </span>
+          <span className="mx-16 text-sm font-medium tracking-wide" aria-hidden="true">
+            Notice: Welcome to National Institute of Neurosciences &amp; Hospital (NINS). Emergency services are available 24/7. OPD registration is open from 8:00 AM to 2:00 PM.
+          </span>
         </div>
       </div>
       <Navbar />

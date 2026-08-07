@@ -14,7 +14,6 @@ const LeaveReview = dynamic(
       default: m.LeaveReview,
     })),
   {
-    ssr: false,
     loading: () => <PageSkeleton />,
   },
 )
