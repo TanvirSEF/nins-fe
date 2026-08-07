@@ -7,9 +7,12 @@ import { NoticeSection } from "@/components/home/notice-section"
 import { PatientServicesGrid } from "@/components/home/patient-services-grid"
 import { DepartmentsShowcase } from "@/components/home/departments-showcase"
 import { FeaturedDoctors } from "@/components/home/featured-doctors"
+import { StrokeGuidanceBanner } from "@/components/home/stroke-guidance-banner"
 import { TestTariffSection } from "@/components/home/test-tariff-section"
+import { PatientStories } from "@/components/home/patient-stories"
 import { GallerySection } from "@/components/home/gallery-section"
 import { VideoGallerySection } from "@/components/home/video-gallery-section"
+import { FaqSection } from "@/components/home/faq-section"
 import { ContactSection } from "@/components/home/contact-section"
 import { Footer } from "@/components/home/footer"
 
@@ -52,7 +55,7 @@ export default function Page() {
         {/* 1. Hero Section: 100% Full-Width Slider */}
         <Hero />
 
-        {/* 2. About Section: History, Award, Leadership & Stats (Directly after Hero) */}
+        {/* 2. About Section: History, Award, Leadership & Stats */}
         <AboutSection />
 
         {/* 3. Official Notice Board & Announcements */}
@@ -67,16 +70,25 @@ export default function Page() {
         {/* 6. Prominent Specialist Doctors & Faculty */}
         <FeaturedDoctors />
 
-        {/* 7. Diagnostic Test Tariff & Govt Subsidies */}
+        {/* 7. 24/7 F.A.S.T. Stroke Emergency & Hotline Banner */}
+        <StrokeGuidanceBanner />
+
+        {/* 8. Diagnostic Test Tariff & Govt Subsidies */}
         <TestTariffSection />
 
-        {/* 8. Photo Gallery & Event Showcase */}
+        {/* 9. Patient Recovery Stories & Testimonials */}
+        <PatientStories />
+
+        {/* 10. Photo Gallery & Event Showcase */}
         <GallerySection />
 
-        {/* 9. Video Gallery & Documentaries */}
+        {/* 11. Video Gallery & Documentaries */}
         <VideoGallerySection />
 
-        {/* 10. Location, Emergency & Contact Information */}
+        {/* 12. Interactive Patient FAQ & Help Center */}
+        <FaqSection />
+
+        {/* 13. Location, Emergency & Contact Information */}
         <ContactSection />
       </main>
 
