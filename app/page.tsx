@@ -1,6 +1,7 @@
 import Image from "next/image"
 import { Navbar } from "@/components/home/navbar"
 import { Hero } from "@/components/home/hero"
+import { AboutSection } from "@/components/home/about-section"
 import { Stats } from "@/components/home/stats"
 import { Services } from "@/components/home/services"
 import { Footer } from "@/components/home/footer"
@@ -34,6 +35,7 @@ export default function Page() {
       <Navbar />
       <main className="flex-1">
         <Hero />
+        <AboutSection />
         <Stats />
         <section className="border-y border-slate-100 bg-slate-50/30 py-16 dark:border-white/10 lg:py-24">
           <div className="mx-auto max-w-7xl px-6">
