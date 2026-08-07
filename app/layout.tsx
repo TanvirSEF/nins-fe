@@ -31,6 +31,16 @@ export default function RootLayout({
       className={cn("antialiased", fontHeading.variable, fontSans.variable)}
     >
       <body suppressHydrationWarning>
+        {/* Register self-destructing SW → clears all stale Turbopack chunks from browser cache */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(function(){});
+}
+`,
+          }}
+        />
         <Providers>{children}</Providers>
       </body>
     </html>
