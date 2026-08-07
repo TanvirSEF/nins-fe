@@ -2,10 +2,7 @@ import Image from "next/image"
 import { Navbar } from "@/components/home/navbar"
 import { Hero } from "@/components/home/hero"
 import { AboutSection } from "@/components/home/about-section"
-import { Stats } from "@/components/home/stats"
-import { Services } from "@/components/home/services"
 import { Footer } from "@/components/home/footer"
-import { LiveBedBoard } from "@/components/shared/LiveBedBoard"
 
 export default function Page() {
   return (
@@ -36,25 +33,6 @@ export default function Page() {
       <main className="flex-1">
         <Hero />
         <AboutSection />
-        <Stats />
-        <section className="border-y border-slate-100 bg-slate-50/30 py-16 dark:border-white/10 lg:py-24">
-          <div className="mx-auto max-w-7xl px-6">
-            <div className="mx-auto mb-12 max-w-2xl space-y-3 text-center">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                Live Bed Availability
-              </span>
-              <h2 className="font-heading text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-                Critical care, at a glance
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                Real-time ICU &amp; HDU occupancy — check capacity before you
-                arrive.
-              </p>
-            </div>
-            <LiveBedBoard compact />
-          </div>
-        </section>
-        <Services />
       </main>
       <Footer />
     </div>
