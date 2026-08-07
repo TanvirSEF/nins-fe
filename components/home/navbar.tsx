@@ -10,7 +10,7 @@ const NavbarAuth = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="h-8 w-24 animate-pulse rounded bg-slate-100 dark:bg-white/5" />
+      <div className="h-8 w-24 animate-pulse rounded-full bg-slate-100 dark:bg-white/5" />
     ),
   },
 )
@@ -145,7 +145,7 @@ function DropdownNavItem({ item }: { item: NavItem }) {
     return (
       <Link
         href={item.href}
-        className="text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
+        className="whitespace-nowrap text-[11px] xl:text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
       >
         {item.label}
       </Link>
@@ -155,13 +155,13 @@ function DropdownNavItem({ item }: { item: NavItem }) {
   return (
     <div
       ref={ref}
-      className="relative"
+      className="relative shrink-0"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-1 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
+        className="flex items-center gap-0.5 whitespace-nowrap text-[11px] xl:text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
       >
         {item.label}
         <ChevronDown
@@ -170,7 +170,7 @@ function DropdownNavItem({ item }: { item: NavItem }) {
       </button>
 
       {open && (
-        <div className="animate-in absolute left-0 top-full z-50 mt-1 min-w-[240px] rounded-lg border border-border bg-card/95 p-1.5 shadow-xl backdrop-blur-md fade-in slide-in-from-top-1 duration-150">
+        <div className="animate-in absolute left-0 top-full z-50 mt-1 min-w-[220px] rounded-lg border border-border bg-card/95 p-1.5 shadow-xl backdrop-blur-md fade-in slide-in-from-top-1 duration-150">
           {item.children.map((child) => (
             <Link
               key={child.href}
@@ -192,24 +192,25 @@ export function Navbar() {
   const [mobileOpenIdx, setMobileOpenIdx] = React.useState<number | null>(null)
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-100 bg-white/80 backdrop-blur-md dark:border-white/10 dark:bg-slate-950/80">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+    <header className="sticky top-0 z-50 w-full border-b border-slate-100 bg-white/90 backdrop-blur-md dark:border-white/10 dark:bg-slate-950/90">
+      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6">
         {/* Desktop Navigation */}
-        <nav className="hidden items-center gap-6 md:flex">
+        <nav className="hidden items-center gap-2 lg:gap-3 xl:gap-4.5 lg:flex">
           {navItems.map((item) => (
             <DropdownNavItem key={item.label} item={item} />
           ))}
         </nav>
 
         {/* Auth CTA */}
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden items-center gap-2 lg:flex shrink-0">
           <NavbarAuth />
         </div>
 
         {/* Mobile Menu Button */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="flex items-center justify-center p-2 text-muted-foreground transition-colors hover:text-foreground md:hidden"
+          className="flex items-center justify-center p-2 text-muted-foreground transition-colors hover:text-foreground lg:hidden ml-auto"
+          aria-label="Toggle Navigation Menu"
         >
           {mobileMenuOpen ? (
             <X className="h-5 w-5" />
@@ -221,7 +222,7 @@ export function Navbar() {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="animate-in border-b border-slate-100 bg-white px-6 py-4 duration-150 fade-in slide-in-from-top-2 md:hidden dark:border-white/10 dark:bg-slate-950">
+        <div className="animate-in border-b border-slate-100 bg-white px-6 py-4 duration-150 fade-in slide-in-from-top-2 lg:hidden dark:border-white/10 dark:bg-slate-950">
           <nav className="flex flex-col gap-1">
             {navItems.map((item, idx) => (
               <div key={item.label}>
