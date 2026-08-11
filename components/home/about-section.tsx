@@ -85,6 +85,7 @@ export function AboutSection() {
                       src="/images/Director-NINS.webp"
                       alt="Prof. Dr. Mohammad Nuruzzaman Khan"
                       fill
+                      sizes="144px"
                       className="object-cover object-top"
                     />
                   </div>
@@ -112,6 +113,7 @@ export function AboutSection() {
                       src="/images/Dr.Badrul_AlamJD.webp"
                       alt="Prof. Dr. Md. Badrul Alam Mondal"
                       fill
+                      sizes="144px"
                       className="object-cover object-top"
                     />
                   </div>

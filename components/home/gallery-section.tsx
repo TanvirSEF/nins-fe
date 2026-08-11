@@ -141,6 +141,7 @@ export function GallerySection() {
                   src={item.src}
                   alt={item.title}
                   fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover transition-transform duration-700 ease-out group-hover:scale-108"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent opacity-80 transition-opacity group-hover:opacity-90" />
@@ -208,6 +209,7 @@ export function GallerySection() {
                   src={filteredGallery[selectedIndex].src}
                   alt={filteredGallery[selectedIndex].title}
                   fill
+                  sizes="100vw"
                   className="object-contain rounded-xl shadow-2xl transition-all duration-300"
                   priority
                 />

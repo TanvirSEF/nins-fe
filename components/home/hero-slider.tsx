@@ -53,6 +53,7 @@ export function HeroSlider() {
               src={image.src}
               alt={image.alt}
               fill
+              sizes="100vw"
               className="object-cover transition-transform duration-1000 ease-out group-hover:scale-102"
               priority={index === 0}
             />
@@ -110,6 +111,7 @@ export function HeroSlider() {
                 src={img.src}
                 alt={img.alt}
                 fill
+                sizes="64px"
                 className="object-cover"
               />
             </button>

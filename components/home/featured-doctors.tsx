@@ -76,6 +76,7 @@ export function FeaturedDoctors() {
                   src={doctor.image}
                   alt={doctor.name}
                   fill
+                  sizes="176px"
                   className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
                 />
               </div>

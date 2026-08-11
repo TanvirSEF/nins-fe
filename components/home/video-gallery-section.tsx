@@ -75,6 +75,7 @@ export function VideoGallerySection() {
                   src={item.thumbnail}
                   alt={item.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 400px"
                   className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-slate-950/20" />
@@ -132,6 +133,7 @@ export function VideoGallerySection() {
                   src={playingVideo.thumbnail}
                   alt={playingVideo.title}
                   fill
+                  sizes="100vw"
                   className="object-cover opacity-30"
                 />
                 <div className="relative z-10 space-y-4 max-w-md">
