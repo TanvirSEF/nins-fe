@@ -1,16 +1,15 @@
 "use client"
 
 import * as React from "react"
-import { PhoneCall, ShieldAlert, Clock, Activity, ArrowRight } from "lucide-react"
+import { PhoneCall, ShieldAlert, Activity } from "lucide-react"
+import { useLanguage } from "@/context/language-context"
 
-const fastSteps = [
-  { letter: "F", title: "Face Drooping", desc: "Does one side of the face droop or is it numb? Ask the person to smile." },
-  { letter: "A", title: "Arm Weakness", desc: "Is one arm weak or numb? Ask the person to raise both arms." },
-  { letter: "S", title: "Speech Difficulty", desc: "Is speech slurred? Ask the person to repeat a simple sentence." },
-  { letter: "T", title: "Time to Call NINS", desc: "If someone shows any of these symptoms, call NINS 24/7 Hotline immediately!" },
-]
+const FAST_LETTERS = ["F", "A", "S", "T"] as const
 
 export function StrokeGuidanceBanner() {
+  const { dict } = useLanguage()
+  const t = dict.stroke
+
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-rose-950 via-slate-950 to-slate-900 py-16 text-white border-t border-rose-900/30">
       {/* Background Glows */}
@@ -19,20 +18,21 @@ export function StrokeGuidanceBanner() {
 
       <div className="relative z-10 mx-auto max-w-7xl px-6">
         <div className="grid gap-12 lg:grid-cols-12 items-center">
-          
+
           {/* Left Column: Urgency & Call Button */}
           <div className="space-y-6 lg:col-span-5">
             <div className="inline-flex items-center gap-2 rounded-full border border-rose-500/30 bg-rose-500/10 px-4 py-1.5 text-xs font-black text-rose-400 uppercase tracking-wide">
               <ShieldAlert className="h-4 w-4 animate-bounce text-rose-400" />
-              24/7 Acute Stroke Emergency Protocol
+              {t.badge}
             </div>
 
             <h2 className="font-heading text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-              Recognize Stroke Symptoms: Think <span className="text-rose-500 underline decoration-rose-500 decoration-wavy">F.A.S.T.</span>
+              {t.heading}{" "}
+              <span className="text-rose-500 underline decoration-rose-500 decoration-wavy">{t.highlight}</span>
             </h2>
 
             <p className="text-sm text-slate-300 leading-relaxed">
-              Every minute counts in acute stroke management. NINS 100-Bedded Stroke Unit provides round-the-clock IV thrombolysis and mechanical thrombectomy.
+              {t.subtext}
             </p>
 
             {/* Big Emergency Call Button */}
@@ -46,7 +46,7 @@ export function StrokeGuidanceBanner() {
                 </div>
                 <div className="text-left">
                   <span className="block text-xs font-bold uppercase tracking-wider text-rose-200">
-                    NINS Emergency Casualty Hotline (24/7)
+                    {t.hotlineLabel}
                   </span>
                   <span className="font-mono text-xl font-black text-white">
                     +880 2-9140752
@@ -59,25 +59,28 @@ export function StrokeGuidanceBanner() {
           {/* Right Column: F.A.S.T. Interactive Grid */}
           <div className="lg:col-span-7">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {fastSteps.map((step) => (
-                <div
-                  key={step.letter}
-                  className="rounded-2xl border border-white/10 bg-slate-900/80 p-5 backdrop-blur-md space-y-2 transition-all duration-300 hover:border-rose-500/50 hover:bg-slate-900"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-600 font-mono text-lg font-black text-white shadow-md">
-                      {step.letter}
-                    </span>
-                    <Activity className="h-4 w-4 text-rose-400" />
+              {FAST_LETTERS.map((letter) => {
+                const step = t.steps[letter]
+                return (
+                  <div
+                    key={letter}
+                    className="rounded-2xl border border-white/10 bg-slate-900/80 p-5 backdrop-blur-md space-y-2 transition-all duration-300 hover:border-rose-500/50 hover:bg-slate-900"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-600 font-mono text-lg font-black text-white shadow-md">
+                        {letter}
+                      </span>
+                      <Activity className="h-4 w-4 text-rose-400" />
+                    </div>
+                    <h3 className="font-heading text-sm font-bold text-white pt-1">
+                      {step.title}
+                    </h3>
+                    <p className="text-xs text-slate-300 leading-relaxed">
+                      {step.desc}
+                    </p>
                   </div>
-                  <h3 className="font-heading text-sm font-bold text-white pt-1">
-                    {step.title}
-                  </h3>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    {step.desc}
-                  </p>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
 

@@ -13,6 +13,7 @@ import {
   Building2,
   Users,
 } from "lucide-react"
+import { useLanguage } from "@/context/language-context"
 
 const usefulGovtLinks = [
   { label: "Prime Minister's Office", href: "https://pmo.gov.bd" },
@@ -38,6 +39,9 @@ const pabxDirectory = [
 const visitorCountDigits = ["1", "1", "3", "3", "6", "1", "2"]
 
 export function Footer() {
+  const { dict } = useLanguage()
+  const t = dict.footer
+
   return (
     <footer className="relative overflow-hidden bg-[#0A192F] text-slate-200 border-t border-slate-800">
       {/* Subtle Glow Elements */}
@@ -51,15 +55,15 @@ export function Footer() {
           {/* Column 1: Hospital Brand, Address, Socials & Visitor Counter (4 Cols) */}
           <div className="space-y-6 lg:col-span-4">
             <div className="space-y-3">
-              <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3.5 py-1 text-xs font-bold text-cyan-400">
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-xs font-bold text-primary">
                 <Building2 className="h-3.5 w-3.5" />
-                Govt. Tertiary Neuroscience Center
+                {t.govtBadge}
               </div>
               <h3 className="font-heading text-lg font-extrabold text-white leading-snug">
-                National Institute of Neurosciences &amp; Hospital
+                {t.instituteName}
               </h3>
               <div className="flex items-start gap-2.5 text-xs text-slate-300 pt-1">
-                <MapPin className="h-4 w-4 shrink-0 text-cyan-400 mt-0.5" />
+                <MapPin className="h-4 w-4 shrink-0 text-primary mt-0.5" />
                 <span>
                   Sher-e-Bangla Nagar, Agargaon, Dhaka-1207, Bangladesh
                 </span>
@@ -69,7 +73,7 @@ export function Footer() {
             {/* Social Media Links */}
             <div className="space-y-2">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                Social Media Connections
+                {t.socialLabel}
               </span>
               <div className="flex items-center gap-2">
                 {[
@@ -84,7 +88,7 @@ export function Footer() {
                       key={social.label}
                       href={social.href}
                       aria-label={social.label}
-                      className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-700 bg-slate-900/80 text-slate-300 transition-all hover:border-cyan-400 hover:bg-cyan-500/20 hover:text-cyan-400 hover:scale-110"
+                      className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-700 bg-slate-900/80 text-slate-300 transition-all hover:border-primary hover:bg-primary/20 hover:text-primary hover:scale-110"
                     >
                       <Icon className="h-4 w-4" />
                     </a>
@@ -95,22 +99,22 @@ export function Footer() {
 
             {/* Digital Live Visitor Counter */}
             <div className="rounded-2xl border border-slate-800 bg-slate-900/90 p-4 space-y-2 shadow-lg backdrop-blur-md">
-              <div className="flex items-center gap-2 text-xs font-bold text-cyan-400">
+              <div className="flex items-center gap-2 text-xs font-bold text-primary">
                 <Users className="h-4 w-4" />
-                <span>TOTAL VISITS COUNTER</span>
+                <span>{t.visitorLabel}</span>
               </div>
               <div className="flex items-center gap-1.5 pt-1">
                 {visitorCountDigits.map((digit, idx) => (
                   <div
                     key={idx}
-                    className="flex h-9 w-7 items-center justify-center rounded-lg border border-cyan-500/40 bg-slate-950 font-mono text-base font-black text-cyan-300 shadow-inner"
+                    className="flex h-9 w-7 items-center justify-center rounded-lg border border-primary/40 bg-slate-950 font-mono text-base font-black text-primary shadow-inner"
                   >
                     {digit}
                   </div>
                 ))}
               </div>
               <p className="text-[11px] text-slate-400 font-medium pt-0.5">
-                Official Visitor Tracker • NINS Portal
+                {t.visitorSub}
               </p>
             </div>
           </div>
@@ -118,7 +122,7 @@ export function Footer() {
           {/* Column 2: Useful Government Links (4 Cols) */}
           <div className="space-y-4 lg:col-span-4">
             <h4 className="font-heading text-sm font-bold uppercase tracking-wider text-white border-b border-slate-800 pb-2">
-              Useful Government Links
+              {t.govtLinks}
             </h4>
             <ul className="grid grid-cols-1 gap-2 text-xs">
               {usefulGovtLinks.map((link) => (
@@ -127,9 +131,9 @@ export function Footer() {
                     href={link.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="group inline-flex items-center gap-2 text-slate-300 transition-colors hover:text-cyan-400"
+                    className="group inline-flex items-center gap-2 text-slate-300 transition-colors hover:text-primary"
                   >
-                    <ExternalLink className="h-3.5 w-3.5 text-cyan-500/70 transition-transform group-hover:translate-x-0.5" />
+                    <ExternalLink className="h-3.5 w-3.5 text-primary/70 transition-transform group-hover:translate-x-0.5" />
                     <span>{link.label}</span>
                   </a>
                 </li>
@@ -140,7 +144,7 @@ export function Footer() {
           {/* Column 3: Contact Directory & PABX Numbers (4 Cols) */}
           <div className="space-y-4 lg:col-span-4">
             <h4 className="font-heading text-sm font-bold uppercase tracking-wider text-white border-b border-slate-800 pb-2">
-              PABX &amp; Contact Directory
+              {t.pabxTitle}
             </h4>
 
             {/* Structured Modern PABX Table */}
@@ -150,7 +154,7 @@ export function Footer() {
                   <div
                     key={item.title}
                     className={`flex items-center justify-between px-3.5 py-2.5 ${
-                      item.highlight ? "bg-cyan-950/40" : ""
+                      item.highlight ? "bg-primary/10" : ""
                     }`}
                   >
                     <span className="font-semibold text-slate-300">
@@ -159,7 +163,7 @@ export function Footer() {
                     <span
                       className={`font-mono text-xs font-bold ${
                         item.highlight
-                          ? "text-cyan-400"
+                          ? "text-primary"
                           : item.isEmail
                           ? "text-amber-400"
                           : item.isWeb
@@ -179,24 +183,24 @@ export function Footer() {
         {/* Bottom Bar: Copyright & Terms */}
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-800 pt-8 text-xs text-slate-400 sm:flex-row">
           <div className="flex items-center gap-2">
-            <ShieldCheck className="h-4 w-4 text-cyan-400" />
+            <ShieldCheck className="h-4 w-4 text-primary" />
             <p>
-              Copyright © 2012-2026 NINS (National Institute of Neurosciences &amp; Hospital). All Rights Reserved.
+              {t.copyright}
             </p>
           </div>
 
           <div className="flex items-center gap-4 text-xs font-medium">
-            <Link href="/notice" className="transition-colors hover:text-cyan-400">
-              Notice Board
+            <Link href="/notice" className="transition-colors hover:text-primary">
+              {t.noticeBoard}
             </Link>
-            <Link href="/noc" className="transition-colors hover:text-cyan-400">
-              NOC
+            <Link href="/noc" className="transition-colors hover:text-primary">
+              {t.noc}
             </Link>
-            <Link href="/gallery" className="transition-colors hover:text-cyan-400">
-              Gallery
+            <Link href="/gallery" className="transition-colors hover:text-primary">
+              {t.gallery}
             </Link>
-            <a href="https://bangladesh.gov.bd" target="_blank" rel="noreferrer" className="transition-colors hover:text-cyan-400">
-              National Portal
+            <a href="https://bangladesh.gov.bd" target="_blank" rel="noreferrer" className="transition-colors hover:text-primary">
+              {t.nationalPortal}
             </a>
           </div>
         </div>

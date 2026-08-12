@@ -3,6 +3,7 @@
 import * as React from "react"
 import Image from "next/image"
 import { Video, Play, X, Clock, ExternalLink } from "lucide-react"
+import { useLanguage } from "@/context/language-context"
 
 const videoItems = [
   {
@@ -39,6 +40,8 @@ const videoItems = [
 
 export function VideoGallerySection() {
   const [playingVideo, setPlayingVideo] = React.useState<typeof videoItems[0] | null>(null)
+  const { dict } = useLanguage()
+  const t = dict.video
 
   return (
     <section className="relative overflow-hidden bg-slate-900 py-16 lg:py-24 text-white border-t border-white/10">
@@ -51,13 +54,13 @@ export function VideoGallerySection() {
         <div className="mx-auto max-w-3xl text-center space-y-3">
           <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold text-primary backdrop-blur-sm">
             <Video className="h-3.5 w-3.5" />
-            Media &amp; Video Gallery
+            {t.badge}
           </div>
           <h2 className="font-heading text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-            Featured Video Documentaries &amp; Reports
+            {t.heading}
           </h2>
           <p className="text-sm text-slate-300">
-            Watch short video tours of our specialized neurosurgery facilities, stroke units, and official ceremonies.
+            {t.subtext}
           </p>
         </div>
 
@@ -108,7 +111,7 @@ export function VideoGallerySection() {
                   {item.description}
                 </p>
                 <div className="pt-2 flex items-center gap-1 text-[11px] font-semibold text-primary">
-                  <span>Watch Video</span>
+                  <span>{t.watchVideo}</span>
                   <ExternalLink className="h-3 w-3" />
                 </div>
               </div>
@@ -144,9 +147,9 @@ export function VideoGallerySection() {
                     {playingVideo.title}
                   </h3>
                   <div className="rounded-xl border border-white/10 bg-white/10 p-3 text-xs text-slate-300 backdrop-blur-md">
-                    <p className="font-semibold text-primary">📹 Video Player Placeholder Ready</p>
+                    <p className="font-semibold text-primary">{t.playerPlaceholder}</p>
                     <p className="mt-1 text-[11px] text-slate-400">
-                      When you provide the YouTube embed link or MP4 video URL, it will play directly here.
+                      {t.playerHint}
                     </p>
                   </div>
                 </div>

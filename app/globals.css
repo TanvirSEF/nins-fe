@@ -15,10 +15,10 @@
        are loaded as Google Fonts. All other stacks fall back to system faces. */
     --font-heading: var(--font-heading), "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
     --font-sans: var(--font-sans), "Inter", ui-sans-serif, system-ui, sans-serif;
-    /* ui → same as sans; mono → system monospace; bengali → system Bengali faces */
+    /* ui → same as sans; mono → system monospace; bangla → Hind Siliguri (Google Font, loaded in layout.tsx) */
     --font-ui: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
     --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", monospace;
-    --font-bengali: "Noto Sans Bengali", "SolaimanLipi", var(--font-sans), sans-serif;
+    --font-bangla: var(--font-bangla), "Hind Siliguri", "Noto Sans Bengali", "SolaimanLipi", var(--font-sans), sans-serif;
 
     /* Color mappings (Tailwind utilities resolve from these) */
     --color-background: var(--background);
@@ -216,9 +216,19 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading;
     }
-  /* Bengali locale: add `lang="bn"` on <html> to switch body rendering */
-  html[lang="bn"] body {
-    font-family: var(--font-bengali);
+  /* Bangla locale: LanguageProvider sets lang="bn" on <html> to switch body rendering to Hind Siliguri */
+  html[lang="bn"] body,
+  html[lang="bn"] h1,
+  html[lang="bn"] h2,
+  html[lang="bn"] h3,
+  html[lang="bn"] h4,
+  html[lang="bn"] h5,
+  html[lang="bn"] h6,
+  html[lang="bn"] button,
+  html[lang="bn"] a,
+  html[lang="bn"] span,
+  html[lang="bn"] p {
+    font-family: var(--font-bangla) !important;
     }
 }
 

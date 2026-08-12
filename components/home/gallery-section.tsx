@@ -4,60 +4,75 @@ import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Image as ImageIcon, ArrowRight, X, ZoomIn, ChevronLeft, ChevronRight } from "lucide-react"
-
-const galleryCategories = ["All Photos", "Events & Ceremonies", "Official Visits", "Awareness & Seminars"]
+import { useLanguage } from "@/context/language-context"
 
 const galleryImages = [
   {
     id: 1,
     src: "/images/Financial_Assistance_Distribution_Ceremony_for_Stroke_and_Paralysis_Patients.webp",
     title: "Financial Assistance Distribution Ceremony",
-    category: "Events & Ceremonies",
+    categoryKey: "events",
+    categoryDefault: "Events & Ceremonies",
     subtitle: "Support for Stroke & Paralysis Patients at NINS Hospital",
   },
   {
     id: 2,
     src: "/images/Shahid President Ziaur Rahman -Sports Tournament-2026.webp",
     title: "Annual Sports Tournament 2026",
-    category: "Events & Ceremonies",
+    categoryKey: "events",
+    categoryDefault: "Events & Ceremonies",
     subtitle: "NINS Cultural & Athletics Program for Physicians & Staff",
   },
   {
     id: 3,
     src: "/images/Routine_Visit_of_Director.webp",
     title: "Routine Inspection Visit of Director",
-    category: "Official Visits",
+    categoryKey: "visits",
+    categoryDefault: "Official Visits",
     subtitle: "Ensuring High Standards in Clinical Wards & ICU Units",
   },
   {
     id: 4,
     src: "/images/Transport_and_Bridge_Ministry_Visit.webp",
     title: "Ministry Delegation Visit to NINS",
-    category: "Official Visits",
+    categoryKey: "visits",
+    categoryDefault: "Official Visits",
     subtitle: "High-Level Inspection of Facilities & Infrastructure",
   },
   {
     id: 5,
     src: "/images/Pre_Inaugural_Inspection_Discussion_Meeting_1.webp",
     title: "Pre-Inaugural Discussion Meeting",
-    category: "Official Visits",
+    categoryKey: "visits",
+    categoryDefault: "Official Visits",
     subtitle: "Strategic Healthcare Expansion & Clinical Review",
   },
   {
     id: 6,
     src: "/images/dengu_Awarness.webp",
     title: "Dengue Awareness & Prevention Seminar",
-    category: "Awareness & Seminars",
+    categoryKey: "awareness",
+    categoryDefault: "Awareness & Seminars",
     subtitle: "Community Health & Public Safety Campaign",
   },
 ]
 
 export function GallerySection() {
-  const [activeCategory, setActiveCategory] = React.useState("All Photos")
+  const { dict } = useLanguage()
+  const t = dict.gallery
+
+  const categories = [
+    { key: "all", label: t.categories.all },
+    { key: "events", label: t.categories.events },
+    { key: "visits", label: t.categories.visits },
+    { key: "awareness", label: t.categories.awareness },
+  ]
+
+  const [activeCategoryKey, setActiveCategoryKey] = React.useState("all")
   const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null)
 
   const filteredGallery = galleryImages.filter(
-    (item) => activeCategory === "All Photos" || item.category === activeCategory
+    (item) => activeCategoryKey === "all" || item.categoryKey === activeCategoryKey
   )
 
   // Keyboard navigation for Lightbox
@@ -89,13 +104,13 @@ export function GallerySection() {
           <div className="space-y-3">
             <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-xs font-semibold text-primary">
               <ImageIcon className="h-3.5 w-3.5" />
-              Photo Showcase
+              {t.badge}
             </div>
             <h2 className="font-heading text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-              NINS Gallery &amp; Recent Activities
+              {t.heading}
             </h2>
             <p className="text-sm text-muted-foreground max-w-xl">
-              Glimpses of clinical operations, official delegation visits, medical seminars, and student achievements at NINS.
+              {t.subtext}
             </p>
           </div>
 
@@ -103,27 +118,27 @@ export function GallerySection() {
             href="/gallery"
             className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition-all hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 shrink-0"
           >
-            Explore Full Gallery
+            {t.viewAll}
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
 
         {/* Category Tabs */}
         <div className="mt-8 flex flex-wrap items-center gap-2">
-          {galleryCategories.map((category) => (
+          {categories.map((cat) => (
             <button
-              key={category}
+              key={cat.key}
               onClick={() => {
-                setActiveCategory(category)
+                setActiveCategoryKey(cat.key)
                 setSelectedIndex(null)
               }}
               className={`rounded-lg px-4 py-2 text-xs font-semibold transition-all ${
-                activeCategory === category
+                activeCategoryKey === cat.key
                   ? "bg-primary text-primary-foreground shadow-xs"
                   : "bg-slate-100 text-muted-foreground hover:bg-slate-200 hover:text-foreground dark:bg-slate-900 dark:hover:bg-slate-800"
               }`}
             >
-              {category}
+              {cat.label}
             </button>
           ))}
         </div>
@@ -154,7 +169,7 @@ export function GallerySection() {
                 {/* Caption Overlay */}
                 <div className="absolute bottom-4 left-4 right-4 text-white space-y-1">
                   <span className="inline-block rounded-md bg-primary/80 px-2 py-0.5 text-[10px] font-semibold tracking-wide backdrop-blur-sm">
-                    {item.category}
+                    {t.categories[item.categoryKey as keyof typeof t.categories] || item.categoryDefault}
                   </span>
                   <h3 className="font-heading text-sm font-bold leading-snug line-clamp-1">
                     {item.title}
@@ -168,14 +183,14 @@ export function GallerySection() {
           ))}
         </div>
 
-        {/* Fullscreen Lightbox Modal with Keyboard & Prev/Next Support */}
+        {/* Fullscreen Lightbox Modal */}
         {selectedIndex !== null && filteredGallery[selectedIndex] && (
           <div className="fixed inset-0 z-50 flex flex-col bg-slate-950/98 p-4 text-white backdrop-blur-xl animate-in fade-in duration-200">
             {/* Top Header Bar */}
             <div className="flex items-center justify-between pb-3 border-b border-white/10">
               <div className="flex items-center gap-3">
                 <span className="text-xs font-semibold text-primary uppercase tracking-wider">
-                  NINS Photo Showcase
+                  {t.lightboxLabel}
                 </span>
                 <span className="rounded-full bg-white/10 px-3 py-0.5 text-xs font-medium text-slate-300">
                   {selectedIndex + 1} of {filteredGallery.length}
@@ -192,7 +207,6 @@ export function GallerySection() {
 
             {/* Photo Canvas & Navigation */}
             <div className="relative flex flex-1 items-center justify-center py-4 overflow-hidden">
-              {/* Previous Button */}
               <button
                 onClick={() =>
                   setSelectedIndex(selectedIndex > 0 ? selectedIndex - 1 : filteredGallery.length - 1)
@@ -203,7 +217,6 @@ export function GallerySection() {
                 <ChevronLeft className="h-6 w-6" />
               </button>
 
-              {/* Full Image Display */}
               <div className="relative h-full w-full max-w-7xl flex items-center justify-center">
                 <Image
                   src={filteredGallery[selectedIndex].src}
@@ -215,7 +228,6 @@ export function GallerySection() {
                 />
               </div>
 
-              {/* Next Button */}
               <button
                 onClick={() =>
                   setSelectedIndex(selectedIndex < filteredGallery.length - 1 ? selectedIndex + 1 : 0)
@@ -234,14 +246,14 @@ export function GallerySection() {
                   {filteredGallery[selectedIndex].title}
                 </h3>
                 <span className="rounded-md bg-primary/80 px-2.5 py-0.5 text-xs font-semibold text-primary-foreground">
-                  {filteredGallery[selectedIndex].category}
+                  {t.categories[filteredGallery[selectedIndex].categoryKey as keyof typeof t.categories] || filteredGallery[selectedIndex].categoryDefault}
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-slate-300">
                 {filteredGallery[selectedIndex].subtitle}
               </p>
               <p className="text-[11px] text-slate-400 pt-1">
-                Tip: Press ⬅️ / ➡️ Arrow keys on keyboard to switch photos. Press Esc to close.
+                {t.keyboardTip}
               </p>
             </div>
           </div>

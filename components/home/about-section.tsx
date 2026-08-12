@@ -1,8 +1,14 @@
+"use client"
+
 import * as React from "react"
 import Image from "next/image"
 import { Building2, Award, Stethoscope, ShieldCheck, UserCheck } from "lucide-react"
+import { useLanguage } from "@/context/language-context"
 
 export function AboutSection() {
+  const { dict } = useLanguage()
+  const t = dict.about
+
   return (
     <section className="relative overflow-hidden bg-white py-10 lg:py-16 dark:bg-slate-950 border-t border-slate-100 dark:border-white/5">
       {/* Background Subtle Accents */}
@@ -14,13 +20,13 @@ export function AboutSection() {
         <div className="mx-auto max-w-3xl text-center space-y-3">
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-semibold text-primary backdrop-blur-sm">
             <Building2 className="h-3.5 w-3.5" />
-            Est. September 2012 • Sher-e-Bangla Nagar, Agargaon, Dhaka
+            {t.badge}
           </div>
           <span className="block text-xs font-bold uppercase tracking-wider text-muted-foreground">
-            Welcome to
+            {t.welcomeTo}
           </span>
           <h2 className="font-heading text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
-            National Institute of Neurosciences &amp; Hospital
+            {t.instituteName}
           </h2>
           <div className="mx-auto h-1 w-20 rounded-full bg-gradient-to-r from-primary to-info" />
         </div>
@@ -31,15 +37,15 @@ export function AboutSection() {
           <div className="space-y-5 lg:col-span-8">
             <div className="space-y-2">
               <h3 className="font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-                Bangladesh’s Premier Tertiary Care Neuroscience Center
+                {t.subheading}
               </h3>
               <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
-                National Institute of Neurosciences &amp; Hospital started its journey from September, 2012. Officially inaugurated by the Government of the People&apos;s Republic of Bangladesh, it is situated in the health hub of Sher-e-Bangla Nagar, Agargaon, Dhaka. This is the only Govt. run tertiary care neuroscience center in Bangladesh.
+                {t.p1}
               </p>
             </div>
 
             <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
-              A 500-bedded 10-storied hospital comprising specialized departments including Neurology, Neurosurgery, Pediatric Neurology, Pediatric Neurosurgery, Neurophysiology, Neurointervention, Neurorehabilitation, Neuroradiology, Neuropathology, Transfusion Medicine, Critical Care Medicine &amp; a 100-bedded Stroke unit. Our Operation Theatres, Cath Lab, Laboratory Services, ICU &amp; HDU are equipped with state-of-the-art sophisticated technologies.
+              {t.p2}
             </p>
 
             {/* Award Showcase Card */}
@@ -47,13 +53,13 @@ export function AboutSection() {
               <div className="mb-2.5 flex items-center gap-2 text-amber-600 dark:text-amber-400">
                 <Award className="h-5 w-5" />
                 <h4 className="font-heading text-sm font-bold">
-                  Health Minister Best Performance Award 2020
+                  {t.awardTitle}
                 </h4>
               </div>
               <div className="relative overflow-hidden rounded-xl border border-slate-200 bg-black/5 dark:border-white/10">
                 <Image
                   src="/images/dghs-awardex-2020.webp"
-                  alt="Health Minister Best Performance Award 2020 - NINS"
+                  alt={t.awardTitle}
                   width={800}
                   height={500}
                   className="h-auto max-h-[320px] w-full object-contain mx-auto"
@@ -67,7 +73,7 @@ export function AboutSection() {
             <div className="w-full flex items-center gap-2 border-b border-slate-100 pb-2.5 dark:border-white/10">
               <UserCheck className="h-5 w-5 text-primary" />
               <h3 className="font-heading text-lg font-bold text-foreground">
-                Institute Leadership
+                {t.leadershipTitle}
               </h3>
             </div>
 
@@ -76,14 +82,14 @@ export function AboutSection() {
               <div className="w-[220px] shrink-0 overflow-hidden rounded-xl border border-slate-300/80 bg-white shadow-md transition-all duration-300 hover:shadow-lg dark:border-white/15 dark:bg-slate-900">
                 <div className="bg-[#2c474e] px-3 py-1.5 text-center">
                   <h4 className="font-heading text-xs font-bold uppercase tracking-widest text-white">
-                    DIRECTOR
+                    {t.directorTitle}
                   </h4>
                 </div>
                 <div className="p-3 text-center">
                   <div className="relative mx-auto h-44 w-36 overflow-hidden rounded-lg border border-slate-900/80 shadow-xs">
                     <Image
                       src="/images/Director-NINS.webp"
-                      alt="Prof. Dr. Mohammad Nuruzzaman Khan"
+                      alt={t.directorName}
                       fill
                       sizes="144px"
                       className="object-cover object-top"
@@ -91,10 +97,10 @@ export function AboutSection() {
                   </div>
                   <div className="mt-2.5 space-y-0.5">
                     <h5 className="font-heading text-xs font-bold leading-tight text-slate-800 dark:text-slate-100">
-                      Prof. Dr. Mohammad Nuruzzaman Khan
+                      {t.directorName}
                     </h5>
                     <p className="text-[11px] font-semibold text-slate-600 dark:text-slate-300">
-                      Professor cum Director, NINS&amp;H
+                      {t.directorRole}
                     </p>
                   </div>
                 </div>
@@ -104,14 +110,14 @@ export function AboutSection() {
               <div className="w-[220px] shrink-0 overflow-hidden rounded-xl border border-slate-300/80 bg-white shadow-md transition-all duration-300 hover:shadow-lg dark:border-white/15 dark:bg-slate-900">
                 <div className="bg-[#2c474e] px-3 py-1.5 text-center">
                   <h4 className="font-heading text-xs font-bold uppercase tracking-widest text-white">
-                    JOINT DIRECTOR
+                    {t.jointDirectorTitle}
                   </h4>
                 </div>
                 <div className="p-3 text-center">
                   <div className="relative mx-auto h-44 w-36 overflow-hidden rounded-lg border border-slate-900/80 shadow-xs">
                     <Image
                       src="/images/Dr.Badrul_AlamJD.webp"
-                      alt="Prof. Dr. Md. Badrul Alam Mondal"
+                      alt={t.jointDirectorName}
                       fill
                       sizes="144px"
                       className="object-cover object-top"
@@ -119,10 +125,10 @@ export function AboutSection() {
                   </div>
                   <div className="mt-2.5 space-y-0.5">
                     <h5 className="font-heading text-xs font-bold leading-tight text-slate-800 dark:text-slate-100">
-                      Prof. Dr. Md. Badrul Alam Mondal
+                      {t.jointDirectorName}
                     </h5>
                     <p className="text-[11px] font-semibold text-slate-600 dark:text-slate-300">
-                      Professor cum Joint Director, NINS&amp;H
+                      {t.jointDirectorRole}
                     </p>
                   </div>
                 </div>
@@ -138,32 +144,32 @@ export function AboutSection() {
               <div className="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
                 <Building2 className="h-4 w-4" />
               </div>
-              <p className="mt-2 font-heading text-2xl font-extrabold text-foreground sm:text-3xl">500+</p>
-              <p className="text-xs font-medium text-muted-foreground">Bedded 10-Storied Hospital</p>
+              <p className="mt-2 font-heading text-2xl font-extrabold text-foreground sm:text-3xl">{t.stat1Value}</p>
+              <p className="text-xs font-medium text-muted-foreground">{t.stat1Label}</p>
             </div>
 
             <div className="rounded-2xl border border-slate-100 bg-slate-50/50 p-4 text-center shadow-xs dark:border-white/5 dark:bg-slate-900/40">
               <div className="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-info/10 text-info">
                 <Stethoscope className="h-4 w-4" />
               </div>
-              <p className="mt-2 font-heading text-2xl font-extrabold text-foreground sm:text-3xl">100 Bed</p>
-              <p className="text-xs font-medium text-muted-foreground">Comprehensive Stroke Unit</p>
+              <p className="mt-2 font-heading text-2xl font-extrabold text-foreground sm:text-3xl">{t.stat2Value}</p>
+              <p className="text-xs font-medium text-muted-foreground">{t.stat2Label}</p>
             </div>
 
             <div className="rounded-2xl border border-slate-100 bg-slate-50/50 p-4 text-center shadow-xs dark:border-white/5 dark:bg-slate-900/40">
               <div className="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-success/10 text-success">
                 <ShieldCheck className="h-4 w-4" />
               </div>
-              <p className="mt-2 font-heading text-2xl font-extrabold text-foreground sm:text-3xl">1000+</p>
-              <p className="text-xs font-medium text-muted-foreground">Daily OPD Patients Served</p>
+              <p className="mt-2 font-heading text-2xl font-extrabold text-foreground sm:text-3xl">{t.stat3Value}</p>
+              <p className="text-xs font-medium text-muted-foreground">{t.stat3Label}</p>
             </div>
 
             <div className="rounded-2xl border border-slate-100 bg-slate-50/50 p-4 text-center shadow-xs dark:border-white/5 dark:bg-slate-900/40">
               <div className="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-amber-500/10 text-amber-500">
                 <Award className="h-4 w-4" />
               </div>
-              <p className="mt-2 font-heading text-2xl font-extrabold text-foreground sm:text-3xl">Awarded</p>
-              <p className="text-xs font-medium text-muted-foreground">Best Performance Award 2020</p>
+              <p className="mt-2 font-heading text-2xl font-extrabold text-foreground sm:text-3xl">{t.stat4Value}</p>
+              <p className="text-xs font-medium text-muted-foreground">{t.stat4Label}</p>
             </div>
           </div>
         </div>

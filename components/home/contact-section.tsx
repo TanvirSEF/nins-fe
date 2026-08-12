@@ -1,7 +1,13 @@
+"use client"
+
 import * as React from "react"
-import { MapPin, Phone, Clock, Mail, ShieldAlert, ArrowRight } from "lucide-react"
+import { MapPin, Phone, Clock, Mail, ShieldAlert } from "lucide-react"
+import { useLanguage } from "@/context/language-context"
 
 export function ContactSection() {
+  const { dict } = useLanguage()
+  const t = dict.contact
+
   return (
     <section className="relative overflow-hidden bg-white py-16 lg:py-24 dark:bg-slate-950 border-t border-slate-100 dark:border-white/5">
       <div className="relative z-10 mx-auto max-w-7xl px-6">
@@ -11,13 +17,13 @@ export function ContactSection() {
             <div className="space-y-3">
               <div className="inline-flex items-center gap-2 rounded-full border border-destructive/20 bg-destructive/10 px-3.5 py-1 text-xs font-bold text-destructive">
                 <ShieldAlert className="h-3.5 w-3.5" />
-                24/7 Emergency Care Available
+                {t.badge}
               </div>
               <h2 className="font-heading text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-                Location &amp; Emergency Contact
+                {t.heading}
               </h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Situated in the central health hub of Dhaka. Emergency services, acute stroke care, and ICU admissions operate 24 hours a day, 7 days a week.
+                {t.subtext}
               </p>
             </div>
 
@@ -26,9 +32,9 @@ export function ContactSection() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <MapPin className="h-5 w-5" />
                 </div>
-                <h3 className="font-heading text-sm font-bold text-foreground">Hospital Address</h3>
+                <h3 className="font-heading text-sm font-bold text-foreground">{t.addressTitle}</h3>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Sher-e-Bangla Nagar, Agargaon, Dhaka-1207, Bangladesh.
+                  {t.addressText}
                 </p>
               </div>
 
@@ -36,7 +42,7 @@ export function ContactSection() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-destructive/10 text-destructive">
                   <Phone className="h-5 w-5" />
                 </div>
-                <h3 className="font-heading text-sm font-bold text-foreground">Emergency Hotline</h3>
+                <h3 className="font-heading text-sm font-bold text-foreground">{t.hotlineTitle}</h3>
                 <p className="text-xs font-semibold text-foreground">+880 2-9140752</p>
                 <p className="text-[11px] text-muted-foreground">24/7 Casualty &amp; Stroke Unit</p>
               </div>
@@ -45,9 +51,9 @@ export function ContactSection() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-info/10 text-info">
                   <Clock className="h-5 w-5" />
                 </div>
-                <h3 className="font-heading text-sm font-bold text-foreground">OPD Timings</h3>
+                <h3 className="font-heading text-sm font-bold text-foreground">{t.hoursTitle}</h3>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Saturday – Thursday: 8:00 AM – 2:00 PM (Friday Closed)
+                  {t.hoursText}
                 </p>
               </div>
 
@@ -55,9 +61,9 @@ export function ContactSection() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-success/10 text-success">
                   <Mail className="h-5 w-5" />
                 </div>
-                <h3 className="font-heading text-sm font-bold text-foreground">Email Contact</h3>
+                <h3 className="font-heading text-sm font-bold text-foreground">{t.emailTitle}</h3>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  info@nins.gov.bd
+                  nins@hospi.dghs.gov.bd
                 </p>
               </div>
             </div>

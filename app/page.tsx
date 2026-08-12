@@ -15,6 +15,7 @@ import { VideoGallerySection } from "@/components/home/video-gallery-section"
 import { FaqSection } from "@/components/home/faq-section"
 import { ContactSection } from "@/components/home/contact-section"
 import { Footer } from "@/components/home/footer"
+import { MarqueeBar } from "@/components/home/marquee-bar"
 
 export default function Page() {
   return (
@@ -36,16 +37,7 @@ export default function Page() {
       </div>
 
       {/* Emergency & Notice Marquee Bar */}
-      <div className="w-full overflow-hidden bg-destructive py-1.5 text-destructive-foreground print:hidden">
-        <div className="flex animate-[marquee_30s_linear_infinite] whitespace-nowrap">
-          <span className="mx-16 text-sm font-medium tracking-wide">
-            🚨 24/7 Emergency Hotline: +880 2-9140752 | Notice: Welcome to National Institute of Neurosciences &amp; Hospital (NINS). Emergency &amp; Stroke services 24/7. OPD Registration: 8:00 AM – 2:00 PM.
-          </span>
-          <span className="mx-16 text-sm font-medium tracking-wide" aria-hidden="true">
-            🚨 24/7 Emergency Hotline: +880 2-9140752 | Notice: Welcome to National Institute of Neurosciences &amp; Hospital (NINS). Emergency &amp; Stroke services 24/7. OPD Registration: 8:00 AM – 2:00 PM.
-          </span>
-        </div>
-      </div>
+      <MarqueeBar />
 
       {/* Navbar with Dropdowns & Auth */}
       <Navbar />

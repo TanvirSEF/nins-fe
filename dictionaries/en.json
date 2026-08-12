@@ -1,0 +1,271 @@
+{
+  "nav": {
+    "home": "Home",
+    "administration": "Administration",
+    "director": "Director",
+    "jointDirector": "Joint Director",
+    "listOfDirectors": "List of Directors",
+    "deputyDirector": "Deputy Director",
+    "assistantDirector": "Assistant Director",
+    "administrativeOfficer": "Administrative Officer (A.O.)",
+    "officeStaff": "Office Staff",
+    "paToDirector": "PA to Director & Joint Director",
+    "departments": "Departments",
+    "neurology": "Neurology & Allied Departments",
+    "neurosurgery": "Neurosurgery & Allied Departments",
+    "labScience": "Laboratory Science Departments",
+    "basicScience": "Basic Science Department",
+    "cardiology": "Cardiology Department",
+    "neuroAnesthesia": "Neuro-Anesthesia",
+    "psychiatry": "Department of Psychiatry",
+    "criticalCare": "Department of Critical Care Medicine",
+    "neuroradiology": "Dept. of Neuroradiology & Imaging",
+    "physicalMedicine": "Dept. of Physical Medicine & Neurorehabilitation",
+    "neuroEndocrinology": "Neuro-Endocrinology",
+    "emergency": "Emergency Department",
+    "academic": "Academic",
+    "academicCouncil": "Academic Council",
+    "academicActivities": "Academic Activities",
+    "irb": "Institutional Review Board (IRB)",
+    "academicCourses": "Academic Courses",
+    "disciplinaryCommittee": "Disciplinary Committee",
+    "infectionPrevention": "Infection Prevention & Control Committee",
+    "researchActivities": "Research Activities",
+    "deathReview": "Death Review Committee",
+    "maintenanceCommittee": "Maintenance Committee",
+    "services": "Services",
+    "indoorPatient": "Indoor Patient",
+    "outdoorPatient": "Outdoor Patient",
+    "emergencyService": "Emergency",
+    "icu": "Intensive Care Unit (ICU)",
+    "painMedicine": "Pain Medicine Unit",
+    "neurologyClinic": "Neurology Clinic Distribution",
+    "diagnosticFacilities": "Diagnostic Facilities",
+    "neuroRadiologyTest": "Neuro-Radiology & Imaging test",
+    "mriCtPrice": "MRI & CT SCAN PRICE LIST",
+    "neuroPathology": "Neuro-Pathology Test",
+    "microbiology": "Microbiology & Immunology Tests",
+    "biochemical": "Biochemical test",
+    "bloodTransfusion": "Blood Transfusion Tests",
+    "neuroPhysiology": "Neuro-Physiology Tests",
+    "neuroIntervention": "Neuro-intervention",
+    "diagnosticTests": "Diagnostic Tests",
+    "otCharge": "OT Charge",
+    "publications": "Publications",
+    "journal": "Journal",
+    "yearbook": "Yearbook",
+    "healthBulletin": "Health Bulletin",
+    "internationalArticles": "International Published Articles",
+    "more": "More",
+    "noticeBoard": "Notice Board & Announcements",
+    "tenderNotices": "Tender Notices",
+    "nocApprovals": "NOC Approvals",
+    "institutionalReviewBoard": "Institutional Review Board (IRB)",
+    "photoGallery": "Photo Gallery",
+    "downloadForms": "Download Forms"
+  },
+  "marquee": {
+    "text": "🚨 24/7 Emergency Hotline: +880 2-9140752 | Notice: Welcome to National Institute of Neurosciences & Hospital (NINS). Emergency & Stroke services 24/7. OPD Registration: 8:00 AM – 2:00 PM."
+  },
+  "hero": {
+    "slide1": {
+      "eyebrow": "Est. 2012 • Sher-e-Bangla Nagar, Agargaon, Dhaka",
+      "titlePrefix": "Bangladesh's Premier",
+      "titleHighlight": "Tertiary Neuro-Care",
+      "titleSuffix": "Institute",
+      "description": "The only government-run tertiary care neuroscience hospital in Bangladesh, equipped with 1000 bedded facilities, advanced neurosurgery, and critical care ICU.",
+      "primaryBtn": "Book OPD Consultation",
+      "secondaryBtn": "24/7 Emergency Hotline"
+    },
+    "slide2": {
+      "eyebrow": "Dedicated 100-Bedded Comprehensive Unit",
+      "titlePrefix": "24/7 Emergency &",
+      "titleHighlight": "F.A.S.T. Stroke Care",
+      "titleSuffix": "",
+      "description": "Equipped with state-of-the-art Cath Lab, Neuro-Intervention, and rapid response ICU team for acute stroke and paralysis management.",
+      "primaryBtn": "Call Emergency (+880 2-9140752)",
+      "secondaryBtn": "Diagnostic Tariff"
+    },
+    "slide3": {
+      "eyebrow": "Renowned Neurosurgeons & Neurologists",
+      "titlePrefix": "World-Class Specialist",
+      "titleHighlight": "Medical Faculty",
+      "titleSuffix": "",
+      "description": "Leading professors, surgeons, and medical researchers conducting specialized outpatient clinics and complex surgical procedures.",
+      "primaryBtn": "Browse Specialist Doctors",
+      "secondaryBtn": "Clinical Departments"
+    },
+    "slide4": {
+      "eyebrow": "Advanced Healthcare Infrastructure",
+      "titlePrefix": "State-of-the-Art",
+      "titleHighlight": "Diagnostic Facilities",
+      "titleSuffix": "",
+      "description": "Equipped with 3 Tesla MRI, 128-Slice CT Scanners, Neuro-physiology, and modern laboratory investigation services.",
+      "primaryBtn": "View Facilities",
+      "secondaryBtn": "Contact Us"
+    }
+  },
+  "about": {
+    "badge": "Est. September 2012 • Sher-e-Bangla Nagar, Agargaon, Dhaka",
+    "welcomeTo": "Welcome to",
+    "instituteName": "National Institute of Neurosciences & Hospital",
+    "subheading": "Bangladesh's Premier Tertiary Care Neuroscience Center",
+    "p1": "National Institute of Neurosciences & Hospital started its journey from September, 2012. Officially inaugurated by the Government of the People's Republic of Bangladesh, it is situated in the health hub of Sher-e-Bangla Nagar, Agargaon, Dhaka. This is the only Govt. run tertiary care neuroscience center in Bangladesh.",
+    "p2": "A 1000-bedded 10-storied hospital comprising specialized departments including Neurology, Neurosurgery, Pediatric Neurology, Pediatric Neurosurgery, Neurophysiology, Neurointervention, Neurorehabilitation, Neuroradiology, Neuropathology, Transfusion Medicine, Critical Care Medicine & a 100-bedded Stroke unit. Our Operation Theatres, Cath Lab, Laboratory Services, ICU & HDU are equipped with state-of-the-art sophisticated technologies.",
+    "awardTitle": "Health Minister Best Performance Award 2020",
+    "leadershipTitle": "Institute Leadership",
+    "directorTitle": "DIRECTOR",
+    "directorName": "Prof. Dr. Mohammad Nuruzzaman Khan",
+    "directorRole": "Professor cum Director, NINS&H",
+    "jointDirectorTitle": "JOINT DIRECTOR",
+    "jointDirectorName": "Prof. Dr. Md. Badrul Alam Mondal",
+    "jointDirectorRole": "Professor cum Joint Director, NINS&H",
+    "stat1Value": "1000+",
+    "stat1Label": "Bedded 10-Storied Hospital",
+    "stat2Value": "100 Bed",
+    "stat2Label": "Comprehensive Stroke Unit",
+    "stat3Value": "1000+",
+    "stat3Label": "Daily OPD Patients Served",
+    "stat4Value": "Awarded",
+    "stat4Label": "Best Performance Award 2020"
+  },
+  "patientServices": {
+    "badge": "E-Health Patient Portal",
+    "heading": "Quick Patient Action Services",
+    "subtext": "Access online OPD tickets, check real-time ICU bed availability, and download lab diagnostic reports.",
+    "accessService": "Access Service"
+  },
+  "departments": {
+    "badge": "Specialized Wings",
+    "heading": "Clinical Departments & Units",
+    "subtext": "Delivering multidisciplinary neuroscience care across neurology, neurosurgery, stroke management, and advanced neuro-imaging.",
+    "viewAll": "View All Departments",
+    "explore": "Explore Department"
+  },
+  "doctors": {
+    "badge": "Specialist Faculty",
+    "heading": "Prominent Physicians & Consultants",
+    "subtext": "Renowned professors, neurosurgeons, and neurologists leading specialized outpatient clinics and surgeries at NINS.",
+    "viewAll": "Browse Full Faculty (100+)"
+  },
+  "notice": {
+    "badge": "Official Bulletin",
+    "heading": "Notice Board & Announcements",
+    "subtext": "Stay updated with the latest official circulars, NOC approvals, tender notices, and academic announcements from NINS.",
+    "viewAll": "View All Notices",
+    "download": "Download",
+    "categories": {
+      "all": "All Notices",
+      "general": "General",
+      "noc": "NOC & Orders",
+      "academic": "Academic",
+      "tender": "Tender"
+    }
+  },
+  "stroke": {
+    "badge": "24/7 Acute Stroke Emergency Protocol",
+    "heading": "Recognize Stroke Symptoms: Think",
+    "highlight": "F.A.S.T.",
+    "subtext": "Every minute counts in acute stroke management. NINS 100-Bedded Stroke Unit provides round-the-clock IV thrombolysis and mechanical thrombectomy.",
+    "hotlineLabel": "NINS Emergency Casualty Hotline (24/7)",
+    "steps": {
+      "F": { "title": "Face Drooping", "desc": "Does one side of the face droop or is it numb? Ask the person to smile." },
+      "A": { "title": "Arm Weakness", "desc": "Is one arm weak or numb? Ask the person to raise both arms." },
+      "S": { "title": "Speech Difficulty", "desc": "Is speech slurred? Ask the person to repeat a simple sentence." },
+      "T": { "title": "Time to Call NINS", "desc": "If someone shows any of these symptoms, call NINS 24/7 Hotline immediately!" }
+    }
+  },
+  "faq": {
+    "badge": "Patient Help Center",
+    "heading": "Frequently Asked Questions (FAQ)",
+    "subtext": "Clear information about OPD serials, emergency stroke admissions, MRI tests, and visiting rules.",
+    "items": [
+      {
+        "q": "How can I book an Outpatient (OPD) ticket online at NINS?",
+        "a": "You can book your OPD consultation serial online through our E-Health Patient Portal or by visiting the OPD Ticket Counter between 8:00 AM and 2:00 PM (Sat–Thu). OPD ticket fee is ৳10."
+      },
+      {
+        "q": "What is the Emergency Hotline for 24/7 Stroke & Trauma Patients?",
+        "a": "For immediate emergency admission, call +880 2-9140752. NINS Emergency Casualty Ward and 100-Bed Stroke Unit operate 24 hours a day, 7 days a week."
+      },
+      {
+        "q": "Are diagnostic tests like 3T MRI & CT Scans subsidized at NINS?",
+        "a": "Yes! All diagnostic tests at NINS are conducted at government-subsidized rates (up to 70% lower than private diagnostic centers). Financially insolvent patients receive 100% free care upon Social Welfare approval."
+      },
+      {
+        "q": "What are the visiting hours for indoor wards and ICU?",
+        "a": "Indoor Ward Visiting Hours: 4:00 PM – 6:00 PM daily. Neuro-ICU Visiting Hours: 5:00 PM – 5:30 PM (Only 1 attendant per patient permitted with Visitor Pass)."
+      }
+    ]
+  },
+  "contact": {
+    "badge": "24/7 Emergency Care Available",
+    "heading": "Location & Emergency Contact",
+    "subtext": "Situated in the central health hub of Dhaka. Emergency services, acute stroke care, and ICU admissions operate 24 hours a day, 7 days a week.",
+    "addressTitle": "Hospital Address",
+    "addressText": "Sher-e-Bangla Nagar, Agargaon, Dhaka-1207, Bangladesh.",
+    "hotlineTitle": "Emergency Hotline",
+    "emailTitle": "Email Address",
+    "hoursTitle": "OPD Registration Hours",
+    "hoursText": "Sat \u2013 Thu: 8:00 AM \u2013 2:00 PM",
+    "mapTitle": "Find Us on the Map",
+    "getDirections": "Get Directions on Google Maps"
+  },
+  "tariff": {
+    "badge": "Government Approved Subsidized Rates",
+    "heading": "Diagnostic & Test Tariff Rates",
+    "subtext": "As Bangladesh's premier Government tertiary neuroscience center, all diagnostic tests, MRI scans, CT scans, and surgeries are conducted at minimal government fees or fully subsidized for underprivileged patients.",
+    "bullets": [
+      "100% Free emergency care & basic diagnostic screening",
+      "Up to 70% cost reduction compared to private diagnostic centers",
+      "State-of-the-art 3 Tesla MRI & Digital Angiography equipment",
+      "Financial assistance for stroke & paralysis patients"
+    ],
+    "viewPriceList": "View Full Diagnostic Price List",
+    "tableTitle": "Standard Diagnostic Fee Chart",
+    "govtSubsidized": "Govt Subsidized",
+    "govtCharge": "NINS Govt Charge",
+    "privateRate": "Private Rate"
+  },
+  "patientStories": {
+    "badge": "Patient Recovery Stories",
+    "heading": "Voices of Hope & Healing",
+    "subtext": "Heartfelt testimonials from patients and families who received specialized neurological treatment at NINS."
+  },
+  "gallery": {
+    "badge": "Photo Showcase",
+    "heading": "NINS Gallery & Recent Activities",
+    "subtext": "Glimpses of clinical operations, official delegation visits, medical seminars, and student achievements at NINS.",
+    "viewAll": "Explore Full Gallery",
+    "lightboxLabel": "NINS Photo Showcase",
+    "keyboardTip": "Tip: Press \u2b05\ufe0f / \u27a1\ufe0f Arrow keys to switch photos. Press Esc to close.",
+    "categories": {
+      "all": "All Photos",
+      "events": "Events & Ceremonies",
+      "visits": "Official Visits",
+      "awareness": "Awareness & Seminars"
+    }
+  },
+  "video": {
+    "badge": "Media & Video Gallery",
+    "heading": "Featured Video Documentaries & Reports",
+    "subtext": "Watch short video tours of our specialized neurosurgery facilities, stroke units, and official ceremonies.",
+    "watchVideo": "Watch Video",
+    "playerPlaceholder": "\ud83d\udcf9 Video Player Placeholder Ready",
+    "playerHint": "When you provide the YouTube embed link or MP4 video URL, it will play directly here."
+  },
+  "footer": {
+    "govtBadge": "Govt. Tertiary Neuroscience Center",
+    "instituteName": "National Institute of Neurosciences & Hospital",
+    "socialLabel": "Social Media Connections",
+    "visitorLabel": "TOTAL VISITS COUNTER",
+    "visitorSub": "Official Visitor Tracker \u2022 NINS Portal",
+    "govtLinks": "Useful Government Links",
+    "pabxTitle": "PABX & Contact Directory",
+    "copyright": "Copyright \u00a9 2012-2026 NINS (National Institute of Neurosciences & Hospital). All Rights Reserved.",
+    "noticeBoard": "Notice Board",
+    "noc": "NOC",
+    "gallery": "Gallery",
+    "nationalPortal": "National Portal"
+  }
+}

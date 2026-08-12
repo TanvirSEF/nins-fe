@@ -4,6 +4,8 @@ import * as React from "react"
 import Link from "next/link"
 import dynamic from "next/dynamic"
 import { Menu, X, ChevronDown, Home } from "lucide-react"
+import { useLanguage } from "@/context/language-context"
+import type { Dictionary } from "@/context/language-context"
 
 const NavbarAuth = dynamic(
   () => import("./navbar-auth").then((m) => ({ default: m.NavbarAuth })),
@@ -24,99 +26,101 @@ type NavItem =
   | { label: string; href: string; isHome?: boolean; children?: undefined }
   | { label: string; href?: undefined; isHome?: undefined; children: { label: string; href: string }[] }
 
-const navItems: NavItem[] = [
-  { label: "Home", href: "/", isHome: true },
-  {
-    label: "Administration",
-    children: [
-      { label: "Director", href: "/administration/director" },
-      { label: "Joint Director", href: "/administration/joint-director" },
-      { label: "List of Directors", href: "/administration/list-of-directors" },
-      { label: "Deputy Director", href: "/administration/deputy-director" },
-      { label: "Assistant Director", href: "/administration/assistant-director" },
-      { label: "Administrative Officer (A.O.)", href: "/administration/administrative-officer" },
-      { label: "Office Staff", href: "/administration/office-staff" },
-      { label: "PA to Director & Joint Director", href: "/administration/pa-to-director" },
-    ],
-  },
-  {
-    label: "Departments",
-    children: [
-      { label: "Neurology & Allied Departments", href: "/departments/neurology" },
-      { label: "Neurosurgery & Allied Departments", href: "/departments/neurosurgery" },
-      { label: "Laboratory Science Departments", href: "/departments/laboratory-science" },
-      { label: "Basic Science Department", href: "/departments/basic-science" },
-      { label: "Cardiology Department", href: "/departments/cardiology" },
-      { label: "Neuro-Anesthesia", href: "/departments/neuro-anesthesia" },
-      { label: "Department of Psychiatry", href: "/departments/psychiatry" },
-      { label: "Department of Critical Care Medicine", href: "/departments/critical-care" },
-      { label: "Dept. of Neuroradiology & Imaging", href: "/departments/neuroradiology" },
-      { label: "Dept. of Physical Medicine & Neurorehabilitation", href: "/departments/physical-medicine" },
-      { label: "Neuro-Endocrinology", href: "/departments/neuro-endocrinology" },
-      { label: "Emergency Department", href: "/departments/emergency" },
-    ],
-  },
-  {
-    label: "Academic",
-    children: [
-      { label: "Academic Council", href: "/academic/council" },
-      { label: "Academic Activities", href: "/academic/activities" },
-      { label: "Institutional Review Board (IRB)", href: "/academic/irb" },
-      { label: "Academic Courses", href: "/academic/courses" },
-      { label: "Disciplinary Committee", href: "/academic/disciplinary-committee" },
-      { label: "Infection Prevention & Control Committee", href: "/academic/infection-prevention" },
-      { label: "Research Activities", href: "/academic/research" },
-      { label: "Death Review Committee", href: "/academic/death-review" },
-      { label: "Maintenance Committee", href: "/academic/maintenance" },
-    ],
-  },
-  {
-    label: "Services",
-    children: [
-      { label: "Indoor Patient", href: "/services/indoor-patient" },
-      { label: "Outdoor Patient", href: "/services/outdoor-patient" },
-      { label: "Emergency", href: "/services/emergency" },
-      { label: "Intensive Care Unit (ICU)", href: "/services/icu" },
-      { label: "Pain Medicine Unit", href: "/services/pain-medicine" },
-      { label: "Neurology Clinic Distribution", href: "/services/neurology-clinic" },
-    ],
-  },
-  {
-    label: "Diagnostic Facilities",
-    children: [
-      { label: "Neuro-Radiology & Imaging test", href: "/diagnostic-facilities/neuroradiology" },
-      { label: "MRI & CT SCAN PRICE LIST", href: "/diagnostic-facilities/mri-ct-price-list" },
-      { label: "Neuro-Pathology Test", href: "/diagnostic-facilities/neuropathology" },
-      { label: "Microbiology & Immunology Tests", href: "/diagnostic-facilities/microbiology" },
-      { label: "Biochemical test", href: "/diagnostic-facilities/biochemical" },
-      { label: "Blood Transfusion Tests", href: "/diagnostic-facilities/blood-transfusion" },
-      { label: "Neuro-Physiology Tests", href: "/diagnostic-facilities/neurophysiology" },
-      { label: "Neuro-intervention", href: "/diagnostic-facilities/neuro-intervention" },
-      { label: "Diagnostic Tests", href: "/diagnostic-facilities/diagnostic-tests" },
-      { label: "OT Charge", href: "/diagnostic-facilities/ot-charge" },
-    ],
-  },
-  {
-    label: "Publications",
-    children: [
-      { label: "Journal", href: "/publications/journal" },
-      { label: "Yearbook", href: "/publications/yearbook" },
-      { label: "Health Bulletin", href: "/publications/health-bulletin" },
-      { label: "International Published Articles", href: "/publications/international-articles" },
-    ],
-  },
-  {
-    label: "More",
-    children: [
-      { label: "Notice Board & Announcements", href: "/notice" },
-      { label: "Tender Notices", href: "/notice?category=Tender" },
-      { label: "NOC Approvals", href: "/noc" },
-      { label: "Institutional Review Board (IRB)", href: "/irb" },
-      { label: "Photo Gallery", href: "/gallery" },
-      { label: "Download Forms", href: "/forms" },
-    ],
-  },
-]
+function buildNavItems(t: Dictionary["nav"]): NavItem[] {
+  return [
+    { label: t.home, href: "/", isHome: true },
+    {
+      label: t.administration,
+      children: [
+        { label: t.director, href: "/administration/director" },
+        { label: t.jointDirector, href: "/administration/joint-director" },
+        { label: t.listOfDirectors, href: "/administration/list-of-directors" },
+        { label: t.deputyDirector, href: "/administration/deputy-director" },
+        { label: t.assistantDirector, href: "/administration/assistant-director" },
+        { label: t.administrativeOfficer, href: "/administration/administrative-officer" },
+        { label: t.officeStaff, href: "/administration/office-staff" },
+        { label: t.paToDirector, href: "/administration/pa-to-director" },
+      ],
+    },
+    {
+      label: t.departments,
+      children: [
+        { label: t.neurology, href: "/departments/neurology" },
+        { label: t.neurosurgery, href: "/departments/neurosurgery" },
+        { label: t.labScience, href: "/departments/laboratory-science" },
+        { label: t.basicScience, href: "/departments/basic-science" },
+        { label: t.cardiology, href: "/departments/cardiology" },
+        { label: t.neuroAnesthesia, href: "/departments/neuro-anesthesia" },
+        { label: t.psychiatry, href: "/departments/psychiatry" },
+        { label: t.criticalCare, href: "/departments/critical-care" },
+        { label: t.neuroradiology, href: "/departments/neuroradiology" },
+        { label: t.physicalMedicine, href: "/departments/physical-medicine" },
+        { label: t.neuroEndocrinology, href: "/departments/neuro-endocrinology" },
+        { label: t.emergency, href: "/departments/emergency" },
+      ],
+    },
+    {
+      label: t.academic,
+      children: [
+        { label: t.academicCouncil, href: "/academic/council" },
+        { label: t.academicActivities, href: "/academic/activities" },
+        { label: t.irb, href: "/academic/irb" },
+        { label: t.academicCourses, href: "/academic/courses" },
+        { label: t.disciplinaryCommittee, href: "/academic/disciplinary-committee" },
+        { label: t.infectionPrevention, href: "/academic/infection-prevention" },
+        { label: t.researchActivities, href: "/academic/research" },
+        { label: t.deathReview, href: "/academic/death-review" },
+        { label: t.maintenanceCommittee, href: "/academic/maintenance" },
+      ],
+    },
+    {
+      label: t.services,
+      children: [
+        { label: t.indoorPatient, href: "/services/indoor-patient" },
+        { label: t.outdoorPatient, href: "/services/outdoor-patient" },
+        { label: t.emergencyService, href: "/services/emergency" },
+        { label: t.icu, href: "/services/icu" },
+        { label: t.painMedicine, href: "/services/pain-medicine" },
+        { label: t.neurologyClinic, href: "/services/neurology-clinic" },
+      ],
+    },
+    {
+      label: t.diagnosticFacilities,
+      children: [
+        { label: t.neuroRadiologyTest, href: "/diagnostic-facilities/neuroradiology" },
+        { label: t.mriCtPrice, href: "/diagnostic-facilities/mri-ct-price-list" },
+        { label: t.neuroPathology, href: "/diagnostic-facilities/neuropathology" },
+        { label: t.microbiology, href: "/diagnostic-facilities/microbiology" },
+        { label: t.biochemical, href: "/diagnostic-facilities/biochemical" },
+        { label: t.bloodTransfusion, href: "/diagnostic-facilities/blood-transfusion" },
+        { label: t.neuroPhysiology, href: "/diagnostic-facilities/neurophysiology" },
+        { label: t.neuroIntervention, href: "/diagnostic-facilities/neuro-intervention" },
+        { label: t.diagnosticTests, href: "/diagnostic-facilities/diagnostic-tests" },
+        { label: t.otCharge, href: "/diagnostic-facilities/ot-charge" },
+      ],
+    },
+    {
+      label: t.publications,
+      children: [
+        { label: t.journal, href: "/publications/journal" },
+        { label: t.yearbook, href: "/publications/yearbook" },
+        { label: t.healthBulletin, href: "/publications/health-bulletin" },
+        { label: t.internationalArticles, href: "/publications/international-articles" },
+      ],
+    },
+    {
+      label: t.more,
+      children: [
+        { label: t.noticeBoard, href: "/notice" },
+        { label: t.tenderNotices, href: "/notice?category=Tender" },
+        { label: t.nocApprovals, href: "/noc" },
+        { label: t.institutionalReviewBoard, href: "/irb" },
+        { label: t.photoGallery, href: "/gallery" },
+        { label: t.downloadForms, href: "/forms" },
+      ],
+    },
+  ]
+}
 
 function DropdownNavItem({ item }: { item: NavItem }) {
   const [open, setOpen] = React.useState(false)
@@ -198,11 +202,13 @@ function DropdownNavItem({ item }: { item: NavItem }) {
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
   const [mobileOpenIdx, setMobileOpenIdx] = React.useState<number | null>(null)
+  const { dict } = useLanguage()
+  const navItems = buildNavItems(dict.nav)
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200/80 bg-white/95 backdrop-blur-md dark:border-white/10 dark:bg-slate-950/95 shadow-2xs">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6">
-        {/* Desktop Navigation (Organized into 8 clean items) */}
+        {/* Desktop Navigation */}
         <nav className="hidden items-center gap-4 xl:gap-6 lg:flex">
           {navItems.map((item) => (
             <DropdownNavItem key={item.label} item={item} />
@@ -275,7 +281,7 @@ export function Navbar() {
               </div>
             ))}
           </nav>
-          <div className="mt-4 flex flex-col gap-2 border-t border-slate-100 pt-3 dark:border-white/5">
+          <div className="mt-4 flex flex-col gap-3 border-t border-slate-100 pt-3 dark:border-white/5">
             <NavbarAuthMobile onClose={() => setMobileMenuOpen(false)} />
           </div>
         </div>

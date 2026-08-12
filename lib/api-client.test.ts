@@ -111,7 +111,11 @@ describe("apiClient", () => {
 
       // call order: /x (401) → /auth/refresh → /x retry (200)
       const calls = fn.mock.calls.map((c) => String(c[0]))
-      expect(calls).toEqual(["/x", "/auth/refresh", "/x"])
+      expect(calls).toEqual([
+        "https://nins.zephlotech.com/api/x",
+        "https://nins.zephlotech.com/api/auth/refresh",
+        "https://nins.zephlotech.com/api/x",
+      ])
       const retryInit = (fn.mock.calls[2]?.[1] ?? {}) as RequestInit
       const headers = (retryInit.headers ?? {}) as Record<string, string>
       expect(headers.Authorization).toBe("Bearer fresh-token")

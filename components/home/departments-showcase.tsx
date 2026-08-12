@@ -3,6 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { Brain, Activity, Stethoscope, Baby, Microscope, ShieldAlert, ArrowRight } from "lucide-react"
+import { useLanguage } from "@/context/language-context"
 
 const clinicalDepartments = [
   {
@@ -25,7 +26,7 @@ const clinicalDepartments = [
     icon: ShieldAlert,
     title: "100-Bedded Stroke Unit",
     doctorsCount: "24/7 Rapid Response",
-    description: "Bangladesh’s largest dedicated stroke center providing intravenous thrombolysis and mechanical thrombectomy.",
+    description: "Bangladesh's largest dedicated stroke center providing intravenous thrombolysis and mechanical thrombectomy.",
     href: "/services/emergency",
     tag: "Acute Stroke Care",
   },
@@ -56,6 +57,9 @@ const clinicalDepartments = [
 ]
 
 export function DepartmentsShowcase() {
+  const { dict } = useLanguage()
+  const t = dict.departments
+
   return (
     <section className="relative overflow-hidden bg-slate-50/70 py-16 lg:py-24 dark:bg-slate-950/60 border-t border-slate-100 dark:border-white/5">
       <div className="relative z-10 mx-auto max-w-7xl px-6">
@@ -64,13 +68,13 @@ export function DepartmentsShowcase() {
           <div className="space-y-3">
             <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-xs font-semibold text-primary">
               <Brain className="h-3.5 w-3.5" />
-              Specialized Wings
+              {t.badge}
             </div>
             <h2 className="font-heading text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-              Clinical Departments &amp; Units
+              {t.heading}
             </h2>
             <p className="text-sm text-muted-foreground max-w-xl">
-              Delivering multidisciplinary neuroscience care across neurology, neurosurgery, stroke management, and advanced neuro-imaging.
+              {t.subtext}
             </p>
           </div>
 
@@ -78,7 +82,7 @@ export function DepartmentsShowcase() {
             href="/departments"
             className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-xs font-bold text-primary-foreground shadow-sm transition-all hover:bg-primary/95 shrink-0"
           >
-            View All Departments
+            {t.viewAll}
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
@@ -120,7 +124,7 @@ export function DepartmentsShowcase() {
                     href={dept.href}
                     className="inline-flex items-center gap-1.5 text-xs font-bold text-foreground transition-colors group-hover:text-primary"
                   >
-                    Explore Department
+                    {t.explore}
                     <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 </div>

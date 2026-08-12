@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { Heart, Star, Quote, CheckCircle2 } from "lucide-react"
+import { useLanguage } from "@/context/language-context"
 
 const testimonials = [
   {
@@ -34,6 +35,9 @@ const testimonials = [
 ]
 
 export function PatientStories() {
+  const { dict } = useLanguage()
+  const t = dict.patientStories
+
   return (
     <section className="relative overflow-hidden bg-slate-50/70 py-16 lg:py-24 dark:bg-slate-950/60 border-t border-slate-100 dark:border-white/5">
       <div className="relative z-10 mx-auto max-w-7xl px-6">
@@ -41,13 +45,13 @@ export function PatientStories() {
         <div className="mx-auto max-w-3xl text-center space-y-3">
           <div className="inline-flex items-center gap-2 rounded-full border border-rose-500/20 bg-rose-500/10 px-3.5 py-1 text-xs font-bold text-rose-600 dark:text-rose-400">
             <Heart className="h-3.5 w-3.5 fill-current" />
-            Patient Recovery Stories
+            {t.badge}
           </div>
           <h2 className="font-heading text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-            Voices of Hope &amp; Healing
+            {t.heading}
           </h2>
           <p className="text-sm text-muted-foreground">
-            Heartfelt testimonials from patients and families who received specialized neurological treatment at NINS.
+            {t.subtext}
           </p>
         </div>
 
