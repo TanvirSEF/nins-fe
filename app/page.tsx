@@ -4,7 +4,6 @@ import { Navbar } from "@/components/home/navbar"
 import { Hero } from "@/components/home/hero"
 import { AboutSection } from "@/components/home/about-section"
 import { NoticeSection } from "@/components/home/notice-section"
-import { PatientServicesGrid } from "@/components/home/patient-services-grid"
 import { DepartmentsShowcase } from "@/components/home/departments-showcase"
 import { FeaturedDoctors } from "@/components/home/featured-doctors"
 import { StrokeGuidanceBanner } from "@/components/home/stroke-guidance-banner"
@@ -53,10 +52,7 @@ export default function Page() {
         {/* 3. Official Notice Board & Announcements */}
         <NoticeSection />
 
-        {/* 4. Quick Patient Action Portal Grid */}
-        <PatientServicesGrid />
-
-        {/* 5. Specialized Clinical Departments & Wings */}
+        {/* 4. Specialized Clinical Departments & Wings */}
         <DepartmentsShowcase />
 
         {/* 6. Prominent Specialist Doctors & Faculty */}

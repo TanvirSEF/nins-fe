@@ -1,4 +1,4 @@
-import { Plus_Jakarta_Sans, Inter, Hind_Siliguri } from "next/font/google"
+import { Plus_Jakarta_Sans, Inter, Hind_Siliguri, Noto_Sans_Bengali } from "next/font/google"
 
 import "./globals.css"
 import { Providers } from "./providers"
@@ -20,8 +20,15 @@ const fontSans = Inter({
 
 const fontBangla = Hind_Siliguri({
   subsets: ["bengali"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
   variable: "--font-bangla",
+  display: "swap",
+})
+
+const fontNotoBangla = Noto_Sans_Bengali({
+  subsets: ["bengali"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-noto-bangla",
   display: "swap",
 })
 
@@ -34,7 +41,13 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontHeading.variable, fontSans.variable, fontBangla.variable)}
+      className={cn(
+        "antialiased",
+        fontHeading.variable,
+        fontSans.variable,
+        fontBangla.variable,
+        fontNotoBangla.variable
+      )}
     >
       <body suppressHydrationWarning>
         <script
