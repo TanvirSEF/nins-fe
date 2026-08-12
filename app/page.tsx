@@ -5,6 +5,9 @@ import { Hero } from "@/components/home/hero"
 import { AboutSection } from "@/components/home/about-section"
 import { NoticeSection } from "@/components/home/notice-section"
 import { DepartmentsShowcase } from "@/components/home/departments-showcase"
+import { CoursesShowcase } from "@/components/home/courses-showcase"
+import { EventsShowcase } from "@/components/home/events-showcase"
+import { NewsShowcase } from "@/components/home/news-showcase"
 import { FeaturedDoctors } from "@/components/home/featured-doctors"
 import { StrokeGuidanceBanner } from "@/components/home/stroke-guidance-banner"
 import { TestTariffSection } from "@/components/home/test-tariff-section"
@@ -55,7 +58,16 @@ export default function Page() {
         {/* 4. Specialized Clinical Departments & Wings */}
         <DepartmentsShowcase />
 
-        {/* 6. Prominent Specialist Doctors & Faculty */}
+        {/* 5. NINS Courses & Academic Degrees */}
+        <CoursesShowcase />
+
+        {/* 6. NINS Official Events & Conferences */}
+        <EventsShowcase />
+
+        {/* 7. NINS News & Bulletin */}
+        <NewsShowcase />
+
+        {/* 5. Prominent Specialist Doctors & Faculty */}
         <FeaturedDoctors />
 
         {/* 7. 24/7 F.A.S.T. Stroke Emergency & Hotline Banner */}
