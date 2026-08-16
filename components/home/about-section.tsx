@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Image from "next/image"
-import { Building2, Award, Stethoscope, ShieldCheck, UserCheck } from "lucide-react"
+import { Building2, Award, Stethoscope, ShieldCheck, UserCheck, User } from "lucide-react"
 import { useLanguage } from "@/context/language-context"
 
 export function AboutSection() {
@@ -114,14 +114,8 @@ export function AboutSection() {
                   </h4>
                 </div>
                 <div className="p-3 text-center">
-                  <div className="relative mx-auto h-44 w-36 overflow-hidden rounded-lg border border-slate-900/80 shadow-xs">
-                    <Image
-                      src="/images/Dr.Badrul_AlamJD.webp"
-                      alt={t.jointDirectorName}
-                      fill
-                      sizes="144px"
-                      className="object-cover object-top"
-                    />
+                  <div className="relative mx-auto h-44 w-36 flex flex-col items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-100/80 text-slate-400 dark:border-white/15 dark:bg-slate-800/40">
+                    <User className="h-12 w-12 stroke-[1.25] text-slate-400/70" />
                   </div>
                   <div className="mt-2.5 space-y-0.5">
                     <h5 className="font-heading text-xs font-bold leading-tight text-slate-800 dark:text-slate-100">

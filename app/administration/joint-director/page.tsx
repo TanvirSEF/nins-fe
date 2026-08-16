@@ -14,6 +14,7 @@ import {
   ArrowLeft,
   BookOpen,
   UserCheck,
+  User,
   Calendar,
   Briefcase,
 } from "lucide-react"
@@ -79,10 +80,10 @@ export default function JointDirectorPage() {
                 Office of the Joint Director • NINS&amp;H
               </div>
               <h1 className="font-heading text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
-                Prof. Dr. Md. Badrul Alam Mondal
+                Office of the Joint Director
               </h1>
               <p className="text-sm sm:text-base text-slate-300 font-medium leading-relaxed">
-                Joint Director &amp; Professor of Neurology • President, Society of Neurologists of Bangladesh (SNB)
+                National Institute of Neurosciences &amp; Hospital (NINS&amp;H) • Sher-E-Bangla Nagar, Agargaon, Dhaka
               </p>
             </div>
           </div>
@@ -94,15 +95,10 @@ export default function JointDirectorPage() {
             <div className="lg:col-span-4 space-y-6">
               {/* Image Frame Card */}
               <div className="overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-4 shadow-xl dark:border-white/10 dark:bg-slate-900">
-                <div className="relative mx-auto h-80 sm:h-96 w-full overflow-hidden rounded-2xl border border-slate-300 bg-slate-100 shadow-sm dark:border-white/15 dark:bg-slate-950">
-                  <Image
-                    src="/images/Dr.Badrul_AlamJD.webp"
-                    alt="Prof. Dr. Md. Badrul Alam Mondal"
-                    fill
-                    className="object-cover object-top"
-                    priority
-                  />
-                  <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent p-4 text-white text-center">
+                <div className="relative mx-auto h-80 sm:h-96 w-full flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-100/80 text-slate-400 shadow-sm dark:border-white/15 dark:bg-slate-950">
+                  <User className="h-20 w-20 stroke-[1.2] text-slate-400/70" />
+                  <span className="mt-3 text-xs font-semibold uppercase tracking-wider text-slate-400">Photo to be updated</span>
+                  <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent p-4 text-white text-center rounded-b-2xl">
                     <span className="rounded-md bg-[#2c474e] px-3 py-1 text-xs font-bold uppercase tracking-wider">
                       JOINT DIRECTOR
                     </span>
@@ -111,10 +107,10 @@ export default function JointDirectorPage() {
 
                 <div className="mt-4 text-center space-y-1">
                   <h3 className="font-heading text-base font-bold text-foreground">
-                    Prof. Dr. Md. Badrul Alam Mondal
+                    To be appointed
                   </h3>
                   <p className="text-xs font-semibold text-primary">
-                    Joint Director &amp; Professor of Neurology
+                    Joint Director, NINS&amp;H
                   </p>
                 </div>
               </div>

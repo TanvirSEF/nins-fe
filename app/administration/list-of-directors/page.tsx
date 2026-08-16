@@ -14,6 +14,7 @@ import {
   LayoutGrid,
   Table as TableIcon,
   Sparkles,
+  User,
 } from "lucide-react"
 
 const directorsList = [
@@ -55,14 +56,14 @@ const directorsList = [
   },
   {
     slNo: 4,
-    name: "Prof. Dr. Md. Badrul Alam Mondal",
-    designation: "Joint Director (Founding Joint Director of NINS&H)",
-    duration: "11/01/2012 to Present",
-    status: "Founding & Current Joint Director",
-    statusColor: "bg-primary/10 text-primary border-primary/30",
-    isCurrent: true,
-    isFounding: true,
-    image: "/images/Dr.Badrul_AlamJD.webp",
+    name: "To be appointed",
+    designation: "Joint Director, NINS&H",
+    duration: "Awaiting Appointment",
+    status: "Upcoming Joint Director",
+    statusColor: "bg-slate-100 text-slate-700 border-slate-200 dark:bg-white/10 dark:text-slate-300",
+    isCurrent: false,
+    isFounding: false,
+    image: "",
     profileUrl: "/administration/joint-director",
   },
 ]
@@ -185,13 +186,20 @@ export default function ListOfDirectorsPage() {
                   </div>
 
                   {/* Photo Frame */}
-                  <div className="mt-5 relative mx-auto h-56 w-44 overflow-hidden rounded-2xl border border-slate-300 bg-slate-100 shadow-md dark:border-white/15 dark:bg-slate-950">
-                    <Image
-                      src={person.image}
-                      alt={person.name}
-                      fill
-                      className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                    />
+                  <div className="mt-5 relative mx-auto h-56 w-44 overflow-hidden rounded-2xl border border-slate-300 bg-slate-100 shadow-md dark:border-white/15 dark:bg-slate-950 flex items-center justify-center">
+                    {person.image ? (
+                      <Image
+                        src={person.image}
+                        alt={person.name}
+                        fill
+                        className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center text-slate-400">
+                        <User className="h-16 w-16 stroke-[1.25] text-slate-400/60" />
+                        <span className="mt-2 text-[10px] font-semibold uppercase tracking-wider text-slate-400">To be updated</span>
+                      </div>
+                    )}
                     {person.isFounding && (
                       <div className="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-amber-500 text-slate-950 shadow-md" title="Founding Leader">
                         <Sparkles className="h-4 w-4 fill-current" />
